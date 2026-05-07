@@ -28,7 +28,6 @@
       --red:#ff5b6e;
       --blue:#67b7ff;
       --shadow:0 18px 50px rgba(0,0,0,.35);
-      --radius:20px;
     }
 
     *{
@@ -72,7 +71,7 @@
       top:0;
       z-index:50;
       backdrop-filter:blur(18px);
-      background:rgba(16,11,18,.82);
+      background:rgba(16,11,18,.84);
       border-bottom:1px solid var(--line);
     }
 
@@ -101,7 +100,15 @@
       background:linear-gradient(135deg,var(--pink),var(--gold));
       box-shadow:0 10px 25px rgba(255,95,162,.25);
       font-size:20px;
+      overflow:hidden;
       flex:0 0 auto;
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     .brand h1{
@@ -208,7 +215,7 @@
       box-shadow:var(--shadow);
     }
 
-    .loginCard .bigIcon{
+    .bigIcon{
       width:54px;
       height:54px;
       border-radius:18px;
@@ -232,55 +239,52 @@
       line-height:1.5;
     }
 
-    .formGrid{
-      display:grid;
-      gap:10px;
-      margin-top:14px;
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-
-    .field label{
-      color:var(--cream);
-      font-size:12px;
-      font-weight:900;
-    }
-
-    .field input,
-    .field textarea,
-    .field select{
-      width:100%;
-      min-height:44px;
-      outline:none;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border-radius:15px;
-      padding:11px 12px;
-      resize:vertical;
-    }
-
-    .field textarea{
-      min-height:78px;
-    }
-
-    .field select option{
-      color:#111;
-    }
-
     .main{
       padding:18px 0 34px;
     }
 
-    .hero{
+    .tabs{
+      display:flex;
+      gap:8px;
+      overflow:auto;
+      padding-bottom:8px;
+      margin-bottom:10px;
+      scrollbar-width:none;
+    }
+
+    .tabs::-webkit-scrollbar{
+      display:none;
+    }
+
+    .tab{
+      flex:0 0 auto;
+      padding:10px 13px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.055);
+      color:var(--muted);
+      font-size:13px;
+      font-weight:1000;
+    }
+
+    .tab.active{
+      color:white;
+      border-color:rgba(255,95,162,.45);
+      background:linear-gradient(135deg,rgba(255,95,162,.88),rgba(255,138,192,.72));
+    }
+
+    .tabPanel{
+      display:none;
+    }
+
+    .tabPanel.show{
+      display:block;
+    }
+
+    .grid2{
       display:grid;
-      grid-template-columns:1.1fr .9fr;
+      grid-template-columns:1.05fr .95fr;
       gap:12px;
-      margin-bottom:12px;
     }
 
     .panel{
@@ -348,28 +352,58 @@
       color:var(--cream);
       font-size:12px;
       line-height:1.5;
+      margin-top:10px;
     }
 
-    .cakeForm{
+    .formGrid{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
     }
 
-    .cakeForm .full{
+    .formGrid.one{
+      grid-template-columns:1fr;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .field.full{
       grid-column:1/-1;
     }
 
-    .checkRow{
-      grid-column:1/-1;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .field label{
+      color:var(--cream);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .field input,
+    .field textarea,
+    .field select{
+      width:100%;
+      min-height:44px;
+      outline:none;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius:15px;
+      padding:11px 12px;
+      resize:vertical;
+    }
+
+    .field textarea{
+      min-height:78px;
+    }
+
+    .field select option{
+      color:#111;
     }
 
     .checkBox{
-      flex:1;
-      min-width:170px;
       display:flex;
       align-items:center;
       gap:9px;
@@ -385,6 +419,43 @@
     .checkBox input{
       width:18px;
       height:18px;
+      accent-color:var(--pink);
+    }
+
+    .multiBox{
+      grid-column:1/-1;
+      display:grid;
+      gap:8px;
+    }
+
+    .multiTitle{
+      color:var(--cream);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .multiGrid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+
+    .multiItem{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.055);
+      border-radius:14px;
+      color:var(--text);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .multiItem input{
+      width:17px;
+      height:17px;
       accent-color:var(--pink);
     }
 
@@ -484,7 +555,8 @@
       gap:10px;
     }
 
-    .cakeItem{
+    .cakeItem,
+    .simpleItem{
       border:1px solid var(--line);
       background:rgba(255,255,255,.052);
       border-radius:20px;
@@ -573,6 +645,32 @@
       align-items:flex-end;
     }
 
+    .simpleRow{
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      gap:10px;
+      padding:11px;
+    }
+
+    .simpleRow h4{
+      font-size:14px;
+      letter-spacing:-.025em;
+    }
+
+    .simpleRow p{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:5px;
+    }
+
+    .simpleActions{
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
     .empty{
       padding:28px 14px;
       text-align:center;
@@ -618,7 +716,7 @@
     }
 
     @media(max-width:930px){
-      .hero{
+      .grid2{
         grid-template-columns:1fr;
       }
 
@@ -629,6 +727,10 @@
       .toolbar{
         grid-template-columns:1fr;
       }
+
+      .multiGrid{
+        grid-template-columns:repeat(2,1fr);
+      }
     }
 
     @media(max-width:640px){
@@ -636,20 +738,9 @@
         width:min(100% - 18px,1180px);
       }
 
-      .nav{
-        align-items:flex-start;
-      }
-
-      .brand p{
-        display:none;
-      }
-
+      .brand p,
       .pill{
         display:none;
-      }
-
-      .main{
-        padding-top:10px;
       }
 
       .panel{
@@ -657,7 +748,11 @@
         border-radius:22px;
       }
 
-      .cakeForm{
+      .formGrid{
+        grid-template-columns:1fr;
+      }
+
+      .multiGrid{
         grid-template-columns:1fr;
       }
 
@@ -676,70 +771,86 @@
         align-items:center;
         justify-content:flex-end;
       }
+
+      .simpleRow{
+        grid-template-columns:1fr;
+      }
+
+      .simpleActions{
+        justify-content:flex-start;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header class="topbar">
-    <div class="wrap nav">
-      <a class="brand" href="index.html">
-        <div class="logo">🍰</div>
-        <div>
-          <h1>Cake Studio Admin</h1>
-          <p>Manage cake catalogue</p>
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <div id="adminTopLogo" class="logo">🍰</div>
+      <div>
+        <h1 id="adminTopBrand">Cake Studio Admin</h1>
+        <p>Manage catalogue, flavours & settings</p>
+      </div>
+    </a>
+
+    <div class="navActions">
+      <span id="adminEmailPill" class="pill">Not logged in</span>
+      <a class="btn small" href="index.html" target="_blank">Open Site</a>
+      <button id="signOutBtn" class="btn red small" style="display:none" onclick="signOut()">Sign Out</button>
+    </div>
+  </div>
+</header>
+
+<section id="loginScreen" class="screen show">
+  <div class="wrap loginShell">
+    <div class="loginCard">
+      <div class="bigIcon">🔐</div>
+      <h2>Admin Login</h2>
+      <p>Use the same email added in Supabase SQL and Authentication Users.</p>
+
+      <form class="formGrid one" onsubmit="loginAdmin(event)">
+        <div class="field">
+          <label>Email</label>
+          <input id="loginEmail" type="email" required placeholder="admin@example.com">
         </div>
-      </a>
 
-      <div class="navActions">
-        <span id="adminEmailPill" class="pill">Not logged in</span>
-        <a class="btn small" href="index.html" target="_blank">Open Site</a>
-        <button id="signOutBtn" class="btn red small" style="display:none" onclick="signOut()">Sign Out</button>
-      </div>
+        <div class="field">
+          <label>Password</label>
+          <input id="loginPassword" type="password" required placeholder="Your password">
+        </div>
+
+        <button class="btn primary" type="submit">Login</button>
+
+        <p id="loginMsg" class="muted"></p>
+      </form>
     </div>
-  </header>
+  </div>
+</section>
 
-  <section id="loginScreen" class="screen show">
-    <div class="wrap loginShell">
-      <div class="loginCard">
-        <div class="bigIcon">🔐</div>
-        <h2>Admin Login</h2>
-        <p>Use the same email that you added in Supabase SQL and Authentication Users.</p>
+<section id="adminScreen" class="screen">
+  <main class="wrap main">
 
-        <form class="formGrid" onsubmit="loginAdmin(event)">
-          <div class="field">
-            <label>Email</label>
-            <input id="loginEmail" type="email" required placeholder="admin@example.com">
-          </div>
-
-          <div class="field">
-            <label>Password</label>
-            <input id="loginPassword" type="password" required placeholder="Your password">
-          </div>
-
-          <button class="btn primary" type="submit">Login</button>
-
-          <p id="loginMsg" class="muted"></p>
-        </form>
-      </div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('cakes', this)">Cakes</button>
+      <button class="tab" onclick="showTab('categories', this)">Categories</button>
+      <button class="tab" onclick="showTab('flavours', this)">Flavours</button>
+      <button class="tab" onclick="showTab('settings', this)">Settings</button>
     </div>
-  </section>
 
-  <section id="adminScreen" class="screen">
-    <main class="wrap main">
-
-      <div class="hero">
+    <section id="tab-cakes" class="tabPanel show">
+      <div class="grid2">
         <div class="panel">
           <div class="panelHead">
             <div>
-              <h2 id="formTitle">Add New Cake</h2>
-              <p>Add photo URL, name, category, price and status. Changes show on website instantly.</p>
+              <h2 id="cakeFormTitle">Add New Cake</h2>
+              <p>Add cake photo, categories, flavours and details.</p>
             </div>
-            <button class="btn small" onclick="resetForm()">Clear</button>
+            <button class="btn small" onclick="resetCakeForm()">Clear</button>
           </div>
 
-          <form class="cakeForm" onsubmit="saveCake(event)">
+          <form class="formGrid" onsubmit="saveCake(event)">
             <input type="hidden" id="cakeId">
 
             <div class="field">
@@ -748,62 +859,56 @@
             </div>
 
             <div class="field">
-              <label>Category *</label>
-              <input id="cakeCategory" required list="categoryList" placeholder="Birthday">
-              <datalist id="categoryList">
-                <option value="Birthday">
-                <option value="Wedding">
-                <option value="Kids">
-                <option value="Cupcakes">
-                <option value="Anniversary">
-                <option value="Classic">
-                <option value="Custom">
-              </datalist>
-            </div>
-
-            <div class="field full">
-              <label>Image URL *</label>
-              <input id="cakeImage" required placeholder="https://..." oninput="previewImage()">
-            </div>
-
-            <div id="imagePreviewBox" class="imagePreview">
-              <img id="imagePreview" src="" alt="Cake preview">
-              <div>
-                <b>Image preview</b>
-                <span id="imagePreviewUrl"></span>
-              </div>
-            </div>
-
-            <div class="field">
               <label>Starting Price</label>
               <input id="cakePrice" type="number" min="0" step="0.01" placeholder="45">
             </div>
 
+            <div class="field full">
+              <label>Image URL *</label>
+              <input id="cakeImage" required placeholder="https://..." oninput="previewCakeImage()">
+            </div>
+
+            <div id="cakeImagePreviewBox" class="imagePreview">
+              <img id="cakeImagePreview" src="" alt="Cake preview">
+              <div>
+                <b>Image preview</b>
+                <span id="cakeImagePreviewUrl"></span>
+              </div>
+            </div>
+
             <div class="field">
               <label>Sort Order</label>
-              <input id="sortOrder" type="number" min="0" step="1" placeholder="0">
+              <input id="cakeSortOrder" type="number" min="0" step="1" placeholder="0">
             </div>
+
+            <label class="checkBox">
+              <input id="cakeActive" type="checkbox" checked>
+              Active / Show
+            </label>
+
+            <label class="checkBox">
+              <input id="cakeFeatured" type="checkbox">
+              Featured cake
+            </label>
 
             <div class="field full">
               <label>Description</label>
               <textarea id="cakeDescription" placeholder="Short cake details..."></textarea>
             </div>
 
-            <div class="checkRow">
-              <label class="checkBox">
-                <input id="isActive" type="checkbox" checked>
-                Active / Show on website
-              </label>
+            <div class="multiBox">
+              <div class="multiTitle">Select Categories</div>
+              <div id="cakeCategoryChecks" class="multiGrid"></div>
+            </div>
 
-              <label class="checkBox">
-                <input id="isFeatured" type="checkbox">
-                Featured cake
-              </label>
+            <div class="multiBox">
+              <div class="multiTitle">Select Available Flavours</div>
+              <div id="cakeFlavourChecks" class="multiGrid"></div>
             </div>
 
             <div class="formActions">
-              <button class="btn green" type="submit" id="saveBtn">Save Cake</button>
-              <button class="btn" type="button" onclick="resetForm()">Cancel Edit</button>
+              <button class="btn green" type="submit" id="saveCakeBtn">Save Cake</button>
+              <button class="btn" type="button" onclick="resetCakeForm()">Cancel Edit</button>
             </div>
           </form>
         </div>
@@ -812,7 +917,7 @@
           <div class="panelHead">
             <div>
               <h3>Dashboard</h3>
-              <p>Quick status of your cake catalogue.</p>
+              <p>Quick catalogue status.</p>
             </div>
           </div>
 
@@ -835,38 +940,36 @@
             </div>
           </div>
 
-          <div style="height:10px"></div>
-
           <div class="notice">
-            <b>Important:</b> Use image URLs for now. Later we can add Supabase Storage upload button, order history, WhatsApp settings, coupons, and delivery areas.
+            <b>Good setup:</b> Add categories and flavours first, then attach them to each cake. This keeps the website clean and reusable.
           </div>
         </div>
       </div>
 
-      <section class="panel">
+      <section class="panel" style="margin-top:12px">
         <div class="panelHead">
           <div>
-            <h3>Cake List</h3>
-            <p>Edit, hide, feature or delete cakes from here.</p>
+            <h3>All Cakes</h3>
+            <p>Edit, hide, feature or delete cakes.</p>
           </div>
 
-          <button class="btn small" onclick="loadCakes()">Refresh</button>
+          <button class="btn small" onclick="loadAllData()">Refresh</button>
         </div>
 
         <div class="toolbar">
           <div class="searchBox">
             <span>🔎</span>
-            <input id="searchInput" placeholder="Search cake, category, description..." oninput="renderCakes()">
+            <input id="cakeSearchInput" placeholder="Search cake, category, flavour..." oninput="renderCakes()">
           </div>
 
-          <select id="statusFilter" class="selectMini" onchange="renderCakes()">
+          <select id="cakeStatusFilter" class="selectMini" onchange="renderCakes()">
             <option value="all">All Status</option>
             <option value="active">Active Only</option>
             <option value="hidden">Hidden Only</option>
             <option value="featured">Featured Only</option>
           </select>
 
-          <select id="sortFilter" class="selectMini" onchange="renderCakes()">
+          <select id="cakeSortFilter" class="selectMini" onchange="renderCakes()">
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
             <option value="sort_order">Sort Order</option>
@@ -880,387 +983,982 @@
           <div class="empty">Loading cakes...</div>
         </div>
       </section>
+    </section>
 
-    </main>
-  </section>
+    <section id="tab-categories" class="tabPanel">
+      <div class="grid2">
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h2 id="categoryFormTitle">Add Category</h2>
+              <p>Examples: Birthday, Wedding, Kids, Cupcakes.</p>
+            </div>
+            <button class="btn small" onclick="resetCategoryForm()">Clear</button>
+          </div>
 
-  <div id="toast" class="toast"></div>
+          <form class="formGrid one" onsubmit="saveCategory(event)">
+            <input type="hidden" id="categoryId">
 
-  <script>
-    const SUPABASE_URL = "https://rdpynngsjhzirxwzrxdd.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_oPaplUdywtmujaMjyyzHTQ_6fqthIzu";
+            <div class="field">
+              <label>Category Name *</label>
+              <input id="categoryName" required placeholder="Birthday">
+            </div>
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            <div class="field">
+              <label>Sort Order</label>
+              <input id="categorySortOrder" type="number" min="0" step="1" placeholder="0">
+            </div>
 
-    let currentUser = null;
-    let allCakes = [];
+            <label class="checkBox">
+              <input id="categoryActive" type="checkbox" checked>
+              Active / Show on website
+            </label>
 
-    const $ = (id) => document.getElementById(id);
+            <div class="formActions">
+              <button class="btn green" type="submit" id="saveCategoryBtn">Save Category</button>
+              <button class="btn" type="button" onclick="resetCategoryForm()">Cancel Edit</button>
+            </div>
+          </form>
+        </div>
 
-    init();
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>Category List</h3>
+              <p>Delete carefully. It will remove that category from linked cakes.</p>
+            </div>
+          </div>
 
-    async function init(){
-      const { data } = await supabaseClient.auth.getSession();
+          <div id="categoryList" class="list"></div>
+        </div>
+      </div>
+    </section>
 
-      if(data.session && data.session.user){
-        currentUser = data.session.user;
+    <section id="tab-flavours" class="tabPanel">
+      <div class="grid2">
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h2 id="flavourFormTitle">Add Flavour</h2>
+              <p>Examples: Chocolate, Vanilla, Rasmalai, Mango.</p>
+            </div>
+            <button class="btn small" onclick="resetFlavourForm()">Clear</button>
+          </div>
+
+          <form class="formGrid one" onsubmit="saveFlavour(event)">
+            <input type="hidden" id="flavourId">
+
+            <div class="field">
+              <label>Flavour Name *</label>
+              <input id="flavourName" required placeholder="Chocolate">
+            </div>
+
+            <div class="field">
+              <label>Sort Order</label>
+              <input id="flavourSortOrder" type="number" min="0" step="1" placeholder="0">
+            </div>
+
+            <label class="checkBox">
+              <input id="flavourActive" type="checkbox" checked>
+              Active / Show in order form
+            </label>
+
+            <div class="formActions">
+              <button class="btn green" type="submit" id="saveFlavourBtn">Save Flavour</button>
+              <button class="btn" type="button" onclick="resetFlavourForm()">Cancel Edit</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>Flavour List</h3>
+              <p>Delete carefully. It will remove that flavour from linked cakes.</p>
+            </div>
+          </div>
+
+          <div id="flavourList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="tabPanel">
+      <div class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>Site Settings</h2>
+            <p>Edit brand, logo, WhatsApp and homepage hero text.</p>
+          </div>
+        </div>
+
+        <form class="formGrid" onsubmit="saveSettings(event)">
+          <div class="field">
+            <label>Brand Name</label>
+            <input id="brandName" placeholder="Cake Studio">
+          </div>
+
+          <div class="field">
+            <label>Tagline</label>
+            <input id="tagline" placeholder="Fresh custom cakes & sweet orders">
+          </div>
+
+          <div class="field full">
+            <label>Logo Image URL</label>
+            <input id="logoUrl" placeholder="https://..." oninput="previewLogoImage()">
+          </div>
+
+          <div id="logoPreviewBox" class="imagePreview">
+            <img id="logoPreview" src="" alt="Logo preview">
+            <div>
+              <b>Logo preview</b>
+              <span id="logoPreviewUrl"></span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>WhatsApp Number</label>
+            <input id="whatsappNumber" placeholder="16475551234">
+          </div>
+
+          <div class="field">
+            <label>Instagram URL</label>
+            <input id="instagramUrl" placeholder="https://instagram.com/...">
+          </div>
+
+          <div class="field full">
+            <label>Hero Title</label>
+            <textarea id="heroTitle" placeholder="Beautiful cakes for birthdays, weddings & every sweet moment."></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Hero Subtitle</label>
+            <textarea id="heroSubtitle" placeholder="Browse cake designs..."></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Address</label>
+            <input id="address" placeholder="Shop address or service area">
+          </div>
+
+          <div class="formActions">
+            <button class="btn green" type="submit">Save Settings</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</section>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  const SUPABASE_URL = "https://rdpynngsjhzirxwzrxdd.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_oPaplUdywtmujaMjyyzHTQ_6fqthIzu";
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let currentUser = null;
+  let allCakes = [];
+  let allCategories = [];
+  let allFlavours = [];
+  let cakeCategoryRows = [];
+  let cakeFlavourRows = [];
+  let siteSettings = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  init();
+
+  async function init(){
+    const { data } = await supabaseClient.auth.getSession();
+
+    if(data.session && data.session.user){
+      currentUser = data.session.user;
+      await verifyAdminAndLoad();
+    }else{
+      showLogin();
+    }
+
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      if(session && session.user){
+        currentUser = session.user;
         await verifyAdminAndLoad();
       }else{
+        currentUser = null;
         showLogin();
       }
+    });
+  }
 
-      supabaseClient.auth.onAuthStateChange(async (_event, session) => {
-        if(session && session.user){
-          currentUser = session.user;
-          await verifyAdminAndLoad();
-        }else{
-          currentUser = null;
-          showLogin();
-        }
-      });
+  function showLogin(){
+    $("loginScreen").classList.add("show");
+    $("adminScreen").classList.remove("show");
+    $("signOutBtn").style.display = "none";
+    $("adminEmailPill").textContent = "Not logged in";
+  }
+
+  function showAdmin(){
+    $("loginScreen").classList.remove("show");
+    $("adminScreen").classList.add("show");
+    $("signOutBtn").style.display = "inline-flex";
+    $("adminEmailPill").textContent = currentUser?.email || "Admin";
+  }
+
+  async function loginAdmin(event){
+    event.preventDefault();
+
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+
+    $("loginMsg").textContent = "Logging in...";
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if(error){
+      $("loginMsg").textContent = error.message;
+      showToast(error.message, true);
+      return;
     }
 
-    function showLogin(){
-      $("loginScreen").classList.add("show");
-      $("adminScreen").classList.remove("show");
-      $("signOutBtn").style.display = "none";
-      $("adminEmailPill").textContent = "Not logged in";
-    }
+    currentUser = data.user;
+    await verifyAdminAndLoad();
+  }
 
-    function showAdmin(){
-      $("loginScreen").classList.remove("show");
-      $("adminScreen").classList.add("show");
-      $("signOutBtn").style.display = "inline-flex";
-      $("adminEmailPill").textContent = currentUser?.email || "Admin";
-    }
-
-    async function loginAdmin(event){
-      event.preventDefault();
-
-      const email = $("loginEmail").value.trim();
-      const password = $("loginPassword").value;
-
-      $("loginMsg").textContent = "Logging in...";
-
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if(error){
-        $("loginMsg").textContent = error.message;
-        showToast(error.message, true);
-        return;
-      }
-
-      currentUser = data.user;
-      await verifyAdminAndLoad();
-    }
-
-    async function verifyAdminAndLoad(){
-      if(!currentUser){
-        showLogin();
-        return;
-      }
-
-      try{
-        const { data, error } = await supabaseClient
-          .from("app_admins")
-          .select("email")
-          .eq("email", currentUser.email)
-          .maybeSingle();
-
-        if(error) throw error;
-
-        if(!data){
-          showToast("This email is not added as admin in app_admins table.", true);
-          await supabaseClient.auth.signOut();
-          showLogin();
-          return;
-        }
-
-        showAdmin();
-        await loadCakes();
-      }catch(err){
-        showToast("Admin check failed: " + err.message, true);
-        console.error(err);
-      }
-    }
-
-    async function signOut(){
-      await supabaseClient.auth.signOut();
-      resetForm();
-      allCakes = [];
+  async function verifyAdminAndLoad(){
+    if(!currentUser){
       showLogin();
-      showToast("Signed out");
+      return;
     }
 
-    async function loadCakes(){
-      $("cakeList").innerHTML = `<div class="empty">Loading cakes...</div>`;
-
+    try{
       const { data, error } = await supabaseClient
-        .from("cakes")
-        .select("*")
-        .order("sort_order", { ascending:true })
-        .order("created_at", { ascending:false });
+        .from("app_admins")
+        .select("email")
+        .limit(1);
 
-      if(error){
-        $("cakeList").innerHTML = `<div class="empty dangerText">${escapeHtml(error.message)}</div>`;
-        showToast(error.message, true);
+      if(error) throw error;
+
+      if(!data || !data.length){
+        showToast("This email is not added as admin in app_admins table.", true);
+        await supabaseClient.auth.signOut();
+        showLogin();
         return;
       }
 
-      allCakes = Array.isArray(data) ? data : [];
-      updateStats();
-      updateCategoryList();
-      renderCakes();
+      showAdmin();
+      await loadAllData();
+    }catch(err){
+      showToast("Admin check failed: " + err.message, true);
+      console.error(err);
+    }
+  }
+
+  async function signOut(){
+    await supabaseClient.auth.signOut();
+    resetCakeForm();
+    showLogin();
+    showToast("Signed out");
+  }
+
+  function showTab(name, btn){
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tabPanel").forEach(p => p.classList.remove("show"));
+    btn.classList.add("active");
+    $("tab-" + name).classList.add("show");
+  }
+
+  async function loadAllData(){
+    $("cakeList").innerHTML = `<div class="empty">Loading cakes...</div>`;
+
+    const [
+      cakesRes,
+      catsRes,
+      flavoursRes,
+      cakeCatsRes,
+      cakeFlavoursRes,
+      settingsRes
+    ] = await Promise.all([
+      supabaseClient.from("cakes").select("*").order("sort_order", { ascending:true }).order("created_at", { ascending:false }),
+      supabaseClient.from("categories").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
+      supabaseClient.from("flavours").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
+      supabaseClient.from("cake_categories").select("*"),
+      supabaseClient.from("cake_flavours").select("*"),
+      supabaseClient.from("site_settings").select("*").eq("id", 1).maybeSingle()
+    ]);
+
+    const firstError = cakesRes.error || catsRes.error || flavoursRes.error || cakeCatsRes.error || cakeFlavoursRes.error || settingsRes.error;
+
+    if(firstError){
+      showToast(firstError.message, true);
+      console.error(firstError);
+      return;
     }
 
-    function updateStats(){
-      $("totalCount").textContent = allCakes.length;
-      $("activeCount").textContent = allCakes.filter(c => c.is_active).length;
-      $("featuredCount").textContent = allCakes.filter(c => c.is_featured).length;
-      $("hiddenCount").textContent = allCakes.filter(c => !c.is_active).length;
+    allCakes = cakesRes.data || [];
+    allCategories = catsRes.data || [];
+    allFlavours = flavoursRes.data || [];
+    cakeCategoryRows = cakeCatsRes.data || [];
+    cakeFlavourRows = cakeFlavoursRes.data || [];
+    siteSettings = settingsRes.data || null;
+
+    updateTopBrand();
+    fillSettingsForm();
+    renderCakeFormOptions();
+    renderCakes();
+    renderCategories();
+    renderFlavours();
+    updateStats();
+  }
+
+  function updateTopBrand(){
+    const name = siteSettings?.brand_name || "Cake Studio";
+    const logo = siteSettings?.logo_url || "";
+
+    $("adminTopBrand").textContent = name + " Admin";
+
+    if(logo){
+      $("adminTopLogo").innerHTML = `<img src="${escapeHtml(logo)}" alt="Logo" onerror="this.parentElement.textContent='🍰'">`;
+    }else{
+      $("adminTopLogo").textContent = "🍰";
     }
+  }
 
-    function updateCategoryList(){
-      const defaultCats = ["Birthday","Wedding","Kids","Cupcakes","Anniversary","Classic","Custom"];
-      const cats = [...new Set([...defaultCats, ...allCakes.map(c => c.category).filter(Boolean)])];
+  function updateStats(){
+    $("totalCount").textContent = allCakes.length;
+    $("activeCount").textContent = allCakes.filter(c => c.is_active).length;
+    $("featuredCount").textContent = allCakes.filter(c => c.is_featured).length;
+    $("hiddenCount").textContent = allCakes.filter(c => !c.is_active).length;
+  }
 
-      $("categoryList").innerHTML = cats.map(cat => `<option value="${escapeHtml(cat)}">`).join("");
-    }
+  function renderCakeFormOptions(){
+    const activeCats = allCategories.filter(c => c.is_active);
+    const activeFlavs = allFlavours.filter(f => f.is_active);
 
-    function renderCakes(){
-      const search = $("searchInput").value.trim().toLowerCase();
-      const status = $("statusFilter").value;
-      const sort = $("sortFilter").value;
+    $("cakeCategoryChecks").innerHTML = activeCats.length ? activeCats.map(cat => `
+      <label class="multiItem">
+        <input type="checkbox" name="cakeCategory" value="${cat.id}">
+        ${escapeHtml(cat.name)}
+      </label>
+    `).join("") : `<div class="empty">No active categories. Add category first.</div>`;
 
-      let cakes = [...allCakes];
+    $("cakeFlavourChecks").innerHTML = activeFlavs.length ? activeFlavs.map(flav => `
+      <label class="multiItem">
+        <input type="checkbox" name="cakeFlavour" value="${flav.id}">
+        ${escapeHtml(flav.name)}
+      </label>
+    `).join("") : `<div class="empty">No active flavours. Add flavour first.</div>`;
+  }
 
-      if(search){
-        cakes = cakes.filter(c => {
-          const combined = `${c.name || ""} ${c.category || ""} ${c.description || ""}`.toLowerCase();
-          return combined.includes(search);
-        });
-      }
+  function getCakeCategoryIds(cakeId){
+    return cakeCategoryRows
+      .filter(row => row.cake_id === cakeId)
+      .map(row => row.category_id);
+  }
 
-      if(status === "active") cakes = cakes.filter(c => c.is_active);
-      if(status === "hidden") cakes = cakes.filter(c => !c.is_active);
-      if(status === "featured") cakes = cakes.filter(c => c.is_featured);
+  function getCakeFlavourIds(cakeId){
+    return cakeFlavourRows
+      .filter(row => row.cake_id === cakeId)
+      .map(row => row.flavour_id);
+  }
 
-      cakes.sort((a,b) => {
-        if(sort === "oldest") return new Date(a.created_at || 0) - new Date(b.created_at || 0);
-        if(sort === "sort_order") return Number(a.sort_order || 0) - Number(b.sort_order || 0);
-        if(sort === "name") return String(a.name || "").localeCompare(String(b.name || ""));
-        if(sort === "price_low") return Number(a.starting_price || 0) - Number(b.starting_price || 0);
-        if(sort === "price_high") return Number(b.starting_price || 0) - Number(a.starting_price || 0);
-        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+  function getCakeCategoryNames(cakeId){
+    const ids = getCakeCategoryIds(cakeId);
+    return ids
+      .map(id => allCategories.find(c => c.id === id)?.name)
+      .filter(Boolean);
+  }
+
+  function getCakeFlavourNames(cakeId){
+    const ids = getCakeFlavourIds(cakeId);
+    return ids
+      .map(id => allFlavours.find(f => f.id === id)?.name)
+      .filter(Boolean);
+  }
+
+  function renderCakes(){
+    const search = $("cakeSearchInput").value.trim().toLowerCase();
+    const status = $("cakeStatusFilter").value;
+    const sort = $("cakeSortFilter").value;
+
+    let cakes = [...allCakes];
+
+    if(search){
+      cakes = cakes.filter(c => {
+        const categories = getCakeCategoryNames(c.id).join(" ");
+        const flavours = getCakeFlavourNames(c.id).join(" ");
+        const combined = `${c.name || ""} ${c.category || ""} ${c.description || ""} ${categories} ${flavours}`.toLowerCase();
+        return combined.includes(search);
       });
+    }
 
-      if(!cakes.length){
-        $("cakeList").innerHTML = `<div class="empty">No cakes found.</div>`;
-        return;
-      }
+    if(status === "active") cakes = cakes.filter(c => c.is_active);
+    if(status === "hidden") cakes = cakes.filter(c => !c.is_active);
+    if(status === "featured") cakes = cakes.filter(c => c.is_featured);
 
-      $("cakeList").innerHTML = cakes.map(cake => {
-        const price = cake.starting_price === null || cake.starting_price === undefined || cake.starting_price === ""
-          ? "Custom price"
-          : "$" + Number(cake.starting_price).toFixed(2).replace(".00","");
+    cakes.sort((a,b) => {
+      if(sort === "oldest") return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+      if(sort === "sort_order") return Number(a.sort_order || 0) - Number(b.sort_order || 0);
+      if(sort === "name") return String(a.name || "").localeCompare(String(b.name || ""));
+      if(sort === "price_low") return Number(a.starting_price || 0) - Number(b.starting_price || 0);
+      if(sort === "price_high") return Number(b.starting_price || 0) - Number(a.starting_price || 0);
+      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    });
 
-        return `
-          <article class="cakeItem">
-            <div class="cakeTop">
-              <img src="${escapeHtml(cake.image_url || "")}" alt="${escapeHtml(cake.name || "Cake")}" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80'">
+    if(!cakes.length){
+      $("cakeList").innerHTML = `<div class="empty">No cakes found.</div>`;
+      return;
+    }
 
-              <div class="cakeInfo">
-                <h4>${escapeHtml(cake.name || "Untitled Cake")}</h4>
-                <p>${escapeHtml(cake.description || "No description")}</p>
+    $("cakeList").innerHTML = cakes.map(cake => {
+      const price = cake.starting_price === null || cake.starting_price === undefined || cake.starting_price === ""
+        ? "Custom price"
+        : "$" + Number(cake.starting_price).toFixed(2).replace(".00","");
 
-                <div class="badges">
-                  <span class="badge">${escapeHtml(cake.category || "Custom")}</span>
-                  <span class="badge">${price}</span>
-                  <span class="badge ${cake.is_active ? "active" : "inactive"}">${cake.is_active ? "Active" : "Hidden"}</span>
-                  ${cake.is_featured ? `<span class="badge featured">Featured</span>` : ""}
-                  <span class="badge">Sort ${Number(cake.sort_order || 0)}</span>
-                </div>
-              </div>
+      const cats = getCakeCategoryNames(cake.id);
+      const flavs = getCakeFlavourNames(cake.id);
 
-              <div class="itemActions">
-                <button class="btn small" onclick="editCake('${cake.id}')">Edit</button>
-                <button class="btn small" onclick="toggleActive('${cake.id}', ${cake.is_active ? "false" : "true"})">${cake.is_active ? "Hide" : "Show"}</button>
-                <button class="btn red small" onclick="deleteCake('${cake.id}')">Delete</button>
+      return `
+        <article class="cakeItem">
+          <div class="cakeTop">
+            <img src="${escapeHtml(cake.image_url || "")}" alt="${escapeHtml(cake.name || "Cake")}" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80'">
+
+            <div class="cakeInfo">
+              <h4>${escapeHtml(cake.name || "Untitled Cake")}</h4>
+              <p>${escapeHtml(cake.description || "No description")}</p>
+
+              <div class="badges">
+                <span class="badge">${price}</span>
+                <span class="badge ${cake.is_active ? "active" : "inactive"}">${cake.is_active ? "Active" : "Hidden"}</span>
+                ${cake.is_featured ? `<span class="badge featured">Featured</span>` : ""}
+                <span class="badge">Sort ${Number(cake.sort_order || 0)}</span>
+                ${cats.map(name => `<span class="badge">${escapeHtml(name)}</span>`).join("")}
+                ${flavs.map(name => `<span class="badge">${escapeHtml(name)}</span>`).join("")}
               </div>
             </div>
-          </article>
-        `;
-      }).join("");
+
+            <div class="itemActions">
+              <button class="btn small" onclick="editCake('${cake.id}')">Edit</button>
+              <button class="btn small" onclick="toggleCakeActive('${cake.id}', ${cake.is_active ? "false" : "true"})">${cake.is_active ? "Hide" : "Show"}</button>
+              <button class="btn red small" onclick="deleteCake('${cake.id}')">Delete</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  async function saveCake(event){
+    event.preventDefault();
+
+    const id = $("cakeId").value.trim();
+    const selectedCategoryIds = getCheckedValues("cakeCategory");
+    const selectedFlavourIds = getCheckedValues("cakeFlavour");
+
+    if(!selectedCategoryIds.length){
+      showToast("Select at least one category.", true);
+      return;
     }
 
-    async function saveCake(event){
-      event.preventDefault();
+    const firstCategoryName = allCategories.find(c => c.id === selectedCategoryIds[0])?.name || "Custom";
 
-      const id = $("cakeId").value.trim();
+    const payload = {
+      name: $("cakeName").value.trim(),
+      category: firstCategoryName,
+      description: $("cakeDescription").value.trim(),
+      image_url: $("cakeImage").value.trim(),
+      starting_price: $("cakePrice").value === "" ? null : Number($("cakePrice").value),
+      sort_order: $("cakeSortOrder").value === "" ? 0 : Number($("cakeSortOrder").value),
+      is_active: $("cakeActive").checked,
+      is_featured: $("cakeFeatured").checked
+    };
 
-      const payload = {
-        name: $("cakeName").value.trim(),
-        category: $("cakeCategory").value.trim() || "Custom",
-        description: $("cakeDescription").value.trim(),
-        image_url: $("cakeImage").value.trim(),
-        starting_price: $("cakePrice").value === "" ? null : Number($("cakePrice").value),
-        sort_order: $("sortOrder").value === "" ? 0 : Number($("sortOrder").value),
-        is_active: $("isActive").checked,
-        is_featured: $("isFeatured").checked
-      };
+    if(!payload.name || !payload.image_url){
+      showToast("Cake name and image URL are required.", true);
+      return;
+    }
 
-      if(!payload.name || !payload.image_url){
-        showToast("Cake name and image URL are required.", true);
-        return;
+    $("saveCakeBtn").textContent = id ? "Updating..." : "Saving...";
+    $("saveCakeBtn").disabled = true;
+
+    let savedCakeId = id;
+    let result;
+
+    if(id){
+      result = await supabaseClient.from("cakes").update(payload).eq("id", id).select().single();
+    }else{
+      result = await supabaseClient.from("cakes").insert(payload).select().single();
+    }
+
+    if(result.error){
+      $("saveCakeBtn").disabled = false;
+      $("saveCakeBtn").textContent = "Save Cake";
+      showToast(result.error.message, true);
+      return;
+    }
+
+    savedCakeId = result.data.id;
+
+    const relOk = await saveCakeRelations(savedCakeId, selectedCategoryIds, selectedFlavourIds);
+
+    $("saveCakeBtn").disabled = false;
+    $("saveCakeBtn").textContent = "Save Cake";
+
+    if(!relOk) return;
+
+    showToast(id ? "Cake updated" : "Cake added");
+    resetCakeForm();
+    await loadAllData();
+  }
+
+  async function saveCakeRelations(cakeId, categoryIds, flavourIds){
+    const deleteCats = await supabaseClient.from("cake_categories").delete().eq("cake_id", cakeId);
+    if(deleteCats.error){
+      showToast(deleteCats.error.message, true);
+      return false;
+    }
+
+    const deleteFlavs = await supabaseClient.from("cake_flavours").delete().eq("cake_id", cakeId);
+    if(deleteFlavs.error){
+      showToast(deleteFlavs.error.message, true);
+      return false;
+    }
+
+    if(categoryIds.length){
+      const rows = categoryIds.map(category_id => ({ cake_id:cakeId, category_id }));
+      const insertCats = await supabaseClient.from("cake_categories").insert(rows);
+      if(insertCats.error){
+        showToast(insertCats.error.message, true);
+        return false;
       }
+    }
 
-      $("saveBtn").textContent = id ? "Updating..." : "Saving...";
-      $("saveBtn").disabled = true;
-
-      let result;
-
-      if(id){
-        result = await supabaseClient
-          .from("cakes")
-          .update(payload)
-          .eq("id", id)
-          .select()
-          .single();
-      }else{
-        result = await supabaseClient
-          .from("cakes")
-          .insert(payload)
-          .select()
-          .single();
+    if(flavourIds.length){
+      const rows = flavourIds.map(flavour_id => ({ cake_id:cakeId, flavour_id }));
+      const insertFlavs = await supabaseClient.from("cake_flavours").insert(rows);
+      if(insertFlavs.error){
+        showToast(insertFlavs.error.message, true);
+        return false;
       }
-
-      $("saveBtn").disabled = false;
-      $("saveBtn").textContent = "Save Cake";
-
-      if(result.error){
-        showToast(result.error.message, true);
-        return;
-      }
-
-      showToast(id ? "Cake updated" : "Cake added");
-      resetForm();
-      await loadCakes();
     }
 
-    function editCake(id){
-      const cake = allCakes.find(c => c.id === id);
-      if(!cake) return;
+    return true;
+  }
 
-      $("cakeId").value = cake.id;
-      $("cakeName").value = cake.name || "";
-      $("cakeCategory").value = cake.category || "Custom";
-      $("cakeImage").value = cake.image_url || "";
-      $("cakePrice").value = cake.starting_price ?? "";
-      $("sortOrder").value = cake.sort_order ?? 0;
-      $("cakeDescription").value = cake.description || "";
-      $("isActive").checked = !!cake.is_active;
-      $("isFeatured").checked = !!cake.is_featured;
+  function editCake(id){
+    const cake = allCakes.find(c => c.id === id);
+    if(!cake) return;
 
-      $("formTitle").textContent = "Edit Cake";
-      $("saveBtn").textContent = "Update Cake";
+    $("cakeId").value = cake.id;
+    $("cakeName").value = cake.name || "";
+    $("cakeImage").value = cake.image_url || "";
+    $("cakePrice").value = cake.starting_price ?? "";
+    $("cakeSortOrder").value = cake.sort_order ?? 0;
+    $("cakeDescription").value = cake.description || "";
+    $("cakeActive").checked = !!cake.is_active;
+    $("cakeFeatured").checked = !!cake.is_featured;
 
-      previewImage();
-      window.scrollTo({ top:0, behavior:"smooth" });
+    const catIds = getCakeCategoryIds(cake.id);
+    const flavIds = getCakeFlavourIds(cake.id);
+
+    document.querySelectorAll("input[name='cakeCategory']").forEach(cb => {
+      cb.checked = catIds.includes(cb.value);
+    });
+
+    document.querySelectorAll("input[name='cakeFlavour']").forEach(cb => {
+      cb.checked = flavIds.includes(cb.value);
+    });
+
+    $("cakeFormTitle").textContent = "Edit Cake";
+    $("saveCakeBtn").textContent = "Update Cake";
+
+    previewCakeImage();
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }
+
+  async function toggleCakeActive(id, nextValue){
+    const { error } = await supabaseClient.from("cakes").update({ is_active: nextValue }).eq("id", id);
+
+    if(error){
+      showToast(error.message, true);
+      return;
     }
 
-    async function toggleActive(id, nextValue){
-      const { error } = await supabaseClient
-        .from("cakes")
-        .update({ is_active: nextValue })
-        .eq("id", id);
+    showToast(nextValue ? "Cake is visible now" : "Cake hidden from website");
+    await loadAllData();
+  }
 
-      if(error){
-        showToast(error.message, true);
-        return;
-      }
+  async function deleteCake(id){
+    const cake = allCakes.find(c => c.id === id);
+    const name = cake?.name || "this cake";
 
-      showToast(nextValue ? "Cake is visible now" : "Cake hidden from website");
-      await loadCakes();
+    const ok = confirm(`Delete "${name}" permanently?`);
+    if(!ok) return;
+
+    const { error } = await supabaseClient.from("cakes").delete().eq("id", id);
+
+    if(error){
+      showToast(error.message, true);
+      return;
     }
 
-    async function deleteCake(id){
-      const cake = allCakes.find(c => c.id === id);
-      const name = cake?.name || "this cake";
+    if($("cakeId").value === id) resetCakeForm();
 
-      const ok = confirm(`Delete "${name}" permanently?`);
-      if(!ok) return;
+    showToast("Cake deleted");
+    await loadAllData();
+  }
 
-      const { error } = await supabaseClient
-        .from("cakes")
-        .delete()
-        .eq("id", id);
+  function resetCakeForm(){
+    $("cakeId").value = "";
+    $("cakeName").value = "";
+    $("cakeImage").value = "";
+    $("cakePrice").value = "";
+    $("cakeSortOrder").value = "";
+    $("cakeDescription").value = "";
+    $("cakeActive").checked = true;
+    $("cakeFeatured").checked = false;
+    $("cakeFormTitle").textContent = "Add New Cake";
+    $("saveCakeBtn").textContent = "Save Cake";
+    $("saveCakeBtn").disabled = false;
+    document.querySelectorAll("input[name='cakeCategory'], input[name='cakeFlavour']").forEach(cb => cb.checked = false);
+    $("cakeImagePreviewBox").classList.remove("show");
+    $("cakeImagePreview").src = "";
+    $("cakeImagePreviewUrl").textContent = "";
+  }
 
-      if(error){
-        showToast(error.message, true);
-        return;
-      }
+  function previewCakeImage(){
+    const url = $("cakeImage").value.trim();
 
-      if($("cakeId").value === id) resetForm();
-
-      showToast("Cake deleted");
-      await loadCakes();
+    if(!url){
+      $("cakeImagePreviewBox").classList.remove("show");
+      return;
     }
 
-    function resetForm(){
-      $("cakeId").value = "";
-      $("cakeName").value = "";
-      $("cakeCategory").value = "";
-      $("cakeImage").value = "";
-      $("cakePrice").value = "";
-      $("sortOrder").value = "";
-      $("cakeDescription").value = "";
-      $("isActive").checked = true;
-      $("isFeatured").checked = false;
-      $("formTitle").textContent = "Add New Cake";
-      $("saveBtn").textContent = "Save Cake";
-      $("saveBtn").disabled = false;
-      $("imagePreviewBox").classList.remove("show");
-      $("imagePreview").src = "";
-      $("imagePreviewUrl").textContent = "";
+    $("cakeImagePreview").src = url;
+    $("cakeImagePreviewUrl").textContent = url;
+    $("cakeImagePreviewBox").classList.add("show");
+  }
+
+  function renderCategories(){
+    if(!allCategories.length){
+      $("categoryList").innerHTML = `<div class="empty">No categories yet.</div>`;
+      return;
     }
 
-    function previewImage(){
-      const url = $("cakeImage").value.trim();
+    $("categoryList").innerHTML = allCategories.map(cat => `
+      <article class="simpleItem">
+        <div class="simpleRow">
+          <div>
+            <h4>${escapeHtml(cat.name)}</h4>
+            <p>Sort ${Number(cat.sort_order || 0)} · ${cat.is_active ? "Active" : "Hidden"}</p>
+          </div>
 
-      if(!url){
-        $("imagePreviewBox").classList.remove("show");
-        return;
-      }
+          <div class="simpleActions">
+            <button class="btn small" onclick="editCategory('${cat.id}')">Edit</button>
+            <button class="btn small" onclick="toggleCategoryActive('${cat.id}', ${cat.is_active ? "false" : "true"})">${cat.is_active ? "Hide" : "Show"}</button>
+            <button class="btn red small" onclick="deleteCategory('${cat.id}')">Delete</button>
+          </div>
+        </div>
+      </article>
+    `).join("");
+  }
 
-      $("imagePreview").src = url;
-      $("imagePreviewUrl").textContent = url;
-      $("imagePreviewBox").classList.add("show");
+  async function saveCategory(event){
+    event.preventDefault();
+
+    const id = $("categoryId").value.trim();
+    const name = $("categoryName").value.trim();
+
+    if(!name){
+      showToast("Category name required.", true);
+      return;
     }
 
-    function showToast(message, isError = false){
-      const toast = $("toast");
-      toast.textContent = message;
-      toast.style.borderColor = isError ? "rgba(255,91,110,.35)" : "rgba(255,255,255,.09)";
-      toast.style.color = isError ? "#ffdce1" : "var(--text)";
-      toast.classList.add("show");
+    const payload = {
+      name,
+      slug: slugify(name),
+      sort_order: $("categorySortOrder").value === "" ? 0 : Number($("categorySortOrder").value),
+      is_active: $("categoryActive").checked
+    };
 
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 2600);
+    $("saveCategoryBtn").disabled = true;
+    $("saveCategoryBtn").textContent = id ? "Updating..." : "Saving...";
+
+    const result = id
+      ? await supabaseClient.from("categories").update(payload).eq("id", id)
+      : await supabaseClient.from("categories").insert(payload);
+
+    $("saveCategoryBtn").disabled = false;
+    $("saveCategoryBtn").textContent = "Save Category";
+
+    if(result.error){
+      showToast(result.error.message, true);
+      return;
     }
 
-    function escapeHtml(value){
-      return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    showToast(id ? "Category updated" : "Category added");
+    resetCategoryForm();
+    await loadAllData();
+  }
+
+  function editCategory(id){
+    const cat = allCategories.find(c => c.id === id);
+    if(!cat) return;
+
+    $("categoryId").value = cat.id;
+    $("categoryName").value = cat.name || "";
+    $("categorySortOrder").value = cat.sort_order ?? 0;
+    $("categoryActive").checked = !!cat.is_active;
+    $("categoryFormTitle").textContent = "Edit Category";
+    $("saveCategoryBtn").textContent = "Update Category";
+  }
+
+  async function toggleCategoryActive(id, nextValue){
+    const { error } = await supabaseClient.from("categories").update({ is_active: nextValue }).eq("id", id);
+
+    if(error){
+      showToast(error.message, true);
+      return;
     }
-  </script>
+
+    showToast(nextValue ? "Category active" : "Category hidden");
+    await loadAllData();
+  }
+
+  async function deleteCategory(id){
+    const cat = allCategories.find(c => c.id === id);
+    const ok = confirm(`Delete category "${cat?.name || "this category"}"? It will be removed from linked cakes.`);
+    if(!ok) return;
+
+    const { error } = await supabaseClient.from("categories").delete().eq("id", id);
+
+    if(error){
+      showToast(error.message, true);
+      return;
+    }
+
+    showToast("Category deleted");
+    resetCategoryForm();
+    await loadAllData();
+  }
+
+  function resetCategoryForm(){
+    $("categoryId").value = "";
+    $("categoryName").value = "";
+    $("categorySortOrder").value = "";
+    $("categoryActive").checked = true;
+    $("categoryFormTitle").textContent = "Add Category";
+    $("saveCategoryBtn").textContent = "Save Category";
+    $("saveCategoryBtn").disabled = false;
+  }
+
+  function renderFlavours(){
+    if(!allFlavours.length){
+      $("flavourList").innerHTML = `<div class="empty">No flavours yet.</div>`;
+      return;
+    }
+
+    $("flavourList").innerHTML = allFlavours.map(flav => `
+      <article class="simpleItem">
+        <div class="simpleRow">
+          <div>
+            <h4>${escapeHtml(flav.name)}</h4>
+            <p>Sort ${Number(flav.sort_order || 0)} · ${flav.is_active ? "Active" : "Hidden"}</p>
+          </div>
+
+          <div class="simpleActions">
+            <button class="btn small" onclick="editFlavour('${flav.id}')">Edit</button>
+            <button class="btn small" onclick="toggleFlavourActive('${flav.id}', ${flav.is_active ? "false" : "true"})">${flav.is_active ? "Hide" : "Show"}</button>
+            <button class="btn red small" onclick="deleteFlavour('${flav.id}')">Delete</button>
+          </div>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  async function saveFlavour(event){
+    event.preventDefault();
+
+    const id = $("flavourId").value.trim();
+    const name = $("flavourName").value.trim();
+
+    if(!name){
+      showToast("Flavour name required.", true);
+      return;
+    }
+
+    const payload = {
+      name,
+      slug: slugify(name),
+      sort_order: $("flavourSortOrder").value === "" ? 0 : Number($("flavourSortOrder").value),
+      is_active: $("flavourActive").checked
+    };
+
+    $("saveFlavourBtn").disabled = true;
+    $("saveFlavourBtn").textContent = id ? "Updating..." : "Saving...";
+
+    const result = id
+      ? await supabaseClient.from("flavours").update(payload).eq("id", id)
+      : await supabaseClient.from("flavours").insert(payload);
+
+    $("saveFlavourBtn").disabled = false;
+    $("saveFlavourBtn").textContent = "Save Flavour";
+
+    if(result.error){
+      showToast(result.error.message, true);
+      return;
+    }
+
+    showToast(id ? "Flavour updated" : "Flavour added");
+    resetFlavourForm();
+    await loadAllData();
+  }
+
+  function editFlavour(id){
+    const flav = allFlavours.find(f => f.id === id);
+    if(!flav) return;
+
+    $("flavourId").value = flav.id;
+    $("flavourName").value = flav.name || "";
+    $("flavourSortOrder").value = flav.sort_order ?? 0;
+    $("flavourActive").checked = !!flav.is_active;
+    $("flavourFormTitle").textContent = "Edit Flavour";
+    $("saveFlavourBtn").textContent = "Update Flavour";
+  }
+
+  async function toggleFlavourActive(id, nextValue){
+    const { error } = await supabaseClient.from("flavours").update({ is_active: nextValue }).eq("id", id);
+
+    if(error){
+      showToast(error.message, true);
+      return;
+    }
+
+    showToast(nextValue ? "Flavour active" : "Flavour hidden");
+    await loadAllData();
+  }
+
+  async function deleteFlavour(id){
+    const flav = allFlavours.find(f => f.id === id);
+    const ok = confirm(`Delete flavour "${flav?.name || "this flavour"}"? It will be removed from linked cakes.`);
+    if(!ok) return;
+
+    const { error } = await supabaseClient.from("flavours").delete().eq("id", id);
+
+    if(error){
+      showToast(error.message, true);
+      return;
+    }
+
+    showToast("Flavour deleted");
+    resetFlavourForm();
+    await loadAllData();
+  }
+
+  function resetFlavourForm(){
+    $("flavourId").value = "";
+    $("flavourName").value = "";
+    $("flavourSortOrder").value = "";
+    $("flavourActive").checked = true;
+    $("flavourFormTitle").textContent = "Add Flavour";
+    $("saveFlavourBtn").textContent = "Save Flavour";
+    $("saveFlavourBtn").disabled = false;
+  }
+
+  function fillSettingsForm(){
+    if(!siteSettings) return;
+
+    $("brandName").value = siteSettings.brand_name || "";
+    $("tagline").value = siteSettings.tagline || "";
+    $("logoUrl").value = siteSettings.logo_url || "";
+    $("whatsappNumber").value = siteSettings.whatsapp_number || "";
+    $("heroTitle").value = siteSettings.hero_title || "";
+    $("heroSubtitle").value = siteSettings.hero_subtitle || "";
+    $("instagramUrl").value = siteSettings.instagram_url || "";
+    $("address").value = siteSettings.address || "";
+
+    previewLogoImage();
+  }
+
+  async function saveSettings(event){
+    event.preventDefault();
+
+    const payload = {
+      brand_name: $("brandName").value.trim() || "Cake Studio",
+      tagline: $("tagline").value.trim(),
+      logo_url: $("logoUrl").value.trim(),
+      whatsapp_number: $("whatsappNumber").value.trim(),
+      hero_title: $("heroTitle").value.trim(),
+      hero_subtitle: $("heroSubtitle").value.trim(),
+      instagram_url: $("instagramUrl").value.trim(),
+      address: $("address").value.trim()
+    };
+
+    const { error } = await supabaseClient
+      .from("site_settings")
+      .update(payload)
+      .eq("id", 1);
+
+    if(error){
+      showToast(error.message, true);
+      return;
+    }
+
+    showToast("Settings saved");
+    await loadAllData();
+  }
+
+  function previewLogoImage(){
+    const url = $("logoUrl").value.trim();
+
+    if(!url){
+      $("logoPreviewBox").classList.remove("show");
+      return;
+    }
+
+    $("logoPreview").src = url;
+    $("logoPreviewUrl").textContent = url;
+    $("logoPreviewBox").classList.add("show");
+  }
+
+  function getCheckedValues(name){
+    return Array.from(document.querySelectorAll(`input[name='${name}']:checked`)).map(cb => cb.value);
+  }
+
+  function slugify(value){
+    return String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || crypto.randomUUID();
+  }
+
+  function showToast(message, isError = false){
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.style.borderColor = isError ? "rgba(255,91,110,.35)" : "rgba(255,255,255,.09)";
+    toast.style.color = isError ? "#ffdce1" : "var(--text)";
+    toast.classList.add("show");
+
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2600);
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+</script>
+
 </body>
 </html>
