@@ -27,7 +27,6 @@
       --green:#39d98a;
       --red:#ff5b6e;
       --shadow:0 18px 50px rgba(0,0,0,.35);
-      --radius:20px;
     }
 
     *{
@@ -38,9 +37,7 @@
       -webkit-tap-highlight-color:transparent;
     }
 
-    html{
-      scroll-behavior:smooth;
-    }
+    html{scroll-behavior:smooth}
 
     body{
       min-height:100vh;
@@ -56,14 +53,8 @@
       text-decoration:none;
     }
 
-    button,input,select,textarea{
-      font:inherit;
-    }
-
-    button{
-      border:none;
-      cursor:pointer;
-    }
+    button,input,select,textarea{font:inherit}
+    button{border:none;cursor:pointer}
 
     .wrap{
       width:min(1180px, calc(100% - 28px));
@@ -75,7 +66,7 @@
       top:0;
       z-index:50;
       backdrop-filter:blur(18px);
-      background:rgba(16,11,18,.78);
+      background:rgba(16,11,18,.80);
       border-bottom:1px solid var(--line);
     }
 
@@ -103,6 +94,15 @@
       background:linear-gradient(135deg,var(--pink),var(--gold));
       box-shadow:0 10px 25px rgba(255,95,162,.25);
       font-size:21px;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     .brand h1{
@@ -110,6 +110,9 @@
       line-height:1;
       letter-spacing:-.04em;
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:240px;
     }
 
     .brand p{
@@ -117,6 +120,9 @@
       font-size:11px;
       color:var(--muted);
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:260px;
     }
 
     .navActions{
@@ -132,11 +138,7 @@
       color:var(--text);
       border-radius:999px;
       font-size:13px;
-      font-weight:700;
-    }
-
-    .navLink:hover{
-      background:rgba(255,255,255,.09);
+      font-weight:800;
     }
 
     .primaryBtn{
@@ -148,7 +150,7 @@
       border-radius:999px;
       background:linear-gradient(135deg,var(--pink),var(--pink2));
       color:white;
-      font-weight:900;
+      font-weight:1000;
       box-shadow:0 14px 28px rgba(255,95,162,.24);
       transition:.2s ease;
     }
@@ -168,11 +170,11 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.06);
       color:var(--text);
-      font-weight:800;
+      font-weight:900;
     }
 
     .hero{
-      padding:28px 0 18px;
+      padding:24px 0 16px;
     }
 
     .heroGrid{
@@ -205,6 +207,7 @@
 
     .tag{
       width:max-content;
+      max-width:100%;
       display:flex;
       align-items:center;
       gap:7px;
@@ -214,14 +217,14 @@
       border:1px solid rgba(255,228,199,.16);
       color:var(--cream);
       font-size:12px;
-      font-weight:800;
+      font-weight:900;
       margin-bottom:15px;
     }
 
     .hero h2{
       max-width:720px;
-      font-size:clamp(33px,5vw,64px);
-      line-height:.95;
+      font-size:clamp(33px,5vw,62px);
+      line-height:.97;
       letter-spacing:-.07em;
     }
 
@@ -276,7 +279,7 @@
       border:1px solid var(--line);
       border-radius:28px;
       background:
-        linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.55)),
+        linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.58)),
         url("https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=80") center/cover;
       box-shadow:var(--shadow);
       overflow:hidden;
@@ -331,9 +334,8 @@
 
     .tools{
       display:grid;
-      grid-template-columns:1fr auto;
+      grid-template-columns:1fr;
       gap:10px;
-      align-items:center;
       margin-bottom:12px;
     }
 
@@ -354,7 +356,7 @@
       outline:none;
       background:transparent;
       color:var(--text);
-      font-weight:700;
+      font-weight:800;
     }
 
     .searchBox input::placeholder{
@@ -369,9 +371,7 @@
       scrollbar-width:none;
     }
 
-    .filterRow::-webkit-scrollbar{
-      display:none;
-    }
+    .filterRow::-webkit-scrollbar{display:none}
 
     .chip{
       flex:0 0 auto;
@@ -381,7 +381,7 @@
       background:rgba(255,255,255,.05);
       color:var(--muted);
       font-size:13px;
-      font-weight:900;
+      font-weight:1000;
       white-space:nowrap;
     }
 
@@ -441,8 +441,11 @@
       backdrop-filter:blur(10px);
       color:white;
       font-size:11px;
-      font-weight:900;
+      font-weight:1000;
       border:1px solid rgba(255,255,255,.12);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .cakeBody{
@@ -464,6 +467,23 @@
       overflow:hidden;
     }
 
+    .miniTags{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:9px;
+    }
+
+    .miniTag{
+      padding:5px 7px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--muted);
+      font-size:10px;
+      font-weight:900;
+    }
+
     .cakeMeta{
       margin-top:10px;
       display:flex;
@@ -475,7 +495,7 @@
     .price{
       color:var(--cream);
       font-size:13px;
-      font-weight:900;
+      font-weight:1000;
       white-space:nowrap;
     }
 
@@ -486,7 +506,7 @@
       border:1px solid rgba(255,95,162,.34);
       color:white;
       font-size:12px;
-      font-weight:900;
+      font-weight:1000;
       white-space:nowrap;
     }
 
@@ -528,6 +548,31 @@
       line-height:1.45;
     }
 
+    .contactStrip{
+      margin:0 0 30px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.045);
+      border-radius:22px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .contactStrip b{
+      display:block;
+      font-size:15px;
+    }
+
+    .contactStrip span{
+      display:block;
+      color:var(--muted);
+      margin-top:4px;
+      font-size:12px;
+    }
+
     .footer{
       border-top:1px solid var(--line);
       padding:18px 0;
@@ -550,9 +595,7 @@
       display:none;
     }
 
-    .modal.show{
-      display:block;
-    }
+    .modal.show{display:block}
 
     .modalBackdrop{
       position:absolute;
@@ -607,7 +650,7 @@
       background:rgba(255,255,255,.08);
       color:white;
       font-size:20px;
-      font-weight:900;
+      font-weight:1000;
     }
 
     .form{
@@ -623,14 +666,12 @@
       gap:6px;
     }
 
-    .field.full{
-      grid-column:1/-1;
-    }
+    .field.full{grid-column:1/-1}
 
     .field label{
       color:var(--cream);
       font-size:12px;
-      font-weight:900;
+      font-weight:1000;
     }
 
     .field input,
@@ -647,13 +688,9 @@
       resize:vertical;
     }
 
-    .field select option{
-      color:#111;
-    }
+    .field select option{color:#111}
 
-    .field textarea{
-      min-height:76px;
-    }
+    .field textarea{min-height:76px}
 
     .selectedPreview{
       grid-column:1/-1;
@@ -714,7 +751,7 @@
       border:1px solid var(--line);
     }
 
-    .empty{
+    .empty,.loader{
       grid-column:1/-1;
       padding:26px 14px;
       text-align:center;
@@ -724,591 +761,698 @@
       background:rgba(255,255,255,.04);
     }
 
-    .loader{
-      grid-column:1/-1;
-      padding:26px 14px;
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      z-index:200;
+      max-width:min(520px,calc(100% - 24px));
+      border:1px solid var(--line);
+      background:rgba(33,22,37,.96);
+      color:var(--text);
+      backdrop-filter:blur(18px);
+      border-radius:999px;
+      padding:11px 15px;
+      font-size:13px;
+      font-weight:900;
+      box-shadow:0 18px 50px rgba(0,0,0,.38);
+      transition:.2s ease;
       text-align:center;
-      color:var(--muted);
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
     }
 
     @media(max-width:900px){
-      .heroGrid{
-        grid-template-columns:1fr;
-      }
-
-      .photoPanel{
-        min-height:280px;
-      }
-
-      .grid{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .compactInfo{
-        grid-template-columns:1fr;
-      }
+      .heroGrid{grid-template-columns:1fr}
+      .photoPanel{min-height:280px}
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .compactInfo{grid-template-columns:1fr}
     }
 
     @media(max-width:620px){
-      .wrap{
-        width:min(100% - 18px, 1180px);
-      }
-
-      .nav{
-        height:58px;
-      }
-
-      .brand p{
-        display:none;
-      }
-
-      .navLink{
-        display:none;
-      }
-
-      .primaryBtn{
-        padding:10px 12px;
-        font-size:13px;
-      }
-
-      .hero{
-        padding-top:16px;
-      }
-
-      .heroCard{
-        padding:17px;
-        border-radius:24px;
-      }
-
-      .hero h2{
-        font-size:39px;
-      }
-
-      .heroText{
-        font-size:13px;
-      }
-
-      .miniStats{
-        grid-template-columns:1fr 1fr 1fr;
-        gap:7px;
-      }
-
-      .stat{
-        padding:10px 8px;
-      }
-
-      .stat b{
-        font-size:15px;
-      }
-
-      .stat span{
-        font-size:10px;
-      }
-
-      .tools{
-        grid-template-columns:1fr;
-      }
-
-      .grid{
-        grid-template-columns:1fr;
-      }
-
-      .cakeImg{
-        height:205px;
-      }
-
-      .form{
-        grid-template-columns:1fr;
-      }
-
-      .modalPanel{
-        width:calc(100% - 14px);
-        border-radius:24px;
-      }
+      .wrap{width:min(100% - 18px, 1180px)}
+      .nav{height:58px}
+      .brand p{display:none}
+      .brand h1{max-width:150px}
+      .navLink{display:none}
+      .primaryBtn{padding:10px 12px;font-size:13px}
+      .hero{padding-top:16px}
+      .heroCard{padding:17px;border-radius:24px}
+      .hero h2{font-size:38px}
+      .heroText{font-size:13px}
+      .miniStats{grid-template-columns:1fr 1fr 1fr;gap:7px}
+      .stat{padding:10px 8px}
+      .stat b{font-size:15px}
+      .stat span{font-size:10px}
+      .grid{grid-template-columns:1fr}
+      .cakeImg{height:205px}
+      .form{grid-template-columns:1fr}
+      .modalPanel{width:calc(100% - 14px);border-radius:24px}
     }
   </style>
 </head>
 
 <body>
 
-  <header class="topbar">
-    <div class="wrap nav">
-      <a href="#" class="brand">
-        <div class="logo">🍰</div>
-        <div>
-          <h1>Cake Studio</h1>
-          <p>Fresh custom cakes & sweet orders</p>
-        </div>
-      </a>
-
-      <div class="navActions">
-        <a class="navLink" href="#cakes">Cakes</a>
-        <a class="navLink" href="#how">How it works</a>
-        <button class="primaryBtn" onclick="openCustomOrder()">Order Now</button>
+<header class="topbar">
+  <div class="wrap nav">
+    <a href="#" class="brand">
+      <div id="siteLogo" class="logo">🍰</div>
+      <div>
+        <h1 id="siteBrandName">Cake Studio</h1>
+        <p id="siteTagline">Fresh custom cakes & sweet orders</p>
       </div>
-    </div>
-  </header>
+    </a>
 
-  <main>
-    <section class="hero">
-      <div class="wrap heroGrid">
-        <div class="heroCard">
-          <div class="tag">✨ Custom cakes made fresh</div>
-          <h2>Beautiful cakes for <span>birthdays, weddings & every sweet moment.</span></h2>
-          <p class="heroText">
-            Browse cake designs, choose your size, flavour, message, delivery details, and send your order directly on WhatsApp.
-          </p>
-
-          <div class="heroButtons">
-            <a class="primaryBtn" href="#cakes">View Cakes</a>
-            <button class="ghostBtn" onclick="openCustomOrder()">Custom Request</button>
-          </div>
-
-          <div class="miniStats">
-            <div class="stat">
-              <b>Fresh</b>
-              <span>Baked on order</span>
-            </div>
-            <div class="stat">
-              <b>Custom</b>
-              <span>Theme & message</span>
-            </div>
-            <div class="stat">
-              <b>Easy</b>
-              <span>WhatsApp ordering</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="photoPanel">
-          <div class="floatingInfo">
-            <div>
-              <b>Need a cake urgently?</b>
-              <span>Send your date, theme and serving size.</span>
-            </div>
-            <button class="primaryBtn" onclick="openCustomOrder()">Ask</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="cakes" class="wrap">
-      <div class="sectionHead">
-        <div>
-          <h3>Our Cake Collection</h3>
-          <p>Select a cake or send a custom request.</p>
-        </div>
-      </div>
-
-      <div class="tools">
-        <div class="searchBox">
-          <span>🔎</span>
-          <input id="searchInput" type="search" placeholder="Search birthday, chocolate, wedding..." oninput="renderCakes()">
-        </div>
-
-        <div id="filterRow" class="filterRow"></div>
-      </div>
-
-      <div id="cakeGrid" class="grid">
-        <div class="loader">Loading cakes...</div>
-      </div>
-    </section>
-
-    <section id="how" class="wrap compactInfo">
-      <div class="infoBox">
-        <div class="icon">1</div>
-        <b>Choose design</b>
-        <span>Pick from catalogue or send your own cake idea.</span>
-      </div>
-
-      <div class="infoBox">
-        <div class="icon">2</div>
-        <b>Add details</b>
-        <span>Select size, flavour, eggless option, date and cake message.</span>
-      </div>
-
-      <div class="infoBox">
-        <div class="icon">3</div>
-        <b>Send on WhatsApp</b>
-        <span>Your full order goes directly to the shop for confirmation.</span>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="wrap footerInner">
-      <span>© <span id="year"></span> Cake Studio. All rights reserved.</span>
-      <span>Made for easy WhatsApp cake orders.</span>
-    </div>
-  </footer>
-
-  <div id="orderModal" class="modal">
-    <div class="modalBackdrop" onclick="closeOrderModal()"></div>
-
-    <div class="modalPanel">
-      <div class="modalHead">
-        <div>
-          <h3>Complete Your Order</h3>
-          <p>Fill details and send directly on WhatsApp.</p>
-        </div>
-        <button class="closeBtn" onclick="closeOrderModal()">×</button>
-      </div>
-
-      <form class="form" onsubmit="sendWhatsAppOrder(event)">
-        <div class="selectedPreview">
-          <img id="selectedCakeImg" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80" alt="Selected cake">
-          <div>
-            <b id="selectedCakeName">Custom Cake Request</b>
-            <span id="selectedCakeCategory">Tell us your cake idea</span>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Full Name *</label>
-          <input id="customerName" required placeholder="Your name">
-        </div>
-
-        <div class="field">
-          <label>Phone Number *</label>
-          <input id="customerPhone" required placeholder="Your phone number">
-        </div>
-
-        <div class="field">
-          <label>Needed Date *</label>
-          <input id="neededDate" required type="date">
-        </div>
-
-        <div class="field">
-          <label>Needed Time</label>
-          <input id="neededTime" type="time">
-        </div>
-
-        <div class="field">
-          <label>Cake Size</label>
-          <select id="cakeSize">
-            <option value="">Select size</option>
-            <option>6 inch</option>
-            <option>8 inch</option>
-            <option>10 inch</option>
-            <option>12 inch</option>
-            <option>1 tier</option>
-            <option>2 tier</option>
-            <option>3 tier</option>
-            <option>Custom size</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Flavour</label>
-          <select id="cakeFlavour">
-            <option value="">Select flavour</option>
-            <option>Chocolate</option>
-            <option>Vanilla</option>
-            <option>Red Velvet</option>
-            <option>Black Forest</option>
-            <option>Strawberry</option>
-            <option>Pineapple</option>
-            <option>Butterscotch</option>
-            <option>Custom flavour</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Eggless?</label>
-          <select id="eggless">
-            <option>No</option>
-            <option>Yes</option>
-            <option>Not sure</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Pickup or Delivery?</label>
-          <select id="deliveryType">
-            <option>Pickup</option>
-            <option>Delivery</option>
-          </select>
-        </div>
-
-        <div class="field full">
-          <label>Address / Pickup Note</label>
-          <input id="address" placeholder="Delivery address or pickup note">
-        </div>
-
-        <div class="field full">
-          <label>Message on Cake</label>
-          <input id="cakeMessage" placeholder="Happy Birthday Aanya, Congratulations, etc.">
-        </div>
-
-        <div class="field full">
-          <label>Special Notes</label>
-          <textarea id="notes" placeholder="Theme, colours, inspiration photo link, allergies, budget, serving size..."></textarea>
-        </div>
-
-        <div class="formActions">
-          <button class="waBtn" type="submit">Send Order on WhatsApp</button>
-          <button class="clearBtn" type="button" onclick="closeOrderModal()">Cancel</button>
-        </div>
-      </form>
+    <div class="navActions">
+      <a class="navLink" href="#cakes">Cakes</a>
+      <a class="navLink" href="#how">How it works</a>
+      <button class="primaryBtn" onclick="openCustomOrder()">Order Now</button>
     </div>
   </div>
+</header>
 
-  <script>
-    const SUPABASE_URL = "https://rdpynngsjhzirxwzrxdd.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_oPaplUdywtmujaMjyyzHTQ_6fqthIzu";
+<main>
+  <section class="hero">
+    <div class="wrap heroGrid">
+      <div class="heroCard">
+        <div class="tag" id="heroTag">✨ Custom cakes made fresh</div>
+        <h2 id="heroTitle">Beautiful cakes for <span>birthdays, weddings & every sweet moment.</span></h2>
+        <p class="heroText" id="heroSubtitle">
+          Browse cake designs, choose your size, flavour, message, delivery details, and send your order directly on WhatsApp.
+        </p>
 
-    /*
-      Replace this with shop WhatsApp number.
-      Format: country code + number, no plus sign, no spaces.
-      Example Canada: 16475551234
-      Example India: 919876543210
-    */
-    const SHOP_WHATSAPP = "16475551234";
+        <div class="heroButtons">
+          <a class="primaryBtn" href="#cakes">View Cakes</a>
+          <button class="ghostBtn" onclick="openCustomOrder()">Custom Request</button>
+        </div>
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const DEMO_CAKES = [
-      {
-        id:"demo-1",
-        name:"Chocolate Birthday Cake",
-        category:"Birthday",
-        description:"Rich chocolate layers with smooth cream and custom birthday message.",
-        image_url:"https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=900&q=80",
-        starting_price:"45",
-        is_featured:true
-      },
-      {
-        id:"demo-2",
-        name:"Elegant Wedding Cake",
-        category:"Wedding",
-        description:"Clean premium design for weddings, engagements and receptions.",
-        image_url:"https://images.unsplash.com/photo-1535141192574-5d4897c12636?auto=format&fit=crop&w=900&q=80",
-        starting_price:"120",
-        is_featured:true
-      },
-      {
-        id:"demo-3",
-        name:"Kids Theme Cake",
-        category:"Kids",
-        description:"Colourful cake for kids with custom theme and name topper.",
-        image_url:"https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?auto=format&fit=crop&w=900&q=80",
-        starting_price:"55",
-        is_featured:false
-      },
-      {
-        id:"demo-4",
-        name:"Cupcake Box",
-        category:"Cupcakes",
-        description:"Fresh cupcakes box for parties, gifts and office treats.",
-        image_url:"https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=900&q=80",
-        starting_price:"24",
-        is_featured:false
-      },
-      {
-        id:"demo-5",
-        name:"Anniversary Cake",
-        category:"Anniversary",
-        description:"Romantic design with flowers, topper and custom message.",
-        image_url:"https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=900&q=80",
-        starting_price:"60",
-        is_featured:false
-      },
-      {
-        id:"demo-6",
-        name:"Custom Photo Cake",
-        category:"Custom",
-        description:"Send your idea or inspiration photo and we will confirm design.",
-        image_url:"https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=900&q=80",
-        starting_price:"50",
-        is_featured:true
-      },
-      {
-        id:"demo-7",
-        name:"Minimal Cream Cake",
-        category:"Classic",
-        description:"Simple, fresh and elegant cake for any small celebration.",
-        image_url:"https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=900&q=80",
-        starting_price:"38",
-        is_featured:false
-      },
-      {
-        id:"demo-8",
-        name:"Fruit Cake",
-        category:"Classic",
-        description:"Fresh fruit topping with soft sponge and light cream.",
-        image_url:"https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=900&q=80",
-        starting_price:"42",
-        is_featured:false
-      }
-    ];
-
-    let allCakes = [];
-    let currentCategory = "All";
-    let selectedCake = null;
-
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    async function loadCakes(){
-      const grid = document.getElementById("cakeGrid");
-      grid.innerHTML = `<div class="loader">Loading cakes...</div>`;
-
-      try{
-        const { data, error } = await supabaseClient
-          .from("cakes")
-          .select("*")
-          .eq("is_active", true)
-          .order("created_at", { ascending:false })
-          .limit(80);
-
-        if(error) throw error;
-
-        if(Array.isArray(data) && data.length){
-          allCakes = data.map(normalizeCake);
-        }else{
-          allCakes = DEMO_CAKES.map(normalizeCake);
-        }
-      }catch(err){
-        console.warn("Supabase cakes table not ready, showing demo cakes:", err.message);
-        allCakes = DEMO_CAKES.map(normalizeCake);
-      }
-
-      buildFilters();
-      renderCakes();
-    }
-
-    function normalizeCake(cake){
-      return {
-        id:cake.id || crypto.randomUUID(),
-        name:cake.name || cake.title || "Custom Cake",
-        category:cake.category || "Custom",
-        description:cake.description || cake.desc || "Fresh custom cake made on order.",
-        image_url:cake.image_url || cake.image || cake.photo_url || "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80",
-        starting_price:cake.starting_price || cake.price || cake.base_price || "",
-        is_featured:!!cake.is_featured
-      };
-    }
-
-    function buildFilters(){
-      const row = document.getElementById("filterRow");
-      const categories = ["All", ...new Set(allCakes.map(c => c.category).filter(Boolean))];
-
-      row.innerHTML = categories.map(cat => `
-        <button class="chip ${cat === currentCategory ? "active" : ""}" onclick="setCategory('${escapeForJs(cat)}')">
-          ${escapeHtml(cat)}
-        </button>
-      `).join("");
-    }
-
-    function setCategory(category){
-      currentCategory = category;
-      buildFilters();
-      renderCakes();
-    }
-
-    function renderCakes(){
-      const grid = document.getElementById("cakeGrid");
-      const search = document.getElementById("searchInput").value.trim().toLowerCase();
-
-      let cakes = allCakes.filter(cake => {
-        const matchesCategory = currentCategory === "All" || cake.category === currentCategory;
-        const combined = `${cake.name} ${cake.category} ${cake.description}`.toLowerCase();
-        const matchesSearch = !search || combined.includes(search);
-        return matchesCategory && matchesSearch;
-      });
-
-      if(!cakes.length){
-        grid.innerHTML = `
-          <div class="empty">
-            No cakes found. Try another search or send a custom request.
-            <br><br>
-            <button class="primaryBtn" onclick="openCustomOrder()">Custom Request</button>
+        <div class="miniStats">
+          <div class="stat">
+            <b>Fresh</b>
+            <span>Baked on order</span>
           </div>
-        `;
-        return;
-      }
+          <div class="stat">
+            <b>Custom</b>
+            <span>Theme & message</span>
+          </div>
+          <div class="stat">
+            <b>Easy</b>
+            <span>WhatsApp ordering</span>
+          </div>
+        </div>
+      </div>
 
-      grid.innerHTML = cakes.map(cake => `
+      <div class="photoPanel">
+        <div class="floatingInfo">
+          <div>
+            <b>Need a cake urgently?</b>
+            <span>Send your date, theme and serving size.</span>
+          </div>
+          <button class="primaryBtn" onclick="openCustomOrder()">Ask</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cakes" class="wrap">
+    <div class="sectionHead">
+      <div>
+        <h3>Our Cake Collection</h3>
+        <p>Filter by category or send a custom request.</p>
+      </div>
+    </div>
+
+    <div class="tools">
+      <div class="searchBox">
+        <span>🔎</span>
+        <input id="searchInput" type="search" placeholder="Search birthday, chocolate, wedding..." oninput="renderCakes()">
+      </div>
+
+      <div id="filterRow" class="filterRow">
+        <button class="chip active">All Cakes</button>
+      </div>
+    </div>
+
+    <div id="cakeGrid" class="grid">
+      <div class="loader">Loading cakes...</div>
+    </div>
+  </section>
+
+  <section id="how" class="wrap compactInfo">
+    <div class="infoBox">
+      <div class="icon">1</div>
+      <b>Choose design</b>
+      <span>Pick from catalogue or send your own cake idea.</span>
+    </div>
+
+    <div class="infoBox">
+      <div class="icon">2</div>
+      <b>Add details</b>
+      <span>Select size, flavour, eggless option, date and cake message.</span>
+    </div>
+
+    <div class="infoBox">
+      <div class="icon">3</div>
+      <b>Send on WhatsApp</b>
+      <span>Your full order goes directly to the shop for confirmation.</span>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="contactStrip">
+      <div>
+        <b id="contactTitle">Have a custom idea?</b>
+        <span id="contactInfo">Send your theme, date and serving size on WhatsApp.</span>
+      </div>
+
+      <button class="primaryBtn" onclick="openCustomOrder()">Start Order</button>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footerInner">
+    <span>© <span id="year"></span> <span id="footerBrand">Cake Studio</span>. All rights reserved.</span>
+    <span id="footerAddress">Made for easy WhatsApp cake orders.</span>
+  </div>
+</footer>
+
+<div id="orderModal" class="modal">
+  <div class="modalBackdrop" onclick="closeOrderModal()"></div>
+
+  <div class="modalPanel">
+    <div class="modalHead">
+      <div>
+        <h3>Complete Your Order</h3>
+        <p>Fill details and send directly on WhatsApp.</p>
+      </div>
+      <button class="closeBtn" onclick="closeOrderModal()">×</button>
+    </div>
+
+    <form class="form" onsubmit="sendWhatsAppOrder(event)">
+      <div class="selectedPreview">
+        <img id="selectedCakeImg" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80" alt="Selected cake">
+        <div>
+          <b id="selectedCakeName">Custom Cake Request</b>
+          <span id="selectedCakeCategory">Tell us your cake idea</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Full Name *</label>
+        <input id="customerName" required placeholder="Your name">
+      </div>
+
+      <div class="field">
+        <label>Phone Number *</label>
+        <input id="customerPhone" required placeholder="Your phone number">
+      </div>
+
+      <div class="field">
+        <label>Needed Date *</label>
+        <input id="neededDate" required type="date">
+      </div>
+
+      <div class="field">
+        <label>Needed Time</label>
+        <input id="neededTime" type="time">
+      </div>
+
+      <div class="field">
+        <label>Cake Size</label>
+        <select id="cakeSize">
+          <option value="">Select size</option>
+          <option>6 inch</option>
+          <option>8 inch</option>
+          <option>10 inch</option>
+          <option>12 inch</option>
+          <option>1 tier</option>
+          <option>2 tier</option>
+          <option>3 tier</option>
+          <option>Custom size</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Flavour</label>
+        <select id="cakeFlavour">
+          <option value="">Select flavour</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Eggless?</label>
+        <select id="eggless">
+          <option>No</option>
+          <option>Yes</option>
+          <option>Not sure</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Pickup or Delivery?</label>
+        <select id="deliveryType">
+          <option>Pickup</option>
+          <option>Delivery</option>
+        </select>
+      </div>
+
+      <div class="field full">
+        <label>Address / Pickup Note</label>
+        <input id="orderAddress" placeholder="Delivery address or pickup note">
+      </div>
+
+      <div class="field full">
+        <label>Message on Cake</label>
+        <input id="cakeMessage" placeholder="Happy Birthday Aanya, Congratulations, etc.">
+      </div>
+
+      <div class="field full">
+        <label>Special Notes</label>
+        <textarea id="notes" placeholder="Theme, colours, inspiration photo link, allergies, budget, serving size..."></textarea>
+      </div>
+
+      <div class="formActions">
+        <button class="waBtn" type="submit">Send Order on WhatsApp</button>
+        <button class="clearBtn" type="button" onclick="closeOrderModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  const SUPABASE_URL = "https://rdpynngsjhzirxwzrxdd.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_oPaplUdywtmujaMjyyzHTQ_6fqthIzu";
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const DEFAULT_SETTINGS = {
+    brand_name:"Cake Studio",
+    tagline:"Fresh custom cakes & sweet orders",
+    logo_url:"",
+    whatsapp_number:"",
+    hero_title:"Beautiful cakes for birthdays, weddings & every sweet moment.",
+    hero_subtitle:"Browse cake designs, choose your size, flavour, message, delivery details, and send your order directly on WhatsApp.",
+    instagram_url:"",
+    address:""
+  };
+
+  const FALLBACK_CAKES = [
+    {
+      id:"demo-1",
+      name:"Chocolate Birthday Cake",
+      category:"Birthday",
+      description:"Rich chocolate layers with smooth cream and custom birthday message.",
+      image_url:"https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=900&q=80",
+      starting_price:"45",
+      is_featured:true,
+      is_active:true,
+      sort_order:1
+    },
+    {
+      id:"demo-2",
+      name:"Elegant Wedding Cake",
+      category:"Wedding",
+      description:"Premium clean design for weddings, engagements and receptions.",
+      image_url:"https://images.unsplash.com/photo-1535141192574-5d4897c12636?auto=format&fit=crop&w=900&q=80",
+      starting_price:"120",
+      is_featured:true,
+      is_active:true,
+      sort_order:2
+    },
+    {
+      id:"demo-3",
+      name:"Kids Theme Cake",
+      category:"Kids",
+      description:"Colourful cake for kids with custom theme and name topper.",
+      image_url:"https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?auto=format&fit=crop&w=900&q=80",
+      starting_price:"55",
+      is_featured:false,
+      is_active:true,
+      sort_order:3
+    },
+    {
+      id:"demo-4",
+      name:"Cupcake Box",
+      category:"Cupcakes",
+      description:"Fresh cupcakes box for parties, gifts and office treats.",
+      image_url:"https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=900&q=80",
+      starting_price:"24",
+      is_featured:false,
+      is_active:true,
+      sort_order:4
+    }
+  ];
+
+  const FALLBACK_FLAVOURS = [
+    {id:"fallback-chocolate", name:"Chocolate"},
+    {id:"fallback-vanilla", name:"Vanilla"},
+    {id:"fallback-red-velvet", name:"Red Velvet"},
+    {id:"fallback-black-forest", name:"Black Forest"},
+    {id:"fallback-strawberry", name:"Strawberry"},
+    {id:"fallback-custom", name:"Custom Flavour"}
+  ];
+
+  let siteSettings = {...DEFAULT_SETTINGS};
+  let allCakes = [];
+  let allCategories = [];
+  let allFlavours = [];
+  let cakeCategoryRows = [];
+  let cakeFlavourRows = [];
+  let currentCategoryId = "all";
+  let selectedCake = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  $("year").textContent = new Date().getFullYear();
+
+  init();
+
+  async function init(){
+    await loadSiteData();
+    applySettings();
+    buildFilters();
+    renderCakes();
+  }
+
+  async function loadSiteData(){
+    $("cakeGrid").innerHTML = `<div class="loader">Loading cakes...</div>`;
+
+    try{
+      const [
+        settingsRes,
+        cakesRes,
+        catsRes,
+        flavoursRes,
+        cakeCatsRes,
+        cakeFlavoursRes
+      ] = await Promise.all([
+        supabaseClient.from("site_settings").select("*").eq("id", 1).maybeSingle(),
+        supabaseClient.from("cakes").select("*").eq("is_active", true).order("sort_order", { ascending:true }).order("created_at", { ascending:false }),
+        supabaseClient.from("categories").select("*").eq("is_active", true).order("sort_order", { ascending:true }).order("name", { ascending:true }),
+        supabaseClient.from("flavours").select("*").eq("is_active", true).order("sort_order", { ascending:true }).order("name", { ascending:true }),
+        supabaseClient.from("cake_categories").select("*"),
+        supabaseClient.from("cake_flavours").select("*")
+      ]);
+
+      const firstError = settingsRes.error || cakesRes.error || catsRes.error || flavoursRes.error || cakeCatsRes.error || cakeFlavoursRes.error;
+      if(firstError) throw firstError;
+
+      siteSettings = {...DEFAULT_SETTINGS, ...(settingsRes.data || {})};
+      allCakes = Array.isArray(cakesRes.data) && cakesRes.data.length ? cakesRes.data : FALLBACK_CAKES;
+      allCategories = Array.isArray(catsRes.data) ? catsRes.data : [];
+      allFlavours = Array.isArray(flavoursRes.data) && flavoursRes.data.length ? flavoursRes.data : FALLBACK_FLAVOURS;
+      cakeCategoryRows = Array.isArray(cakeCatsRes.data) ? cakeCatsRes.data : [];
+      cakeFlavourRows = Array.isArray(cakeFlavoursRes.data) ? cakeFlavoursRes.data : [];
+
+    }catch(err){
+      console.warn("Supabase loading issue:", err.message);
+      siteSettings = {...DEFAULT_SETTINGS};
+      allCakes = FALLBACK_CAKES;
+      allCategories = [
+        {id:"fallback-birthday", name:"Birthday"},
+        {id:"fallback-wedding", name:"Wedding"},
+        {id:"fallback-kids", name:"Kids"},
+        {id:"fallback-cupcakes", name:"Cupcakes"}
+      ];
+      allFlavours = FALLBACK_FLAVOURS;
+      cakeCategoryRows = [];
+      cakeFlavourRows = [];
+      showToast("Showing demo cakes. Check Supabase table/policies.");
+    }
+  }
+
+  function applySettings(){
+    const brand = siteSettings.brand_name || DEFAULT_SETTINGS.brand_name;
+    const tagline = siteSettings.tagline || DEFAULT_SETTINGS.tagline;
+    const logo = siteSettings.logo_url || "";
+
+    document.title = brand + " - Custom Cakes & Orders";
+
+    $("siteBrandName").textContent = brand;
+    $("siteTagline").textContent = tagline;
+    $("footerBrand").textContent = brand;
+
+    $("heroTag").textContent = "✨ " + tagline;
+    $("heroTitle").innerHTML = formatHeroTitle(siteSettings.hero_title || DEFAULT_SETTINGS.hero_title);
+    $("heroSubtitle").textContent = siteSettings.hero_subtitle || DEFAULT_SETTINGS.hero_subtitle;
+
+    $("contactTitle").textContent = "Have a custom idea?";
+    $("contactInfo").textContent = siteSettings.address
+      ? siteSettings.address
+      : "Send your theme, date and serving size on WhatsApp.";
+
+    $("footerAddress").textContent = siteSettings.address || "Made for easy WhatsApp cake orders.";
+
+    if(logo){
+      $("siteLogo").innerHTML = `<img src="${escapeHtml(logo)}" alt="${escapeHtml(brand)}" onerror="this.parentElement.textContent='🍰'">`;
+    }else{
+      $("siteLogo").textContent = "🍰";
+    }
+  }
+
+  function formatHeroTitle(title){
+    const clean = escapeHtml(title || "");
+    const words = clean.split(" ");
+    if(words.length < 6) return clean;
+    const first = words.slice(0, Math.ceil(words.length / 2)).join(" ");
+    const second = words.slice(Math.ceil(words.length / 2)).join(" ");
+    return `${first} <span>${second}</span>`;
+  }
+
+  function buildFilters(){
+    const row = $("filterRow");
+
+    const categoryButtons = allCategories.map(cat => `
+      <button class="chip ${currentCategoryId === cat.id ? "active" : ""}" onclick="setCategory('${escapeForJs(cat.id)}')">
+        ${escapeHtml(cat.name)}
+      </button>
+    `).join("");
+
+    row.innerHTML = `
+      <button class="chip ${currentCategoryId === "all" ? "active" : ""}" onclick="setCategory('all')">
+        All Cakes
+      </button>
+      ${categoryButtons}
+    `;
+  }
+
+  function setCategory(categoryId){
+    currentCategoryId = categoryId;
+    buildFilters();
+    renderCakes();
+  }
+
+  function getCakeCategoryIds(cakeId){
+    return cakeCategoryRows
+      .filter(row => String(row.cake_id) === String(cakeId))
+      .map(row => row.category_id);
+  }
+
+  function getCakeFlavourIds(cakeId){
+    return cakeFlavourRows
+      .filter(row => String(row.cake_id) === String(cakeId))
+      .map(row => row.flavour_id);
+  }
+
+  function getCakeCategoryNames(cake){
+    const ids = getCakeCategoryIds(cake.id);
+
+    const names = ids
+      .map(id => allCategories.find(cat => String(cat.id) === String(id))?.name)
+      .filter(Boolean);
+
+    if(names.length) return names;
+
+    return cake.category ? [cake.category] : ["Custom"];
+  }
+
+  function getCakeFlavourNames(cake){
+    const ids = getCakeFlavourIds(cake.id);
+
+    return ids
+      .map(id => allFlavours.find(flav => String(flav.id) === String(id))?.name)
+      .filter(Boolean);
+  }
+
+  function renderCakes(){
+    const grid = $("cakeGrid");
+    const search = $("searchInput").value.trim().toLowerCase();
+
+    let cakes = [...allCakes];
+
+    if(currentCategoryId !== "all"){
+      cakes = cakes.filter(cake => {
+        const ids = getCakeCategoryIds(cake.id);
+
+        if(ids.length){
+          return ids.map(String).includes(String(currentCategoryId));
+        }
+
+        const selectedCat = allCategories.find(cat => String(cat.id) === String(currentCategoryId));
+        return selectedCat && String(cake.category || "").toLowerCase() === String(selectedCat.name || "").toLowerCase();
+      });
+    }
+
+    if(search){
+      cakes = cakes.filter(cake => {
+        const categories = getCakeCategoryNames(cake).join(" ");
+        const flavours = getCakeFlavourNames(cake).join(" ");
+        const combined = `${cake.name || ""} ${cake.category || ""} ${cake.description || ""} ${categories} ${flavours}`.toLowerCase();
+        return combined.includes(search);
+      });
+    }
+
+    if(!cakes.length){
+      grid.innerHTML = `
+        <div class="empty">
+          No cakes found. Try another search or send a custom request.
+          <br><br>
+          <button class="primaryBtn" onclick="openCustomOrder()">Custom Request</button>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = cakes.map(cake => {
+      const cats = getCakeCategoryNames(cake);
+      const flavs = getCakeFlavourNames(cake);
+      const price = cake.starting_price !== null && cake.starting_price !== undefined && cake.starting_price !== ""
+        ? "From $" + Number(cake.starting_price).toFixed(2).replace(".00","")
+        : "Custom price";
+
+      return `
         <article class="cakeCard">
           <div class="cakeImg">
-            <img src="${escapeHtml(cake.image_url)}" alt="${escapeHtml(cake.name)}" loading="lazy">
-            <div class="badge">${escapeHtml(cake.category)}${cake.is_featured ? " · Featured" : ""}</div>
+            <img src="${escapeHtml(cake.image_url || "")}" alt="${escapeHtml(cake.name || "Cake")}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80'">
+            <div class="badge">${escapeHtml(cats[0] || "Cake")}${cake.is_featured ? " · Featured" : ""}</div>
           </div>
 
           <div class="cakeBody">
-            <h4>${escapeHtml(cake.name)}</h4>
-            <p class="cakeDesc">${escapeHtml(cake.description)}</p>
+            <h4>${escapeHtml(cake.name || "Custom Cake")}</h4>
+            <p class="cakeDesc">${escapeHtml(cake.description || "Fresh custom cake made on order.")}</p>
+
+            <div class="miniTags">
+              ${cats.slice(0,2).map(name => `<span class="miniTag">${escapeHtml(name)}</span>`).join("")}
+              ${flavs.slice(0,1).map(name => `<span class="miniTag">${escapeHtml(name)}</span>`).join("")}
+            </div>
 
             <div class="cakeMeta">
-              <div class="price">${cake.starting_price ? "From $" + escapeHtml(String(cake.starting_price)) : "Custom price"}</div>
+              <div class="price">${price}</div>
               <button class="smallOrderBtn" onclick="openOrder('${escapeForJs(cake.id)}')">Order</button>
             </div>
           </div>
         </article>
-      `).join("");
+      `;
+    }).join("");
+  }
+
+  function openOrder(cakeId){
+    selectedCake = allCakes.find(cake => String(cake.id) === String(cakeId)) || null;
+    updateSelectedPreview();
+    updateFlavourDropdown();
+    $("orderModal").classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+
+  function openCustomOrder(){
+    selectedCake = null;
+    updateSelectedPreview();
+    updateFlavourDropdown();
+    $("orderModal").classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeOrderModal(){
+    $("orderModal").classList.remove("show");
+    document.body.style.overflow = "";
+  }
+
+  function updateSelectedPreview(){
+    const img = $("selectedCakeImg");
+    const name = $("selectedCakeName");
+    const category = $("selectedCakeCategory");
+
+    if(selectedCake){
+      const cats = getCakeCategoryNames(selectedCake);
+      img.src = selectedCake.image_url || "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80";
+      name.textContent = selectedCake.name || "Selected Cake";
+      category.textContent = cats.join(", ");
+    }else{
+      img.src = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80";
+      name.textContent = "Custom Cake Request";
+      category.textContent = "Tell us your cake idea";
+    }
+  }
+
+  function updateFlavourDropdown(){
+    const select = $("cakeFlavour");
+
+    let flavourList = [];
+
+    if(selectedCake){
+      const ids = getCakeFlavourIds(selectedCake.id);
+      flavourList = ids
+        .map(id => allFlavours.find(flav => String(flav.id) === String(id)))
+        .filter(Boolean);
     }
 
-    function openOrder(cakeId){
-      selectedCake = allCakes.find(c => String(c.id) === String(cakeId)) || null;
-      updateSelectedPreview();
-      document.getElementById("orderModal").classList.add("show");
-      document.body.style.overflow = "hidden";
+    if(!flavourList.length){
+      flavourList = allFlavours.length ? allFlavours : FALLBACK_FLAVOURS;
     }
 
-    function openCustomOrder(){
-      selectedCake = null;
-      updateSelectedPreview();
-      document.getElementById("orderModal").classList.add("show");
-      document.body.style.overflow = "hidden";
+    select.innerHTML = `
+      <option value="">Select flavour</option>
+      ${flavourList.map(flav => `<option>${escapeHtml(flav.name)}</option>`).join("")}
+      <option>Not sure / Need suggestion</option>
+    `;
+  }
+
+  function sendWhatsAppOrder(event){
+    event.preventDefault();
+
+    const whatsapp = normalizePhone(siteSettings.whatsapp_number || "");
+
+    if(!whatsapp){
+      showToast("Shop WhatsApp number is missing. Add it in admin settings.", true);
+      return;
     }
 
-    function closeOrderModal(){
-      document.getElementById("orderModal").classList.remove("show");
-      document.body.style.overflow = "";
-    }
+    const name = getValue("customerName");
+    const phone = getValue("customerPhone");
+    const neededDate = getValue("neededDate");
+    const neededTime = getValue("neededTime");
+    const size = getValue("cakeSize");
+    const flavour = getValue("cakeFlavour");
+    const eggless = getValue("eggless");
+    const deliveryType = getValue("deliveryType");
+    const address = getValue("orderAddress");
+    const cakeMessage = getValue("cakeMessage");
+    const notes = getValue("notes");
 
-    function updateSelectedPreview(){
-      const img = document.getElementById("selectedCakeImg");
-      const name = document.getElementById("selectedCakeName");
-      const category = document.getElementById("selectedCakeCategory");
+    const cakeName = selectedCake ? selectedCake.name : "Custom Cake Request";
+    const cakeCategories = selectedCake ? getCakeCategoryNames(selectedCake).join(", ") : "Custom";
+    const cakePrice = selectedCake && selectedCake.starting_price
+      ? "$" + Number(selectedCake.starting_price).toFixed(2).replace(".00","")
+      : "To be confirmed";
 
-      if(selectedCake){
-        img.src = selectedCake.image_url;
-        name.textContent = selectedCake.name;
-        category.textContent = selectedCake.category;
-      }else{
-        img.src = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80";
-        name.textContent = "Custom Cake Request";
-        category.textContent = "Tell us your cake idea";
-      }
-    }
-
-    function sendWhatsAppOrder(event){
-      event.preventDefault();
-
-      const name = getValue("customerName");
-      const phone = getValue("customerPhone");
-      const neededDate = getValue("neededDate");
-      const neededTime = getValue("neededTime");
-      const size = getValue("cakeSize");
-      const flavour = getValue("cakeFlavour");
-      const eggless = getValue("eggless");
-      const deliveryType = getValue("deliveryType");
-      const address = getValue("address");
-      const cakeMessage = getValue("cakeMessage");
-      const notes = getValue("notes");
-
-      const cakeName = selectedCake ? selectedCake.name : "Custom Cake Request";
-      const cakeCategory = selectedCake ? selectedCake.category : "Custom";
-      const cakePrice = selectedCake && selectedCake.starting_price ? "$" + selectedCake.starting_price : "To be confirmed";
-
-      const message =
+    const message =
 `🍰 New Cake Order
 
 Customer Name: ${name}
 Phone: ${phone}
 
 Cake: ${cakeName}
-Category: ${cakeCategory}
+Category: ${cakeCategories}
 Starting Price: ${cakePrice}
 
 Size: ${size || "Not selected"}
@@ -1327,35 +1471,51 @@ ${notes || "No extra notes"}
 
 Please confirm availability and final price.`;
 
-      const url = `https://wa.me/${SHOP_WHATSAPP}?text=${encodeURIComponent(message)}`;
-      window.open(url, "_blank");
-    }
+    const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  }
 
-    function getValue(id){
-      return document.getElementById(id).value.trim();
-    }
+  function getValue(id){
+    return $(id).value.trim();
+  }
 
-    function escapeHtml(value){
-      return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+  function normalizePhone(value){
+    return String(value || "").replace(/[^\d]/g, "");
+  }
 
-    function escapeForJs(value){
-      return String(value ?? "")
-        .replaceAll("\\","\\\\")
-        .replaceAll("'","\\'")
-        .replaceAll("\n"," ");
-    }
+  function showToast(message, isError = false){
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.style.borderColor = isError ? "rgba(255,91,110,.35)" : "rgba(255,255,255,.09)";
+    toast.style.color = isError ? "#ffdce1" : "var(--text)";
+    toast.classList.add("show");
 
-    document.addEventListener("keydown", function(e){
-      if(e.key === "Escape") closeOrderModal();
-    });
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2800);
+  }
 
-    loadCakes();
-  </script>
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function escapeForJs(value){
+    return String(value ?? "")
+      .replaceAll("\\","\\\\")
+      .replaceAll("'","\\'")
+      .replaceAll("\n"," ");
+  }
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closeOrderModal();
+  });
+</script>
+
 </body>
 </html>
