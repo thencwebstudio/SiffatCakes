@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cake Studio Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#100b12;
+      --bg2:#19101c;
+      --card:#211625;
+      --card2:#291b2f;
+      --text:#fff7fb;
+      --muted:#c9aebd;
+      --line:rgba(255,255,255,.09);
+      --pink:#ff5fa2;
+      --pink2:#ff8ac0;
+      --cream:#ffe4c7;
+      --gold:#ffc86b;
+      --green:#39d98a;
+      --red:#ff5b6e;
+      --blue:#67b7ff;
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      --radius:20px;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,95,162,.24), transparent 32%),
+        radial-gradient(circle at 90% 10%, rgba(255,200,107,.13), transparent 28%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+    }
+
+    button,input,textarea,select{
+      font:inherit;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      width:min(1180px, calc(100% - 26px));
+      margin:auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:blur(18px);
+      background:rgba(16,11,18,.82);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav{
+      min-height:62px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .logo{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--pink),var(--gold));
+      box-shadow:0 10px 25px rgba(255,95,162,.25);
+      font-size:20px;
+      flex:0 0 auto;
+    }
+
+    .brand h1{
+      font-size:17px;
+      letter-spacing:-.04em;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .brand p{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:11px;
+      white-space:nowrap;
+    }
+
+    .navActions{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.055);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      max-width:250px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 13px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:900;
+      font-size:13px;
+      transition:.18s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.09);
+    }
+
+    .btn.primary{
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--pink),var(--pink2));
+      color:white;
+      box-shadow:0 14px 28px rgba(255,95,162,.24);
+    }
+
+    .btn.green{
+      border-color:transparent;
+      background:linear-gradient(135deg,#19c463,#39d98a);
+      color:#06160c;
+    }
+
+    .btn.red{
+      border-color:rgba(255,91,110,.28);
+      background:rgba(255,91,110,.13);
+      color:#ffdce1;
+    }
+
+    .btn.small{
+      padding:8px 10px;
+      font-size:12px;
+    }
+
+    .screen{
+      display:none;
+    }
+
+    .screen.show{
+      display:block;
+    }
+
+    .loginShell{
+      min-height:calc(100vh - 62px);
+      display:grid;
+      place-items:center;
+      padding:30px 0;
+    }
+
+    .loginCard{
+      width:min(460px,100%);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:20px;
+      background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035));
+      box-shadow:var(--shadow);
+    }
+
+    .loginCard .bigIcon{
+      width:54px;
+      height:54px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--pink),var(--gold));
+      font-size:26px;
+      margin-bottom:14px;
+    }
+
+    .loginCard h2{
+      font-size:28px;
+      letter-spacing:-.06em;
+      line-height:1;
+    }
+
+    .loginCard p{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .formGrid{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .field label{
+      color:var(--cream);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .field input,
+    .field textarea,
+    .field select{
+      width:100%;
+      min-height:44px;
+      outline:none;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius:15px;
+      padding:11px 12px;
+      resize:vertical;
+    }
+
+    .field textarea{
+      min-height:78px;
+    }
+
+    .field select option{
+      color:#111;
+    }
+
+    .main{
+      padding:18px 0 34px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+      border-radius:24px;
+      padding:14px;
+      box-shadow:0 16px 45px rgba(0,0,0,.22);
+    }
+
+    .panelHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .panelHead h2,
+    .panelHead h3{
+      font-size:20px;
+      letter-spacing:-.05em;
+      line-height:1.1;
+    }
+
+    .panelHead p{
+      margin-top:5px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:9px;
+    }
+
+    .stat{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.055);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .stat b{
+      display:block;
+      font-size:20px;
+      line-height:1;
+    }
+
+    .stat span{
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+    }
+
+    .notice{
+      border:1px solid rgba(255,200,107,.22);
+      background:rgba(255,200,107,.08);
+      border-radius:18px;
+      padding:12px;
+      color:var(--cream);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .cakeForm{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .cakeForm .full{
+      grid-column:1/-1;
+    }
+
+    .checkRow{
+      grid-column:1/-1;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .checkBox{
+      flex:1;
+      min-width:170px;
+      display:flex;
+      align-items:center;
+      gap:9px;
+      padding:11px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.055);
+      border-radius:15px;
+      color:var(--text);
+      font-size:13px;
+      font-weight:900;
+    }
+
+    .checkBox input{
+      width:18px;
+      height:18px;
+      accent-color:var(--pink);
+    }
+
+    .formActions{
+      grid-column:1/-1;
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-top:2px;
+    }
+
+    .imagePreview{
+      grid-column:1/-1;
+      display:none;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.045);
+      padding:10px;
+      border-radius:18px;
+    }
+
+    .imagePreview.show{
+      display:flex;
+    }
+
+    .imagePreview img{
+      width:74px;
+      height:74px;
+      object-fit:cover;
+      border-radius:16px;
+      background:#2b1c30;
+    }
+
+    .imagePreview b{
+      display:block;
+      font-size:13px;
+    }
+
+    .imagePreview span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-top:4px;
+      word-break:break-all;
+    }
+
+    .toolbar{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:9px;
+      margin:12px 0;
+    }
+
+    .searchBox{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-height:44px;
+      padding:0 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+    }
+
+    .searchBox input{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-weight:800;
+    }
+
+    .searchBox input::placeholder{
+      color:rgba(201,174,189,.75);
+    }
+
+    .selectMini{
+      min-height:44px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+      color:var(--text);
+      padding:0 12px;
+      outline:none;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .selectMini option{
+      color:#111;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .cakeItem{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.052);
+      border-radius:20px;
+      overflow:hidden;
+    }
+
+    .cakeTop{
+      display:grid;
+      grid-template-columns:82px 1fr auto;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+    }
+
+    .cakeTop img{
+      width:82px;
+      height:82px;
+      object-fit:cover;
+      border-radius:16px;
+      background:#2b1c30;
+    }
+
+    .cakeInfo{
+      min-width:0;
+    }
+
+    .cakeInfo h4{
+      font-size:15px;
+      letter-spacing:-.025em;
+      line-height:1.2;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .cakeInfo p{
+      margin-top:5px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .badges{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+
+    .badge{
+      padding:6px 8px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:1000;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+    }
+
+    .badge.active{
+      color:#d9ffe9;
+      border-color:rgba(57,217,138,.25);
+      background:rgba(57,217,138,.1);
+    }
+
+    .badge.inactive{
+      color:#ffdce1;
+      border-color:rgba(255,91,110,.25);
+      background:rgba(255,91,110,.1);
+    }
+
+    .badge.featured{
+      color:#fff2cf;
+      border-color:rgba(255,200,107,.25);
+      background:rgba(255,200,107,.1);
+    }
+
+    .itemActions{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+      align-items:flex-end;
+    }
+
+    .empty{
+      padding:28px 14px;
+      text-align:center;
+      color:var(--muted);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:20px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      z-index:200;
+      max-width:min(520px,calc(100% - 24px));
+      border:1px solid var(--line);
+      background:rgba(33,22,37,.96);
+      color:var(--text);
+      backdrop-filter:blur(18px);
+      border-radius:999px;
+      padding:11px 15px;
+      font-size:13px;
+      font-weight:900;
+      box-shadow:0 18px 50px rgba(0,0,0,.38);
+      transition:.2s ease;
+      text-align:center;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .dangerText{
+      color:#ffdce1 !important;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    @media(max-width:930px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .toolbar{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        width:min(100% - 18px,1180px);
+      }
+
+      .nav{
+        align-items:flex-start;
+      }
+
+      .brand p{
+        display:none;
+      }
+
+      .pill{
+        display:none;
+      }
+
+      .main{
+        padding-top:10px;
+      }
+
+      .panel{
+        padding:12px;
+        border-radius:22px;
+      }
+
+      .cakeForm{
+        grid-template-columns:1fr;
+      }
+
+      .cakeTop{
+        grid-template-columns:70px 1fr;
+      }
+
+      .cakeTop img{
+        width:70px;
+        height:70px;
+      }
+
+      .itemActions{
+        grid-column:1/-1;
+        flex-direction:row;
+        align-items:center;
+        justify-content:flex-end;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <div class="logo">🍰</div>
+        <div>
+          <h1>Cake Studio Admin</h1>
+          <p>Manage cake catalogue</p>
+        </div>
+      </a>
+
+      <div class="navActions">
+        <span id="adminEmailPill" class="pill">Not logged in</span>
+        <a class="btn small" href="index.html" target="_blank">Open Site</a>
+        <button id="signOutBtn" class="btn red small" style="display:none" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <section id="loginScreen" class="screen show">
+    <div class="wrap loginShell">
+      <div class="loginCard">
+        <div class="bigIcon">🔐</div>
+        <h2>Admin Login</h2>
+        <p>Use the same email that you added in Supabase SQL and Authentication Users.</p>
+
+        <form class="formGrid" onsubmit="loginAdmin(event)">
+          <div class="field">
+            <label>Email</label>
+            <input id="loginEmail" type="email" required placeholder="admin@example.com">
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <input id="loginPassword" type="password" required placeholder="Your password">
+          </div>
+
+          <button class="btn primary" type="submit">Login</button>
+
+          <p id="loginMsg" class="muted"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="adminScreen" class="screen">
+    <main class="wrap main">
+
+      <div class="hero">
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h2 id="formTitle">Add New Cake</h2>
+              <p>Add photo URL, name, category, price and status. Changes show on website instantly.</p>
+            </div>
+            <button class="btn small" onclick="resetForm()">Clear</button>
+          </div>
+
+          <form class="cakeForm" onsubmit="saveCake(event)">
+            <input type="hidden" id="cakeId">
+
+            <div class="field">
+              <label>Cake Name *</label>
+              <input id="cakeName" required placeholder="Chocolate Birthday Cake">
+            </div>
+
+            <div class="field">
+              <label>Category *</label>
+              <input id="cakeCategory" required list="categoryList" placeholder="Birthday">
+              <datalist id="categoryList">
+                <option value="Birthday">
+                <option value="Wedding">
+                <option value="Kids">
+                <option value="Cupcakes">
+                <option value="Anniversary">
+                <option value="Classic">
+                <option value="Custom">
+              </datalist>
+            </div>
+
+            <div class="field full">
+              <label>Image URL *</label>
+              <input id="cakeImage" required placeholder="https://..." oninput="previewImage()">
+            </div>
+
+            <div id="imagePreviewBox" class="imagePreview">
+              <img id="imagePreview" src="" alt="Cake preview">
+              <div>
+                <b>Image preview</b>
+                <span id="imagePreviewUrl"></span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Starting Price</label>
+              <input id="cakePrice" type="number" min="0" step="0.01" placeholder="45">
+            </div>
+
+            <div class="field">
+              <label>Sort Order</label>
+              <input id="sortOrder" type="number" min="0" step="1" placeholder="0">
+            </div>
+
+            <div class="field full">
+              <label>Description</label>
+              <textarea id="cakeDescription" placeholder="Short cake details..."></textarea>
+            </div>
+
+            <div class="checkRow">
+              <label class="checkBox">
+                <input id="isActive" type="checkbox" checked>
+                Active / Show on website
+              </label>
+
+              <label class="checkBox">
+                <input id="isFeatured" type="checkbox">
+                Featured cake
+              </label>
+            </div>
+
+            <div class="formActions">
+              <button class="btn green" type="submit" id="saveBtn">Save Cake</button>
+              <button class="btn" type="button" onclick="resetForm()">Cancel Edit</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>Dashboard</h3>
+              <p>Quick status of your cake catalogue.</p>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <b id="totalCount">0</b>
+              <span>Total Cakes</span>
+            </div>
+            <div class="stat">
+              <b id="activeCount">0</b>
+              <span>Active</span>
+            </div>
+            <div class="stat">
+              <b id="featuredCount">0</b>
+              <span>Featured</span>
+            </div>
+            <div class="stat">
+              <b id="hiddenCount">0</b>
+              <span>Hidden</span>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="notice">
+            <b>Important:</b> Use image URLs for now. Later we can add Supabase Storage upload button, order history, WhatsApp settings, coupons, and delivery areas.
+          </div>
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h3>Cake List</h3>
+            <p>Edit, hide, feature or delete cakes from here.</p>
+          </div>
+
+          <button class="btn small" onclick="loadCakes()">Refresh</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="searchBox">
+            <span>🔎</span>
+            <input id="searchInput" placeholder="Search cake, category, description..." oninput="renderCakes()">
+          </div>
+
+          <select id="statusFilter" class="selectMini" onchange="renderCakes()">
+            <option value="all">All Status</option>
+            <option value="active">Active Only</option>
+            <option value="hidden">Hidden Only</option>
+            <option value="featured">Featured Only</option>
+          </select>
+
+          <select id="sortFilter" class="selectMini" onchange="renderCakes()">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="sort_order">Sort Order</option>
+            <option value="name">Name A-Z</option>
+            <option value="price_low">Price Low</option>
+            <option value="price_high">Price High</option>
+          </select>
+        </div>
+
+        <div id="cakeList" class="list">
+          <div class="empty">Loading cakes...</div>
+        </div>
+      </section>
+
+    </main>
+  </section>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const SUPABASE_URL = "https://rdpynngsjhzirxwzrxdd.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_oPaplUdywtmujaMjyyzHTQ_6fqthIzu";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+    let allCakes = [];
+
+    const $ = (id) => document.getElementById(id);
+
+    init();
+
+    async function init(){
+      const { data } = await supabaseClient.auth.getSession();
+
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+        await verifyAdminAndLoad();
+      }else{
+        showLogin();
+      }
+
+      supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+        if(session && session.user){
+          currentUser = session.user;
+          await verifyAdminAndLoad();
+        }else{
+          currentUser = null;
+          showLogin();
+        }
+      });
+    }
+
+    function showLogin(){
+      $("loginScreen").classList.add("show");
+      $("adminScreen").classList.remove("show");
+      $("signOutBtn").style.display = "none";
+      $("adminEmailPill").textContent = "Not logged in";
+    }
+
+    function showAdmin(){
+      $("loginScreen").classList.remove("show");
+      $("adminScreen").classList.add("show");
+      $("signOutBtn").style.display = "inline-flex";
+      $("adminEmailPill").textContent = currentUser?.email || "Admin";
+    }
+
+    async function loginAdmin(event){
+      event.preventDefault();
+
+      const email = $("loginEmail").value.trim();
+      const password = $("loginPassword").value;
+
+      $("loginMsg").textContent = "Logging in...";
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if(error){
+        $("loginMsg").textContent = error.message;
+        showToast(error.message, true);
+        return;
+      }
+
+      currentUser = data.user;
+      await verifyAdminAndLoad();
+    }
+
+    async function verifyAdminAndLoad(){
+      if(!currentUser){
+        showLogin();
+        return;
+      }
+
+      try{
+        const { data, error } = await supabaseClient
+          .from("app_admins")
+          .select("email")
+          .eq("email", currentUser.email)
+          .maybeSingle();
+
+        if(error) throw error;
+
+        if(!data){
+          showToast("This email is not added as admin in app_admins table.", true);
+          await supabaseClient.auth.signOut();
+          showLogin();
+          return;
+        }
+
+        showAdmin();
+        await loadCakes();
+      }catch(err){
+        showToast("Admin check failed: " + err.message, true);
+        console.error(err);
+      }
+    }
+
+    async function signOut(){
+      await supabaseClient.auth.signOut();
+      resetForm();
+      allCakes = [];
+      showLogin();
+      showToast("Signed out");
+    }
+
+    async function loadCakes(){
+      $("cakeList").innerHTML = `<div class="empty">Loading cakes...</div>`;
+
+      const { data, error } = await supabaseClient
+        .from("cakes")
+        .select("*")
+        .order("sort_order", { ascending:true })
+        .order("created_at", { ascending:false });
+
+      if(error){
+        $("cakeList").innerHTML = `<div class="empty dangerText">${escapeHtml(error.message)}</div>`;
+        showToast(error.message, true);
+        return;
+      }
+
+      allCakes = Array.isArray(data) ? data : [];
+      updateStats();
+      updateCategoryList();
+      renderCakes();
+    }
+
+    function updateStats(){
+      $("totalCount").textContent = allCakes.length;
+      $("activeCount").textContent = allCakes.filter(c => c.is_active).length;
+      $("featuredCount").textContent = allCakes.filter(c => c.is_featured).length;
+      $("hiddenCount").textContent = allCakes.filter(c => !c.is_active).length;
+    }
+
+    function updateCategoryList(){
+      const defaultCats = ["Birthday","Wedding","Kids","Cupcakes","Anniversary","Classic","Custom"];
+      const cats = [...new Set([...defaultCats, ...allCakes.map(c => c.category).filter(Boolean)])];
+
+      $("categoryList").innerHTML = cats.map(cat => `<option value="${escapeHtml(cat)}">`).join("");
+    }
+
+    function renderCakes(){
+      const search = $("searchInput").value.trim().toLowerCase();
+      const status = $("statusFilter").value;
+      const sort = $("sortFilter").value;
+
+      let cakes = [...allCakes];
+
+      if(search){
+        cakes = cakes.filter(c => {
+          const combined = `${c.name || ""} ${c.category || ""} ${c.description || ""}`.toLowerCase();
+          return combined.includes(search);
+        });
+      }
+
+      if(status === "active") cakes = cakes.filter(c => c.is_active);
+      if(status === "hidden") cakes = cakes.filter(c => !c.is_active);
+      if(status === "featured") cakes = cakes.filter(c => c.is_featured);
+
+      cakes.sort((a,b) => {
+        if(sort === "oldest") return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+        if(sort === "sort_order") return Number(a.sort_order || 0) - Number(b.sort_order || 0);
+        if(sort === "name") return String(a.name || "").localeCompare(String(b.name || ""));
+        if(sort === "price_low") return Number(a.starting_price || 0) - Number(b.starting_price || 0);
+        if(sort === "price_high") return Number(b.starting_price || 0) - Number(a.starting_price || 0);
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+      });
+
+      if(!cakes.length){
+        $("cakeList").innerHTML = `<div class="empty">No cakes found.</div>`;
+        return;
+      }
+
+      $("cakeList").innerHTML = cakes.map(cake => {
+        const price = cake.starting_price === null || cake.starting_price === undefined || cake.starting_price === ""
+          ? "Custom price"
+          : "$" + Number(cake.starting_price).toFixed(2).replace(".00","");
+
+        return `
+          <article class="cakeItem">
+            <div class="cakeTop">
+              <img src="${escapeHtml(cake.image_url || "")}" alt="${escapeHtml(cake.name || "Cake")}" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80'">
+
+              <div class="cakeInfo">
+                <h4>${escapeHtml(cake.name || "Untitled Cake")}</h4>
+                <p>${escapeHtml(cake.description || "No description")}</p>
+
+                <div class="badges">
+                  <span class="badge">${escapeHtml(cake.category || "Custom")}</span>
+                  <span class="badge">${price}</span>
+                  <span class="badge ${cake.is_active ? "active" : "inactive"}">${cake.is_active ? "Active" : "Hidden"}</span>
+                  ${cake.is_featured ? `<span class="badge featured">Featured</span>` : ""}
+                  <span class="badge">Sort ${Number(cake.sort_order || 0)}</span>
+                </div>
+              </div>
+
+              <div class="itemActions">
+                <button class="btn small" onclick="editCake('${cake.id}')">Edit</button>
+                <button class="btn small" onclick="toggleActive('${cake.id}', ${cake.is_active ? "false" : "true"})">${cake.is_active ? "Hide" : "Show"}</button>
+                <button class="btn red small" onclick="deleteCake('${cake.id}')">Delete</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function saveCake(event){
+      event.preventDefault();
+
+      const id = $("cakeId").value.trim();
+
+      const payload = {
+        name: $("cakeName").value.trim(),
+        category: $("cakeCategory").value.trim() || "Custom",
+        description: $("cakeDescription").value.trim(),
+        image_url: $("cakeImage").value.trim(),
+        starting_price: $("cakePrice").value === "" ? null : Number($("cakePrice").value),
+        sort_order: $("sortOrder").value === "" ? 0 : Number($("sortOrder").value),
+        is_active: $("isActive").checked,
+        is_featured: $("isFeatured").checked
+      };
+
+      if(!payload.name || !payload.image_url){
+        showToast("Cake name and image URL are required.", true);
+        return;
+      }
+
+      $("saveBtn").textContent = id ? "Updating..." : "Saving...";
+      $("saveBtn").disabled = true;
+
+      let result;
+
+      if(id){
+        result = await supabaseClient
+          .from("cakes")
+          .update(payload)
+          .eq("id", id)
+          .select()
+          .single();
+      }else{
+        result = await supabaseClient
+          .from("cakes")
+          .insert(payload)
+          .select()
+          .single();
+      }
+
+      $("saveBtn").disabled = false;
+      $("saveBtn").textContent = "Save Cake";
+
+      if(result.error){
+        showToast(result.error.message, true);
+        return;
+      }
+
+      showToast(id ? "Cake updated" : "Cake added");
+      resetForm();
+      await loadCakes();
+    }
+
+    function editCake(id){
+      const cake = allCakes.find(c => c.id === id);
+      if(!cake) return;
+
+      $("cakeId").value = cake.id;
+      $("cakeName").value = cake.name || "";
+      $("cakeCategory").value = cake.category || "Custom";
+      $("cakeImage").value = cake.image_url || "";
+      $("cakePrice").value = cake.starting_price ?? "";
+      $("sortOrder").value = cake.sort_order ?? 0;
+      $("cakeDescription").value = cake.description || "";
+      $("isActive").checked = !!cake.is_active;
+      $("isFeatured").checked = !!cake.is_featured;
+
+      $("formTitle").textContent = "Edit Cake";
+      $("saveBtn").textContent = "Update Cake";
+
+      previewImage();
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    async function toggleActive(id, nextValue){
+      const { error } = await supabaseClient
+        .from("cakes")
+        .update({ is_active: nextValue })
+        .eq("id", id);
+
+      if(error){
+        showToast(error.message, true);
+        return;
+      }
+
+      showToast(nextValue ? "Cake is visible now" : "Cake hidden from website");
+      await loadCakes();
+    }
+
+    async function deleteCake(id){
+      const cake = allCakes.find(c => c.id === id);
+      const name = cake?.name || "this cake";
+
+      const ok = confirm(`Delete "${name}" permanently?`);
+      if(!ok) return;
+
+      const { error } = await supabaseClient
+        .from("cakes")
+        .delete()
+        .eq("id", id);
+
+      if(error){
+        showToast(error.message, true);
+        return;
+      }
+
+      if($("cakeId").value === id) resetForm();
+
+      showToast("Cake deleted");
+      await loadCakes();
+    }
+
+    function resetForm(){
+      $("cakeId").value = "";
+      $("cakeName").value = "";
+      $("cakeCategory").value = "";
+      $("cakeImage").value = "";
+      $("cakePrice").value = "";
+      $("sortOrder").value = "";
+      $("cakeDescription").value = "";
+      $("isActive").checked = true;
+      $("isFeatured").checked = false;
+      $("formTitle").textContent = "Add New Cake";
+      $("saveBtn").textContent = "Save Cake";
+      $("saveBtn").disabled = false;
+      $("imagePreviewBox").classList.remove("show");
+      $("imagePreview").src = "";
+      $("imagePreviewUrl").textContent = "";
+    }
+
+    function previewImage(){
+      const url = $("cakeImage").value.trim();
+
+      if(!url){
+        $("imagePreviewBox").classList.remove("show");
+        return;
+      }
+
+      $("imagePreview").src = url;
+      $("imagePreviewUrl").textContent = url;
+      $("imagePreviewBox").classList.add("show");
+    }
+
+    function showToast(message, isError = false){
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.style.borderColor = isError ? "rgba(255,91,110,.35)" : "rgba(255,255,255,.09)";
+      toast.style.color = isError ? "#ffdce1" : "var(--text)";
+      toast.classList.add("show");
+
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2600);
+    }
+
+    function escapeHtml(value){
+      return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+  </script>
+</body>
+</html>
