@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Your Order - Siffat Cakes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#fbf4fb;
+      --text:#1d141f;
+      --muted:#725a76;
+      --purple:#640D6B;
+      --purple2:#7a1281;
+      --line:rgba(100,13,107,.16);
+      --shadow:0 18px 45px rgba(100,13,107,.12);
+      --shadow2:0 10px 24px rgba(100,13,107,.08);
+      --green:#16823a;
+      --red:#b42318;
+      --orange:#b54708;
+      --blue:#175cd3;
+      --soft:#fff7ff;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html{
+      width:100%;
+      min-height:100%;
+      scroll-behavior:smooth;
+      background:var(--bg);
+    }
+
+    body{
+      width:100%;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(100,13,107,.12),transparent 33%),
+        radial-gradient(circle at 100% 0%,rgba(122,18,129,.08),transparent 30%),
+        linear-gradient(180deg,var(--bg),#fff 58%,#fff);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    button,input,select,textarea{
+      font:inherit;
+    }
+
+    button{
+      border:0;
+      cursor:pointer;
+      background:none;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    .wrap{
+      width:min(1280px,calc(100% - 32px));
+      margin:auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:80;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav{
+      min-height:60px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .logo{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      color:#fff;
+      box-shadow:0 12px 28px rgba(100,13,107,.22);
+      font-size:20px;
+      overflow:hidden;
+      flex:0 0 auto;
+      border:2px solid rgba(255,255,255,.85);
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      background:#fff;
+    }
+
+    .brand h1{
+      color:var(--purple);
+      font-size:18px;
+      line-height:1;
+      letter-spacing:-.045em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:260px;
+    }
+
+    .brand p{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:750;
+      white-space:nowrap;
+      max-width:280px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .navActions{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      justify-content:flex-end;
+      min-width:0;
+    }
+
+    .navLink{
+      padding:9px 11px;
+      border:1px solid transparent;
+      color:var(--muted);
+      border-radius:999px;
+      font-size:13px;
+      font-weight:900;
+      transition:.18s ease;
+      white-space:nowrap;
+    }
+
+    .navLink:hover{
+      color:var(--purple);
+      background:rgba(100,13,107,.07);
+      border-color:rgba(100,13,107,.12);
+    }
+
+    .btn,
+    .primaryBtn,
+    .ghostBtn,
+    .cartBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:40px;
+      padding:10px 13px;
+      border-radius:999px;
+      color:var(--purple);
+      font-weight:1000;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:0 8px 18px rgba(100,13,107,.04);
+      transition:.18s ease;
+      white-space:nowrap;
+      font-size:13px;
+    }
+
+    .btn:hover,
+    .ghostBtn:hover,
+    .cartBtn:hover{
+      transform:translateY(-1px);
+      background:#fff7ff;
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none!important;
+    }
+
+    .primaryBtn,
+    .btn.primary{
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      border-color:rgba(100,13,107,.30);
+      color:#fff;
+      box-shadow:0 12px 26px rgba(100,13,107,.20);
+    }
+
+    .primaryBtn:hover,
+    .btn.primary:hover{
+      transform:translateY(-1px);
+      box-shadow:0 16px 34px rgba(100,13,107,.28);
+    }
+
+    .btn.green{
+      background:rgba(22,130,58,.08);
+      border-color:rgba(22,130,58,.22);
+      color:var(--green);
+    }
+
+    .btn.red{
+      background:rgba(180,35,24,.08);
+      border-color:rgba(180,35,24,.20);
+      color:var(--red);
+    }
+
+    .btn.small{
+      min-height:34px;
+      padding:7px 10px;
+      font-size:12px;
+    }
+
+    .btn.block{
+      width:100%;
+    }
+
+    .cartBtn{
+      min-height:40px;
+      padding:10px 12px;
+      background:#fff;
+      color:var(--purple);
+    }
+
+    .cartCount{
+      min-width:20px;
+      height:20px;
+      padding:0 6px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:var(--purple);
+      color:#fff;
+      font-size:11px;
+      font-weight:1000;
+    }
+
+    .navSvg{
+      width:18px;
+      height:18px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.25;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      flex:0 0 auto;
+    }
+
+    .mobileMenuBtn{
+      display:none;
+    }
+
+    .mobileMenu{
+      display:none;
+      border-top:1px solid var(--line);
+      padding:10px 0 12px;
+      background:rgba(255,255,255,.92);
+    }
+
+    .mobileMenu.show{
+      display:grid;
+      gap:8px;
+    }
+
+    .mobileMenu a{
+      padding:11px 12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:900;
+      font-size:13px;
+      color:var(--purple);
+      box-shadow:0 8px 16px rgba(100,13,107,.04);
+    }
+
+    .trackHero{
+      min-height:calc(100vh - 60px);
+      display:grid;
+      place-items:center;
+      padding:22px 0;
+    }
+
+    .trackGrid{
+      display:grid;
+      grid-template-columns:minmax(0,.9fr) minmax(360px,1.1fr);
+      gap:14px;
+      align-items:stretch;
+      width:100%;
+    }
+
+    .heroCard{
+      border-radius:34px;
+      padding:34px;
+      background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.14),transparent 30%),
+        linear-gradient(135deg,var(--purple),var(--purple2));
+      color:#fff;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      overflow:hidden;
+      position:relative;
+      min-height:480px;
+    }
+
+    .heroCard::after{
+      content:"";
+      position:absolute;
+      width:300px;
+      height:300px;
+      right:-90px;
+      bottom:-100px;
+      border-radius:50%;
+      background:rgba(255,255,255,.10);
+      pointer-events:none;
+    }
+
+    .heroCard > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .heroBadge{
+      width:max-content;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.20);
+      background:rgba(255,255,255,.12);
+      color:rgba(255,255,255,.92);
+      font-size:12px;
+      font-weight:1000;
+      margin-bottom:16px;
+    }
+
+    .heroCard h2{
+      font-size:clamp(38px,5vw,68px);
+      line-height:.98;
+      letter-spacing:-.08em;
+    }
+
+    .heroCard h2 span{
+      color:#ffe7ff;
+    }
+
+    .heroCard p{
+      margin-top:14px;
+      color:rgba(255,255,255,.86);
+      font-size:15px;
+      line-height:1.55;
+      max-width:620px;
+      font-weight:700;
+    }
+
+    .heroMiniGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:22px;
+      max-width:560px;
+    }
+
+    .heroMini{
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:12px;
+      backdrop-filter:blur(12px);
+    }
+
+    .heroMini b{
+      display:block;
+      font-size:13px;
+      margin-bottom:4px;
+    }
+
+    .heroMini span{
+      display:block;
+      color:rgba(255,255,255,.80);
+      font-size:12px;
+      line-height:1.45;
+      font-weight:650;
+    }
+
+    .trackCard{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.94);
+      border-radius:34px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      min-width:0;
+    }
+
+    .cardHead{
+      padding:0 0 14px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .cardHead h3{
+      color:var(--purple);
+      font-size:20px;
+      letter-spacing:-.05em;
+    }
+
+    .cardHead p{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.42;
+      font-weight:700;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom:10px;
+      min-width:0;
+    }
+
+    .field label{
+      color:var(--purple);
+      font-size:12px;
+      font-weight:1000;
+    }
+
+    .field input{
+      width:100%;
+      min-height:45px;
+      border:1px solid var(--line);
+      outline:none;
+      border-radius:15px;
+      background:#fff;
+      color:var(--text);
+      padding:12px;
+      box-shadow:0 8px 18px rgba(100,13,107,.035);
+      font-weight:750;
+    }
+
+    .field input:focus{
+      border-color:rgba(100,13,107,.38);
+      box-shadow:0 0 0 4px rgba(100,13,107,.08);
+    }
+
+    .hint{
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .inputHelp{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      border:1px solid rgba(100,13,107,.14);
+      background:#fff7ff;
+      border-radius:17px;
+      padding:10px;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+      font-weight:750;
+    }
+
+    .inputHelp svg{
+      width:18px;
+      height:18px;
+      flex:0 0 auto;
+      color:var(--purple);
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      margin-top:1px;
+    }
+
+    .result{
+      margin-top:14px;
+      display:none;
+    }
+
+    .result.show{
+      display:block;
+    }
+
+    .loading{
+      padding:22px;
+      border:1px dashed rgba(100,13,107,.22);
+      border-radius:18px;
+      color:var(--muted);
+      text-align:center;
+      background:rgba(255,255,255,.70);
+      line-height:1.5;
+      font-size:13px;
+      font-weight:750;
+    }
+
+    .orderSummary{
+      border:1px solid var(--line);
+      background:#fff7ff;
+      border-radius:20px;
+      padding:13px;
+      margin-top:12px;
+    }
+
+    .orderSummary h3{
+      color:var(--purple);
+      font-size:17px;
+      letter-spacing:-.04em;
+      margin-bottom:7px;
+    }
+
+    .orderSummary p{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.65;
+      font-weight:700;
+    }
+
+    .orderSummary b{
+      color:var(--text);
+    }
+
+    .statusPill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      width:max-content;
+      max-width:100%;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--purple);
+      font-size:12px;
+      font-weight:1000;
+      margin-bottom:8px;
+    }
+
+    .statusDot{
+      width:9px;
+      height:9px;
+      border-radius:99px;
+      background:var(--purple);
+    }
+
+    .statusPill.Pending .statusDot{background:var(--orange)}
+    .statusPill.Confirmed .statusDot{background:var(--blue)}
+    .statusPill.InProgress .statusDot{background:#4a5fd0}
+    .statusPill.Ready .statusDot{background:var(--green)}
+    .statusPill.Completed .statusDot{background:var(--green)}
+    .statusPill.Cancelled .statusDot{background:var(--red)}
+
+    .progress{
+      display:grid;
+      gap:9px;
+      margin-top:12px;
+    }
+
+    .step{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:18px;
+      transition:.18s ease;
+    }
+
+    .stepDot{
+      width:32px;
+      height:32px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:#fff7ff;
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-weight:1000;
+      flex:0 0 auto;
+      font-size:12px;
+    }
+
+    .step.done .stepDot{
+      background:var(--purple);
+      border-color:var(--purple);
+      color:#fff;
+    }
+
+    .step.active{
+      border-color:rgba(100,13,107,.35);
+      box-shadow:0 12px 24px rgba(100,13,107,.10);
+      background:linear-gradient(180deg,#fff,#fff7ff);
+    }
+
+    .step.cancelled{
+      border-color:rgba(180,35,24,.22);
+      background:rgba(180,35,24,.05);
+    }
+
+    .step.cancelled .stepDot{
+      background:var(--red);
+      color:#fff;
+      border-color:var(--red);
+    }
+
+    .step b{
+      display:block;
+      font-size:13px;
+      color:var(--text);
+    }
+
+    .step span{
+      display:block;
+      margin-top:3px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+      font-weight:700;
+    }
+
+    .history{
+      display:grid;
+      gap:7px;
+      margin-top:8px;
+    }
+
+    .historyItem{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:15px;
+      padding:9px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .historyItem b{
+      color:var(--text);
+    }
+
+    .actionRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      z-index:220;
+      max-width:min(560px,calc(100% - 24px));
+      background:var(--purple);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 15px;
+      font-size:13px;
+      font-weight:1000;
+      box-shadow:0 18px 36px rgba(100,13,107,.24);
+      transition:.2s ease;
+      text-align:center;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .footer{
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.72);
+      padding:18px 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .footerInner{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .footerBrand{
+      color:var(--purple);
+      font-weight:1000;
+      font-size:13px;
+    }
+
+    .footerSmall{
+      display:block;
+      margin-top:4px;
+      line-height:1.45;
+      font-weight:650;
+    }
+
+    .footerLinks{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .footerLinks a{
+      color:var(--purple);
+      font-weight:900;
+    }
+
+    @media(max-width:900px){
+      .trackGrid{
+        grid-template-columns:1fr;
+      }
+
+      .heroCard{
+        min-height:auto;
+        border-radius:28px;
+        padding:24px;
+      }
+
+      .trackHero{
+        min-height:auto;
+        place-items:start center;
+      }
+    }
+
+    @media(max-width:720px){
+      body{
+        background:
+          radial-gradient(circle at 0% 0%, rgba(100,13,107,.08), transparent 26%),
+          linear-gradient(180deg,#fff8ff,#fff 40%,#fff);
+      }
+
+      .wrap{
+        width:min(100% - 18px,1280px);
+      }
+
+      .topbar{
+        background:rgba(255,255,255,.94);
+        box-shadow:0 10px 28px rgba(100,13,107,.07);
+      }
+
+      .nav{
+        min-height:54px;
+        gap:8px;
+      }
+
+      .logo{
+        width:36px;
+        height:36px;
+        font-size:18px;
+        box-shadow:0 8px 18px rgba(100,13,107,.16);
+      }
+
+      .brand{
+        gap:8px;
+      }
+
+      .brand p{
+        display:none;
+      }
+
+      .brand h1{
+        font-size:16px;
+        max-width:145px;
+        letter-spacing:-.035em;
+      }
+
+      .navActions{
+        gap:6px;
+      }
+
+      .navLink{
+        display:none;
+      }
+
+      .mobileMenuBtn{
+        display:inline-flex;
+      }
+
+      .cartBtn,
+      .mobileMenuBtn{
+        min-height:36px;
+        padding:8px 10px;
+        font-size:0;
+        border-radius:999px;
+        background:rgba(255,255,255,.88);
+        border-color:rgba(100,13,107,.14);
+        box-shadow:0 8px 18px rgba(100,13,107,.07);
+      }
+
+      .cartBtn{
+        min-width:58px;
+        gap:5px;
+      }
+
+      .cartBtn .navSvg,
+      .mobileMenuBtn .navSvg{
+        width:17px;
+        height:17px;
+      }
+
+      .cartCount{
+        min-width:20px;
+        height:20px;
+        font-size:10px;
+        background:linear-gradient(135deg,var(--purple),var(--purple2));
+      }
+
+      #whatsappBtn{
+        min-height:36px;
+        padding:0 12px;
+        font-size:12px;
+        box-shadow:0 10px 22px rgba(100,13,107,.20);
+      }
+
+      .trackHero{
+        padding:12px 0 22px;
+      }
+
+      .trackGrid{
+        gap:10px;
+      }
+
+      .heroCard{
+        border-radius:24px;
+        padding:19px;
+      }
+
+      .heroBadge{
+        font-size:11px;
+        margin-bottom:12px;
+      }
+
+      .heroCard h2{
+        font-size:38px;
+        line-height:1.02;
+        letter-spacing:-.075em;
+      }
+
+      .heroCard p{
+        font-size:13px;
+        line-height:1.52;
+      }
+
+      .heroMiniGrid{
+        grid-template-columns:1fr;
+        gap:8px;
+        margin-top:16px;
+      }
+
+      .heroMini{
+        padding:10px;
+        border-radius:16px;
+      }
+
+      .trackCard{
+        border-radius:24px;
+        padding:14px;
+        box-shadow:0 14px 32px rgba(100,13,107,.10);
+      }
+
+      .cardHead h3{
+        font-size:18px;
+      }
+
+      .field input{
+        min-height:44px;
+        border-radius:14px;
+      }
+
+      .btn.block{
+        min-height:43px;
+      }
+
+      .actionRow{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .actionRow .btn{
+        width:100%;
+      }
+
+      .footerLinks{
+        justify-content:flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="Siffat Cakes homepage">
+      <div id="siteLogo" class="logo">🍰</div>
+      <div>
+        <h1 id="siteBrandName">Siffat Cakes</h1>
+        <p id="siteTagline">Track your order</p>
+      </div>
+    </a>
+
+    <div class="navActions">
+      <a class="navLink" href="index.html">Home</a>
+      <a class="navLink" href="index.html#menu">Menu</a>
+      <a class="navLink" href="cake.html?custom=true">Custom Cake</a>
+
+      <a class="cartBtn" href="cart.html" aria-label="Open cart">
+        <svg class="navSvg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6.5 6.5h14l-1.5 8.2a2 2 0 0 1-2 1.65H9.3a2 2 0 0 1-1.95-1.55L5.6 4.8H3.5"/>
+          <circle cx="9.5" cy="20" r="1.35"/>
+          <circle cx="17" cy="20" r="1.35"/>
+        </svg>
+        <span class="cartCount" id="cartCount">0</span>
+      </a>
+
+      <button class="ghostBtn mobileMenuBtn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">
+        <svg class="navSvg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 7.5h14M5 12h14M5 16.5h14"/>
+        </svg>
+      </button>
+
+      <a id="whatsappBtn" class="primaryBtn" href="#" target="_blank" rel="noopener">Contact</a>
+    </div>
+  </div>
+
+  <div class="wrap mobileMenu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="index.html#menu">Main Menu</a>
+    <a href="category.html?cat=cakes">Cakes</a>
+    <a href="cake.html?custom=true">Create Custom Cake</a>
+    <a href="cart.html">Cart</a>
+  </div>
+</header>
+
+<main class="wrap trackHero">
+  <div class="trackGrid">
+    <section class="heroCard">
+      <div class="heroBadge">
+        <span>🍰</span>
+        <span>Order Status</span>
+      </div>
+
+      <h2>Track your <span>sweet order.</span></h2>
+
+      <p>
+        Enter your tracking code and the phone number or email used during checkout. You’ll see whether your order is pending, confirmed, in progress, ready, or completed.
+      </p>
+
+      <div class="heroMiniGrid">
+        <div class="heroMini">
+          <b>Privacy protected</b>
+          <span>Tracking requires both order code and customer contact.</span>
+        </div>
+
+        <div class="heroMini">
+          <b>Live status</b>
+          <span>Status updates come from the Siffat Cakes order manager.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="trackCard">
+      <div class="cardHead">
+        <div>
+          <h3>Order Tracking</h3>
+          <p>Use the tracking code or order ID shared by Siffat Cakes.</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Tracking Code / Order ID</label>
+        <input id="trackingCode" placeholder="Example: A1B2C3D4" autocomplete="off" inputmode="text">
+      </div>
+
+      <div class="field">
+        <label>Phone or Email</label>
+        <input id="contact" placeholder="Phone or email used on order" autocomplete="off" inputmode="email">
+      </div>
+
+      <button id="trackBtn" class="btn primary block" type="button" onclick="trackOrder()">Track Order</button>
+
+      <div class="inputHelp">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8h.01M11.2 11.5h1v5h1"/>
+        </svg>
+        <div>
+          For privacy, both tracking code and customer phone/email are required. Use the same phone/email entered during checkout.
+        </div>
+      </div>
+
+      <div id="trackResult" class="result"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footerInner">
+    <div>
+      <div class="footerBrand">© <span id="year"></span> <span id="footerBrand">Siffat Cakes</span></div>
+      <span class="footerSmall" id="footerAddress">381 Talbot Street, St. Thomas</span>
+    </div>
+
+    <div class="footerLinks">
+      <a href="index.html">Home</a>
+      <a href="index.html#menu">Menu</a>
+      <a href="category.html?cat=cakes">Cakes</a>
+      <a href="cake.html?custom=true">Custom Cake</a>
+      <a href="cart.html">Cart</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  const SUPABASE_URL = "https://qchzgwrnibgziqkepnpb.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_u72M1JPe6j9PIqXJ3qtDHA_KDnZheCL";
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const CART_KEY = "cakeShopCartV1";
+  const SETTINGS_CACHE_KEY = "siffatTrackSettingsCacheV2";
+  const SETTINGS_CACHE_MAX_AGE_MS = 1000 * 60 * 60 * 12;
+
+  const LOAD_TIMEOUT_MS = 9000;
+  const LOAD_RETRY_DELAYS = [0, 900, 1800, 3500];
+
+  const DEFAULT_SETTINGS = {
+    brand_name:"Siffat Cakes",
+    tagline:"Eggless Cakes & Desserts",
+    logo_url:"",
+    whatsapp_number:"",
+    instagram_url:"",
+    address:"381 Talbot Street, St. Thomas",
+    business_hours:"",
+    service_area:"",
+    currency:"$"
+  };
+
+  const BASE_FLOW = ["Pending","Confirmed","In Progress","Ready","Completed"];
+
+  let siteSettings = {...DEFAULT_SETTINGS};
+
+  const $ = id => document.getElementById(id);
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    $("year").textContent = new Date().getFullYear();
+
+    updateCartCount();
+    applyCachedSettings();
+    applySettings();
+
+    setupQueryParams();
+    setupEnterKeys();
+
+    await loadSettings();
+  });
+
+  window.addEventListener("pageshow", () => {
+    updateCartCount();
+  });
+
+  function setupQueryParams(){
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code") || params.get("order") || "";
+
+    if(code){
+      $("trackingCode").value = String(code).toUpperCase().trim();
+
+      const box = $("trackResult");
+      box.classList.add("show");
+      box.innerHTML = `
+        <div class="loading">
+          Tracking code added. Enter the customer phone/email and press <b>Track Order</b>.
+        </div>
+      `;
+    }
+  }
+
+  function setupEnterKeys(){
+    ["trackingCode","contact"].forEach(id => {
+      const el = $(id);
+      if(!el) return;
+
+      el.addEventListener("keydown", event => {
+        if(event.key === "Enter"){
+          event.preventDefault();
+          trackOrder();
+        }
+      });
+    });
+
+    $("trackingCode").addEventListener("input", () => {
+      $("trackingCode").value = $("trackingCode").value.toUpperCase();
+    });
+  }
+
+  async function loadSettings(){
+    let lastErr = null;
+
+    for(let attempt = 0; attempt < LOAD_RETRY_DELAYS.length; attempt++){
+      if(LOAD_RETRY_DELAYS[attempt]) await wait(LOAD_RETRY_DELAYS[attempt]);
+
+      try{
+        const { data, error } = await withTimeout(
+          supabaseClient.from("site_settings").select("*").eq("id",1).maybeSingle(),
+          LOAD_TIMEOUT_MS
+        );
+
+        if(error) throw error;
+
+        siteSettings = {...DEFAULT_SETTINGS, ...(data || {})};
+        applySettings();
+        saveSettingsCache();
+        return;
+      }catch(err){
+        lastErr = err;
+        console.warn(`Track settings load attempt ${attempt + 1} failed:`, err?.message || err);
+      }
+    }
+
+    console.warn("Track settings failed:", lastErr?.message || lastErr);
+  }
+
+  function applyCachedSettings(){
+    try{
+      const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+      if(!raw) return;
+
+      const cached = JSON.parse(raw);
+      if(!cached || Date.now() - Number(cached.savedAt || 0) > SETTINGS_CACHE_MAX_AGE_MS) return;
+
+      siteSettings = {...DEFAULT_SETTINGS, ...(cached.siteSettings || {})};
+    }catch(err){
+      console.warn("Could not apply track settings cache:", err);
+    }
+  }
+
+  function saveSettingsCache(){
+    try{
+      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+        savedAt:Date.now(),
+        siteSettings
+      }));
+    }catch(err){
+      console.warn("Could not save track settings cache:", err);
+    }
+  }
+
+  function applySettings(){
+    const brand = siteSettings.brand_name || DEFAULT_SETTINGS.brand_name;
+    const tagline = siteSettings.tagline || "Track your order";
+    const logo = siteSettings.logo_url || "";
+    const phone = normalizePhone(siteSettings.whatsapp_number || "");
+
+    document.title = "Track Your Order - " + brand;
+
+    $("siteBrandName").textContent = brand;
+    $("siteTagline").textContent = tagline;
+    $("footerBrand").textContent = brand;
+    $("footerAddress").textContent = buildFooterInfo();
+
+    if(logo){
+      $("siteLogo").innerHTML = `<img src="${escapeHtml(cacheBustImage(logo))}" alt="${escapeHtml(brand)}" onerror="this.parentElement.textContent='🍰'">`;
+    }else{
+      $("siteLogo").textContent = "🍰";
+    }
+
+    const whatsappUrl = phone
+      ? `https://wa.me/${phone}?text=${encodeURIComponent("Hi, I want to ask about my Siffat Cakes order.")}`
+      : "#";
+
+    $("whatsappBtn").href = whatsappUrl;
+    $("whatsappBtn").onclick = phone ? null : e => {
+      e.preventDefault();
+      showToast("WhatsApp number is not set yet.", true);
+    };
+  }
+
+  async function trackOrder(){
+    const code = sanitizeTrackingCode($("trackingCode").value);
+    const contact = $("contact").value.trim();
+
+    $("trackingCode").value = code;
+
+    if(!code || !contact){
+      const box = $("trackResult");
+      box.classList.add("show");
+      box.innerHTML = `<div class="loading">Please enter both tracking code and phone/email.</div>`;
+      showToast("Enter tracking code and phone/email.", true);
+      return;
+    }
+
+    const box = $("trackResult");
+    const btn = $("trackBtn");
+
+    box.classList.add("show");
+    box.innerHTML = `<div class="loading">Checking order status...</div>`;
+
+    try{
+      if(btn) btn.disabled = true;
+
+      const data = await callTrackOrderWithRetry(code, contact, box);
+
+      if(!data || data.ok !== true){
+        box.innerHTML = `
+          <div class="loading">
+            ${escapeHtml(data?.message || "Order not found. Check tracking code and contact info.")}
+            <br><br>
+            Make sure you use the same phone/email entered during checkout.
+          </div>
+        `;
+        return;
+      }
+
+      renderResult(data.order || {}, Array.isArray(data.history) ? data.history : []);
+    }catch(err){
+      console.error(err);
+
+      box.innerHTML = `
+        <div class="loading">
+          <b>Tracking setup issue.</b><br>
+          Run the updated tracking SQL in Supabase, then refresh this page.
+          <br><br>
+          ${escapeHtml(err.message || "")}
+        </div>
+      `;
+    }finally{
+      if(btn) btn.disabled = false;
+    }
+  }
+
+  async function callTrackOrderWithRetry(code, contact, box){
+    let lastErr = null;
+
+    for(let attempt = 0; attempt < LOAD_RETRY_DELAYS.length; attempt++){
+      const delay = LOAD_RETRY_DELAYS[attempt];
+
+      if(delay){
+        await wait(delay);
+        box.innerHTML = `
+          <div class="loading">
+            Still checking... waking up order data.
+            <br>
+            Attempt ${attempt + 1}/${LOAD_RETRY_DELAYS.length}
+          </div>
+        `;
+      }
+
+      try{
+        await warmSupabase();
+
+        const { data, error } = await withTimeout(
+          supabaseClient.rpc("track_order", {
+            p_tracking_code:code,
+            p_contact:contact
+          }),
+          LOAD_TIMEOUT_MS
+        );
+
+        if(error) throw error;
+
+        return data;
+      }catch(err){
+        lastErr = err;
+        console.warn(`Track attempt ${attempt + 1} failed:`, err?.message || err);
+      }
+    }
+
+    throw lastErr || new Error("Tracking request failed.");
+  }
+
+  async function warmSupabase(){
+    try{
+      await withTimeout(
+        supabaseClient.from("site_settings").select("id").eq("id",1).maybeSingle(),
+        LOAD_TIMEOUT_MS
+      );
+    }catch(err){
+      console.warn("Track warm-up skipped:", err?.message || err);
+    }
+  }
+
+  function renderResult(order, history){
+    const rawStatus = order.status || "Pending";
+    const status = normalizeDisplayStatus(rawStatus, order.delivery_type || "");
+    const flow = getFlowForOrder(order);
+    const activeIndex = getStatusIndex(status, flow);
+    const isCancelled = status === "Cancelled";
+
+    const steps = flow.map((step,i) => {
+      const done = !isCancelled && i < activeIndex;
+      const active = !isCancelled && i === activeIndex;
+
+      return `
+        <div class="step ${done ? "done" : ""} ${active ? "active" : ""}">
+          <div class="stepDot">${done ? "✓" : i + 1}</div>
+          <div>
+            <b>${escapeHtml(step)}</b>
+            <span>${escapeHtml(getStepText(step, order.delivery_type || ""))}</span>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    const cancelBlock = `
+      <div class="step active cancelled">
+        <div class="stepDot">!</div>
+        <div>
+          <b>Cancelled</b>
+          <span>This order was cancelled. Contact the shop if this looks wrong.</span>
+        </div>
+      </div>
+    `;
+
+    const statusClass = escapeClass(status.replaceAll(" ",""));
+
+    $("trackResult").innerHTML = `
+      <div class="orderSummary">
+        <div class="statusPill ${statusClass}">
+          <span class="statusDot"></span>
+          <span>Status: ${escapeHtml(rawStatus)}</span>
+        </div>
+
+        <h3>${escapeHtml(getFriendlyStatusTitle(status, order.delivery_type || ""))}</h3>
+
+        <p>
+          <b>Tracking:</b> ${escapeHtml(order.tracking_code || String(order.id || "").slice(0,8).toUpperCase() || "")}
+          <br>
+          <b>Needed:</b> ${formatDate(order.needed_date)} ${order.needed_time ? escapeHtml(order.needed_time) : ""}
+          <br>
+          <b>Type:</b> ${escapeHtml(order.delivery_type || "Not selected")}
+          <br>
+          <b>Estimated Total:</b> ${Number(order.estimated_total || 0) ? money(order.estimated_total) : "Quote / Confirm with shop"}
+        </p>
+
+        <div class="actionRow">
+          <a class="btn small" href="index.html#menu">Browse Menu</a>
+          <a class="btn primary small" href="${escapeHtml(getWhatsAppOrderLink(order))}" target="_blank" rel="noopener">Message Shop</a>
+        </div>
+      </div>
+
+      <div class="progress">
+        ${isCancelled ? cancelBlock : steps}
+      </div>
+
+      <div class="orderSummary">
+        <h3>Status Activity</h3>
+
+        <div class="history">
+          ${
+            history.length
+              ? history.map(h => `
+                <div class="historyItem">
+                  <b>${escapeHtml(h.status || "Update")}</b>
+                  ${h.note ? `<br>${escapeHtml(h.note)}` : ""}
+                  ${h.created_at ? `<br>${escapeHtml(formatDateTime(h.created_at))}` : ""}
+                </div>
+              `).join("")
+              : `<div class="historyItem">No detailed activity yet. Current status is shown above.</div>`
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  function getFlowForOrder(order){
+    const deliveryType = String(order.delivery_type || "").toLowerCase();
+
+    if(deliveryType.includes("delivery")){
+      return ["Pending","Confirmed","In Progress","Out for Delivery","Completed"];
+    }
+
+    return BASE_FLOW;
+  }
+
+  function normalizeDisplayStatus(status, deliveryType = ""){
+    const v = String(status || "")
+      .toLowerCase()
+      .replace(/[^a-z]/g,"");
+
+    const isDelivery = String(deliveryType || "").toLowerCase().includes("delivery");
+
+    if(v === "ready") return isDelivery ? "Out for Delivery" : "Ready";
+    if(v === "readyforpickup") return "Ready";
+    if(v === "outfordelivery") return "Out for Delivery";
+    if(v === "inprogress") return "In Progress";
+    if(v === "confirmed") return "Confirmed";
+    if(v === "completed") return "Completed";
+    if(v === "cancelled" || v === "canceled") return "Cancelled";
+
+    return "Pending";
+  }
+
+  function getStatusIndex(status, flow){
+    const idx = flow.indexOf(status);
+    return idx < 0 ? 0 : idx;
+  }
+
+  function getStepText(step, deliveryType = ""){
+    const isDelivery = String(deliveryType || "").toLowerCase().includes("delivery");
+
+    const copy = {
+      "Pending":"Order request received.",
+      "Confirmed":"Shop confirmed the order details.",
+      "In Progress":"Your order is being prepared.",
+      "Ready": isDelivery ? "Order is ready for delivery update." : "Order is ready for pickup.",
+      "Out for Delivery":"Order is out for delivery or being prepared for delivery.",
+      "Completed":"Order completed."
+    };
+
+    return copy[step] || "";
+  }
+
+  function getFriendlyStatusTitle(status, deliveryType = ""){
+    if(status === "Pending") return "Your order request is pending review.";
+    if(status === "Confirmed") return "Your order has been confirmed.";
+    if(status === "In Progress") return "Your order is being prepared.";
+    if(status === "Ready") return "Your order is ready for pickup.";
+    if(status === "Out for Delivery") return "Your order is out for delivery.";
+    if(status === "Completed") return "Your order is completed.";
+    if(status === "Cancelled") return "Your order was cancelled.";
+    return "Your order status is available.";
+  }
+
+  function getWhatsAppOrderLink(order){
+    const phone = normalizePhone(siteSettings.whatsapp_number || "");
+
+    if(!phone) return "#";
+
+    const tracking = order.tracking_code || String(order.id || "").slice(0,8).toUpperCase() || "";
+    const msg = tracking
+      ? `Hi, I want to ask about my Siffat Cakes order. Tracking code: ${tracking}`
+      : "Hi, I want to ask about my Siffat Cakes order.";
+
+    return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  }
+
+  function updateCartCount(){
+    const cart = getCart();
+    const count = cart.reduce((sum,item) => sum + Number(item.quantity || 1), 0);
+    $("cartCount").textContent = count;
+  }
+
+  function getCart(){
+    try{
+      const raw = localStorage.getItem(CART_KEY);
+      const parsed = JSON.parse(raw || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    }catch{
+      return [];
+    }
+  }
+
+  function buildFooterInfo(){
+    const parts = [];
+
+    if(siteSettings.address) parts.push(siteSettings.address);
+    if(siteSettings.service_area) parts.push("Serving " + siteSettings.service_area);
+    if(siteSettings.business_hours) parts.push(siteSettings.business_hours);
+
+    return parts.length ? parts.join(" · ") : "381 Talbot Street, St. Thomas";
+  }
+
+  function withTimeout(promise, ms){
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Request timed out. Retrying.")), ms))
+    ]);
+  }
+
+  function cacheBustImage(url){
+    const clean = String(url || "");
+    if(!clean) return clean;
+    if(!clean.includes("supabase.co/storage")) return clean;
+
+    const sep = clean.includes("?") ? "&" : "?";
+    return `${clean}${sep}v=${Date.now()}`;
+  }
+
+  function wait(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  function money(value){
+    const currency = siteSettings.currency || "$";
+    return currency + Number(value || 0).toFixed(2).replace(".00","");
+  }
+
+  function formatDate(value){
+    if(!value) return "No date";
+
+    const d = new Date(value + "T00:00:00");
+    return Number.isNaN(d.getTime())
+      ? value
+      : d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+  }
+
+  function formatDateTime(value){
+    if(!value) return "";
+
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? value : d.toLocaleString();
+  }
+
+  function sanitizeTrackingCode(value){
+    return String(value || "")
+      .trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9-]/g,"");
+  }
+
+  function normalizePhone(value){
+    return String(value || "").replace(/[^\d]/g,"");
+  }
+
+  function toggleMobileMenu(){
+    $("mobileMenu").classList.toggle("show");
+  }
+
+  function escapeClass(value){
+    return String(value || "").replace(/[^a-zA-Z0-9_-]/g,"");
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function showToast(message,isError = false){
+    const toast = $("toast");
+
+    toast.textContent = message;
+    toast.style.background = isError ? "var(--red)" : "var(--purple)";
+    toast.classList.add("show");
+
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+</script>
+
+</body>
+</html>
