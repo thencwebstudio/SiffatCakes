@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Thank You - Siffat Cakes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#fbf4fb;
+      --text:#1d141f;
+      --muted:#725a76;
+      --purple:#640D6B;
+      --purple2:#7a1281;
+      --soft:#fff7ff;
+      --line:rgba(100,13,107,.16);
+      --shadow:0 18px 45px rgba(100,13,107,.12);
+      --shadow2:0 10px 24px rgba(100,13,107,.09);
+      --green:#16823a;
+      --red:#b42318;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html{
+      width:100%;
+      min-height:100%;
+      scroll-behavior:smooth;
+      background:var(--bg);
+    }
+
+    body{
+      width:100%;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(100,13,107,.11), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(122,18,129,.09), transparent 28%),
+        linear-gradient(180deg,var(--bg),#ffffff 54%,#ffffff);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    button{
+      font:inherit;
+      border:none;
+      cursor:pointer;
+      background:none;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    .wrap{
+      width:min(1280px, calc(100% - 32px));
+      margin:auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:80;
+      background:rgba(255,255,255,.90);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav{
+      min-height:60px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .logo{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      color:white;
+      box-shadow:0 12px 28px rgba(100,13,107,.22);
+      font-size:20px;
+      overflow:hidden;
+      flex:0 0 auto;
+      border:2px solid rgba(255,255,255,.85);
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      background:white;
+    }
+
+    .brand h1{
+      font-size:18px;
+      line-height:1;
+      letter-spacing:-.045em;
+      color:var(--purple);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:260px;
+    }
+
+    .brand p{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:280px;
+      font-weight:750;
+    }
+
+    .navActions{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:8px;
+      min-width:0;
+    }
+
+    .navLink{
+      padding:9px 11px;
+      border:1px solid transparent;
+      color:var(--muted);
+      border-radius:999px;
+      font-size:13px;
+      font-weight:900;
+      transition:.18s ease;
+      white-space:nowrap;
+    }
+
+    .navLink:hover{
+      color:var(--purple);
+      background:rgba(100,13,107,.07);
+      border-color:rgba(100,13,107,.12);
+    }
+
+    .primaryBtn,
+    .ghostBtn,
+    .cartBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      border-radius:999px;
+      font-weight:1000;
+      transition:.18s ease;
+      white-space:nowrap;
+    }
+
+    .primaryBtn{
+      min-height:40px;
+      padding:11px 15px;
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      color:white;
+      box-shadow:0 12px 28px rgba(100,13,107,.22);
+    }
+
+    .primaryBtn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 16px 34px rgba(100,13,107,.29);
+    }
+
+    .ghostBtn{
+      min-height:40px;
+      padding:10px 13px;
+      border:1px solid var(--line);
+      background:white;
+      color:var(--purple);
+      box-shadow:0 8px 18px rgba(100,13,107,.05);
+    }
+
+    .ghostBtn:hover{
+      background:#fff7ff;
+      transform:translateY(-1px);
+    }
+
+    .cartBtn{
+      min-height:40px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--purple);
+      font-size:13px;
+      box-shadow:0 8px 18px rgba(100,13,107,.05);
+    }
+
+    .cartCount{
+      min-width:20px;
+      height:20px;
+      padding:0 6px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:var(--purple);
+      color:white;
+      font-size:11px;
+      font-weight:1000;
+    }
+
+    .navSvg{
+      width:18px;
+      height:18px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.25;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      flex:0 0 auto;
+    }
+
+    .mobileMenuBtn{
+      display:none;
+    }
+
+    .mobileMenu{
+      display:none;
+      border-top:1px solid var(--line);
+      padding:10px 0 12px;
+      background:rgba(255,255,255,.92);
+    }
+
+    .mobileMenu.show{
+      display:grid;
+      gap:8px;
+    }
+
+    .mobileMenu a{
+      padding:11px 12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:900;
+      font-size:13px;
+      color:var(--purple);
+      box-shadow:0 8px 16px rgba(100,13,107,.04);
+    }
+
+    .page{
+      min-height:calc(100vh - 150px);
+      display:grid;
+      place-items:center;
+      padding:34px 0;
+    }
+
+    .successCard{
+      width:min(860px,100%);
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 12% 14%,rgba(22,130,58,.10),transparent 28%),
+        radial-gradient(circle at 90% 10%,rgba(100,13,107,.11),transparent 28%),
+        rgba(255,255,255,.92);
+      border-radius:34px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      text-align:center;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .successCard::after{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      right:-90px;
+      top:-95px;
+      border-radius:50%;
+      background:rgba(100,13,107,.07);
+      pointer-events:none;
+    }
+
+    .successCard > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .successIcon{
+      width:78px;
+      height:78px;
+      border-radius:26px;
+      display:grid;
+      place-items:center;
+      margin:0 auto 18px;
+      background:rgba(22,130,58,.10);
+      border:1px solid rgba(22,130,58,.22);
+      color:var(--green);
+      box-shadow:0 18px 35px rgba(22,130,58,.10);
+    }
+
+    .successIcon svg{
+      width:42px;
+      height:42px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .successCard h2{
+      color:var(--purple);
+      font-size:clamp(36px,5vw,62px);
+      line-height:.98;
+      letter-spacing:-.075em;
+      margin-bottom:12px;
+    }
+
+    .successCard h2 span{
+      color:var(--text);
+    }
+
+    .successCard p{
+      max-width:700px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.65;
+      font-weight:700;
+    }
+
+    .orderBox{
+      margin:18px auto 0;
+      width:min(560px,100%);
+      border:1px solid rgba(100,13,107,.18);
+      background:#fff7ff;
+      border-radius:22px;
+      padding:15px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      font-weight:850;
+      text-align:left;
+    }
+
+    .orderBox b{
+      color:var(--purple);
+    }
+
+    .importantBox{
+      margin:12px auto 0;
+      width:min(560px,100%);
+      border:1px solid rgba(180,35,24,.16);
+      background:rgba(180,35,24,.06);
+      border-radius:22px;
+      padding:15px;
+      color:#7a271a;
+      font-size:13px;
+      line-height:1.55;
+      font-weight:850;
+      text-align:left;
+    }
+
+    .actionRow{
+      margin-top:20px;
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .steps{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      text-align:left;
+    }
+
+    .step{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:20px;
+      padding:13px;
+      box-shadow:0 8px 18px rgba(100,13,107,.04);
+    }
+
+    .stepIcon{
+      width:32px;
+      height:32px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      margin-bottom:8px;
+      background:#fff7ff;
+      color:var(--purple);
+      border:1px solid rgba(100,13,107,.14);
+      font-weight:1000;
+      font-size:13px;
+    }
+
+    .step b{
+      display:block;
+      color:var(--purple);
+      font-size:13px;
+      margin-bottom:5px;
+    }
+
+    .step span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      z-index:220;
+      max-width:min(560px,calc(100% - 24px));
+      background:var(--purple);
+      color:white;
+      border-radius:999px;
+      padding:12px 15px;
+      font-size:13px;
+      font-weight:1000;
+      box-shadow:0 18px 36px rgba(100,13,107,.24);
+      transition:.2s ease;
+      text-align:center;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .footer{
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.72);
+      padding:18px 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .footerInner{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .footerBrand{
+      color:var(--purple);
+      font-weight:1000;
+      font-size:13px;
+    }
+
+    .footerSmall{
+      display:block;
+      margin-top:4px;
+      line-height:1.45;
+      font-weight:650;
+    }
+
+    .footerLinks{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .footerLinks a{
+      color:var(--purple);
+      font-weight:900;
+    }
+
+    @media(max-width:720px){
+      body{
+        background:
+          radial-gradient(circle at 0% 0%, rgba(100,13,107,.08), transparent 26%),
+          linear-gradient(180deg,#fff8ff,#fff 40%,#fff);
+      }
+
+      .wrap{
+        width:min(100% - 18px,1280px);
+      }
+
+      .topbar{
+        background:rgba(255,255,255,.94);
+        box-shadow:0 10px 28px rgba(100,13,107,.07);
+      }
+
+      .nav{
+        min-height:54px;
+        gap:8px;
+      }
+
+      .logo{
+        width:36px;
+        height:36px;
+        font-size:18px;
+        box-shadow:0 8px 18px rgba(100,13,107,.16);
+      }
+
+      .brand{
+        gap:8px;
+      }
+
+      .brand p{
+        display:none;
+      }
+
+      .brand h1{
+        font-size:16px;
+        max-width:145px;
+        letter-spacing:-.035em;
+      }
+
+      .navActions{
+        gap:6px;
+      }
+
+      .navLink{
+        display:none;
+      }
+
+      .mobileMenuBtn{
+        display:inline-flex;
+      }
+
+      .cartBtn,
+      .mobileMenuBtn{
+        min-height:36px;
+        padding:8px 10px;
+        font-size:0;
+        border-radius:999px;
+        background:rgba(255,255,255,.88);
+        border-color:rgba(100,13,107,.14);
+        box-shadow:0 8px 18px rgba(100,13,107,.07);
+      }
+
+      .cartBtn{
+        min-width:58px;
+        gap:5px;
+      }
+
+      .cartBtn .navSvg,
+      .mobileMenuBtn .navSvg{
+        width:17px;
+        height:17px;
+      }
+
+      .cartCount{
+        min-width:20px;
+        height:20px;
+        font-size:10px;
+        background:linear-gradient(135deg,var(--purple),var(--purple2));
+      }
+
+      #topWhatsappBtn{
+        min-height:36px;
+        padding:0 12px;
+        font-size:12px;
+        box-shadow:0 10px 22px rgba(100,13,107,.20);
+      }
+
+      .page{
+        min-height:calc(100vh - 130px);
+        padding:18px 0;
+        place-items:start center;
+      }
+
+      .successCard{
+        padding:18px;
+        border-radius:24px;
+        box-shadow:0 14px 32px rgba(100,13,107,.12);
+      }
+
+      .successCard::after{
+        width:160px;
+        height:160px;
+        right:-80px;
+        top:-80px;
+      }
+
+      .successIcon{
+        width:62px;
+        height:62px;
+        border-radius:22px;
+        margin-bottom:14px;
+      }
+
+      .successIcon svg{
+        width:34px;
+        height:34px;
+      }
+
+      .successCard h2{
+        font-size:34px;
+        line-height:1.02;
+        letter-spacing:-.075em;
+        margin-bottom:10px;
+      }
+
+      .successCard p{
+        font-size:13px;
+        line-height:1.55;
+      }
+
+      .orderBox,
+      .importantBox{
+        border-radius:18px;
+        padding:12px;
+        font-size:12px;
+      }
+
+      .actionRow{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:8px;
+        margin-top:16px;
+      }
+
+      .actionRow .primaryBtn,
+      .actionRow .ghostBtn{
+        width:100%;
+        min-height:42px;
+        padding:10px 13px;
+        font-size:13px;
+      }
+
+      .steps{
+        grid-template-columns:1fr;
+        gap:8px;
+        margin-top:16px;
+      }
+
+      .step{
+        border-radius:17px;
+        padding:11px;
+      }
+
+      .stepIcon{
+        width:28px;
+        height:28px;
+        border-radius:10px;
+        margin-bottom:6px;
+      }
+
+      .footer{
+        padding:16px 0;
+      }
+
+      .footerLinks{
+        justify-content:flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="wrap nav">
+    <a href="index.html" class="brand" aria-label="Siffat Cakes homepage">
+      <div id="siteLogo" class="logo">🍰</div>
+      <div>
+        <h1 id="siteBrandName">Siffat Cakes</h1>
+        <p id="siteTagline">Eggless Cakes & Desserts</p>
+      </div>
+    </a>
+
+    <div class="navActions">
+      <a class="navLink" href="index.html">Home</a>
+      <a class="navLink" href="index.html#menu">Menu</a>
+      <a class="navLink" href="cake.html?custom=true">Custom Cake</a>
+
+      <a class="cartBtn" href="cart.html" aria-label="Open cart">
+        <svg class="navSvg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6.5 6.5h14l-1.5 8.2a2 2 0 0 1-2 1.65H9.3a2 2 0 0 1-1.95-1.55L5.6 4.8H3.5"/>
+          <circle cx="9.5" cy="20" r="1.35"/>
+          <circle cx="17" cy="20" r="1.35"/>
+        </svg>
+        <span class="cartCount" id="cartCount">0</span>
+      </a>
+
+      <button class="ghostBtn mobileMenuBtn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">
+        <svg class="navSvg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 7.5h14M5 12h14M5 16.5h14"/>
+        </svg>
+      </button>
+
+      <a class="primaryBtn" id="topWhatsappBtn" href="#" target="_blank" rel="noopener">Contact</a>
+    </div>
+  </div>
+
+  <div class="wrap mobileMenu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="index.html#menu">Main Menu</a>
+    <a href="category.html?cat=cakes">Cakes</a>
+    <a href="cake.html?custom=true">Create Custom Cake</a>
+    <a href="cart.html">Cart</a>
+  </div>
+</header>
+
+<main class="wrap page">
+  <section class="successCard">
+    <div class="successIcon">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+
+    <h2>Order request <span>received.</span></h2>
+
+    <p>
+      Thank you for submitting your order request. Please make sure the WhatsApp message is sent, because your order is confirmed only after the shop replies.
+    </p>
+
+    <div class="orderBox">
+      <div id="orderIdBox">
+        <b>Order ID:</b> Not available
+      </div>
+
+      <div style="margin-top:6px;">
+        <b>Status:</b> Pending review
+      </div>
+
+      <div id="whatsappStatusText" style="margin-top:6px;">
+        <b>WhatsApp:</b> Open WhatsApp and send the message to confirm.
+      </div>
+    </div>
+
+    <div class="importantBox">
+      This is an order request, not a confirmed order or final invoice. Final price, design details, pickup/delivery, and availability will be confirmed by the shop on WhatsApp.
+    </div>
+
+    <div class="actionRow">
+      <a class="primaryBtn" id="whatsappAgainBtn" href="#" target="_blank" rel="noopener">Open WhatsApp Message</a>
+      <a class="ghostBtn" href="index.html#menu">Browse More</a>
+      <a class="ghostBtn" href="index.html">Back to Home</a>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="stepIcon">1</div>
+        <b>Request saved</b>
+        <span>Your order request has been saved for shop review.</span>
+      </div>
+
+      <div class="step">
+        <div class="stepIcon">2</div>
+        <b>WhatsApp confirmation</b>
+        <span>The shop confirms final price, design, date and availability.</span>
+      </div>
+
+      <div class="step">
+        <div class="stepIcon">3</div>
+        <b>Invoice later</b>
+        <span>Final invoice can be sent later after payment or order completion.</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footerInner">
+    <div>
+      <div class="footerBrand">© <span id="year"></span> <span id="footerBrand">Siffat Cakes</span></div>
+      <span class="footerSmall" id="footerAddress">381 Talbot Street, St. Thomas</span>
+    </div>
+
+    <div class="footerLinks">
+      <a href="index.html">Home</a>
+      <a href="index.html#menu">Menu</a>
+      <a href="category.html?cat=cakes">Cakes</a>
+      <a href="cake.html?custom=true">Custom Cake</a>
+      <a href="cart.html">Cart</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  const SUPABASE_URL = "https://rdpynngsjhzirxwzrxdd.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_oPaplUdywtmujaMjyyzHTQ_6fqthIzu";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const CART_KEY = "cakeShopCartV1";
+  const SETTINGS_CACHE_KEY = "siffatThankYouSettingsCacheV2";
+  const SETTINGS_CACHE_MAX_AGE_MS = 1000 * 60 * 60 * 12;
+  const LOAD_TIMEOUT_MS = 8000;
+
+  const DEFAULT_SETTINGS = {
+    brand_name:"Siffat Cakes",
+    tagline:"Eggless Cakes & Desserts",
+    logo_url:"",
+    whatsapp_number:"",
+    instagram_url:"",
+    address:"381 Talbot Street, St. Thomas",
+    business_hours:"",
+    service_area:"",
+    currency:"$"
+  };
+
+  let siteSettings = {...DEFAULT_SETTINGS};
+  let currentOrderId = "";
+
+  const $ = (id) => document.getElementById(id);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    $("year").textContent = new Date().getFullYear();
+
+    updateOrderId();
+    updateCartCount();
+    applyCachedSettings();
+    applySettings();
+
+    init().catch(err => {
+      console.error("Thank you page error:", err);
+    });
+  });
+
+  window.addEventListener("pageshow", () => {
+    updateCartCount();
+  });
+
+  async function init(){
+    await loadSettings();
+    applySettings();
+    saveSettingsCache();
+  }
+
+  async function loadSettings(){
+    try{
+      const { data, error } = await withTimeout(
+        supabaseClient
+          .from("site_settings")
+          .select("*")
+          .eq("id", 1)
+          .maybeSingle(),
+        LOAD_TIMEOUT_MS
+      );
+
+      if(error) throw error;
+
+      siteSettings = {...DEFAULT_SETTINGS, ...(data || {})};
+    }catch(err){
+      console.warn("Settings load issue:", err.message || err);
+    }
+  }
+
+  function applyCachedSettings(){
+    try{
+      const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+      if(!raw) return;
+
+      const cached = JSON.parse(raw);
+      if(!cached || Date.now() - Number(cached.savedAt || 0) > SETTINGS_CACHE_MAX_AGE_MS) return;
+
+      siteSettings = {...DEFAULT_SETTINGS, ...(cached.siteSettings || {})};
+    }catch(err){
+      console.warn("Could not apply settings cache:", err);
+    }
+  }
+
+  function saveSettingsCache(){
+    try{
+      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+        savedAt:Date.now(),
+        siteSettings
+      }));
+    }catch(err){
+      console.warn("Could not save settings cache:", err);
+    }
+  }
+
+  function applySettings(){
+    const brand = siteSettings.brand_name || DEFAULT_SETTINGS.brand_name;
+    const tagline = siteSettings.tagline || DEFAULT_SETTINGS.tagline;
+    const logo = siteSettings.logo_url || "";
+    const whatsapp = normalizePhone(siteSettings.whatsapp_number || "");
+
+    document.title = "Thank You - " + brand;
+
+    $("siteBrandName").textContent = brand;
+    $("siteTagline").textContent = tagline;
+    $("footerBrand").textContent = brand;
+    $("footerAddress").textContent = buildFooterInfo();
+
+    if(logo){
+      $("siteLogo").innerHTML = `<img src="${escapeHtml(cacheBustImage(logo))}" alt="${escapeHtml(brand)}" onerror="this.parentElement.textContent='🍰'">`;
+    }else{
+      $("siteLogo").textContent = "🍰";
+    }
+
+    setupWhatsappLinks(whatsapp);
+  }
+
+  function updateOrderId(){
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("order") || "";
+
+    currentOrderId = orderId;
+
+    if(orderId){
+      $("orderIdBox").innerHTML = `<b>Order ID:</b> ${escapeHtml(String(orderId).slice(0,8).toUpperCase())}`;
+    }
+  }
+
+  function setupWhatsappLinks(phone){
+    const shortId = currentOrderId ? String(currentOrderId).slice(0,8).toUpperCase() : "";
+
+    const confirmMsg = shortId
+      ? `Hi, I submitted an order request. My Order ID is ${shortId}. I want to confirm it.`
+      : "Hi, I submitted an order request and want to confirm it.";
+
+    const normalMsg = "Hi, I want to ask about a cake or dessert order.";
+
+    const whatsappAgainBtn = $("whatsappAgainBtn");
+    const topWhatsappBtn = $("topWhatsappBtn");
+    const lastWhatsAppOrderUrl = localStorage.getItem("lastWhatsAppOrderUrl") || "";
+
+    if(phone || lastWhatsAppOrderUrl){
+      whatsappAgainBtn.href = lastWhatsAppOrderUrl || `https://wa.me/${phone}?text=${encodeURIComponent(confirmMsg)}`;
+      topWhatsappBtn.href = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(normalMsg)}` : whatsappAgainBtn.href;
+
+      whatsappAgainBtn.onclick = null;
+      topWhatsappBtn.onclick = null;
+
+      $("whatsappStatusText").innerHTML = `<b>WhatsApp:</b> Tap “Open WhatsApp Message” and send the message if it did not send yet.`;
+    }else{
+      whatsappAgainBtn.href = "#";
+      topWhatsappBtn.href = "#";
+
+      whatsappAgainBtn.onclick = function(e){
+        e.preventDefault();
+        showToast("WhatsApp number is not added yet.", true);
+      };
+
+      topWhatsappBtn.onclick = function(e){
+        e.preventDefault();
+        showToast("WhatsApp number is not added yet.", true);
+      };
+
+      $("whatsappStatusText").innerHTML = `<b>WhatsApp:</b> WhatsApp number is not added yet.`;
+    }
+  }
+
+  function updateCartCount(){
+    const cart = getCart();
+    const count = cart.reduce((sum,item) => sum + Number(item.quantity || 1), 0);
+    $("cartCount").textContent = count;
+  }
+
+  function getCart(){
+    try{
+      const raw = localStorage.getItem(CART_KEY);
+      const parsed = JSON.parse(raw || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    }catch{
+      return [];
+    }
+  }
+
+  function buildFooterInfo(){
+    const parts = [];
+
+    if(siteSettings.address) parts.push(siteSettings.address);
+    if(siteSettings.service_area) parts.push("Serving " + siteSettings.service_area);
+    if(siteSettings.business_hours) parts.push(siteSettings.business_hours);
+
+    return parts.length ? parts.join(" · ") : "381 Talbot Street, St. Thomas";
+  }
+
+  function toggleMobileMenu(){
+    $("mobileMenu").classList.toggle("show");
+  }
+
+  function normalizePhone(value){
+    return String(value || "").replace(/[^\d]/g, "");
+  }
+
+  function cacheBustImage(url){
+    const clean = String(url || "");
+    if(!clean) return clean;
+    if(!clean.includes("supabase.co/storage")) return clean;
+
+    const sep = clean.includes("?") ? "&" : "?";
+    return `${clean}${sep}v=${Date.now()}`;
+  }
+
+  function withTimeout(promise, ms){
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), ms))
+    ]);
+  }
+
+  function showToast(message, isError = false){
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.style.background = isError ? "var(--red)" : "var(--purple)";
+    toast.classList.add("show");
+
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2600);
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+</script>
+
+</body>
+</html>
