@@ -1,1166 +1,4528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>Cake Studio Admin</title>
+<title>Siffat Cakes Website Manager</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    :root{
-      --bg:#100b12;
-      --bg2:#19101c;
-      --text:#fff7fb;
-      --muted:#c9aebd;
-      --line:rgba(255,255,255,.09);
-      --pink:#ff5fa2;
-      --pink2:#ff8ac0;
-      --cream:#ffe4c7;
-      --gold:#ffc86b;
-      --green:#39d98a;
-      --red:#ff5b6e;
-      --blue:#67b7ff;
-      --shadow:0 18px 50px rgba(0,0,0,.35);
-    }
+<style>
+:root{
+--bg:#fbf4fb;
+--bg2:#fff;
+--text:#1d141f;
+--muted:#725a76;
+--purple:#640D6B;
+--purple2:#7a1281;
+--soft:#fff7ff;
+--line:rgba(100,13,107,.16);
+--shadow:0 18px 45px rgba(100,13,107,.12);
+--shadow2:0 10px 24px rgba(100,13,107,.08);
+--green:#16823a;
+--red:#b42318;
+--orange:#b54708;
+--blue:#175cd3;
+}
 
-    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
-    body{
-      min-height:100vh;
-      background:
-        radial-gradient(circle at top left, rgba(255,95,162,.24), transparent 32%),
-        radial-gradient(circle at 90% 10%, rgba(255,200,107,.13), transparent 28%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      color:var(--text);
-    }
-    button,input,textarea,select{font:inherit}
-    button{border:none;cursor:pointer}
-    a{color:inherit;text-decoration:none}
-    .wrap{width:min(1180px, calc(100% - 26px));margin:auto}
-    .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rgba(16,11,18,.84);border-bottom:1px solid var(--line)}
-    .nav{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .logo{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--gold));box-shadow:0 10px 25px rgba(255,95,162,.25);font-size:20px;overflow:hidden;flex:0 0 auto}
-    .logo img{width:100%;height:100%;object-fit:cover;display:block}
-    .brand h1{font-size:17px;letter-spacing:-.04em;line-height:1;white-space:nowrap}
-    .brand p{margin-top:4px;color:var(--muted);font-size:11px;white-space:nowrap}
-    .navActions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-    .pill{padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.055);color:var(--muted);font-size:12px;font-weight:800;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 13px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);font-weight:900;font-size:13px;transition:.18s ease}
-    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.09)}
-    .btn.primary{border-color:transparent;background:linear-gradient(135deg,var(--pink),var(--pink2));color:white;box-shadow:0 14px 28px rgba(255,95,162,.24)}
-    .btn.green{border-color:transparent;background:linear-gradient(135deg,#19c463,#39d98a);color:#06160c}
-    .btn.red{border-color:rgba(255,91,110,.28);background:rgba(255,91,110,.13);color:#ffdce1}
-    .btn.small{padding:8px 10px;font-size:12px}
-    .btn:disabled{opacity:.6;cursor:not-allowed}
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
 
-    .screen{display:none}
-    .screen.show{display:block}
-    .loginShell{min-height:calc(100vh - 62px);display:grid;place-items:center;padding:30px 0}
-    .loginCard{width:min(460px,100%);border:1px solid var(--line);border-radius:28px;padding:20px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035));box-shadow:var(--shadow)}
-    .bigIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--gold));font-size:26px;margin-bottom:14px}
-    .loginCard h2{font-size:28px;letter-spacing:-.06em;line-height:1}
-    .loginCard p{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.5}
+body{
+min-height:100vh;
+background:
+radial-gradient(circle at 0% 0%,rgba(100,13,107,.12),transparent 33%),
+radial-gradient(circle at 100% 0%,rgba(122,18,129,.08),transparent 30%),
+linear-gradient(180deg,var(--bg),#fff 58%,#fff);
+color:var(--text);
+overflow-x:hidden;
+}
 
-    .main{padding:18px 0 34px}
-    .tabs{display:flex;gap:8px;overflow:auto;padding-bottom:8px;margin-bottom:10px;scrollbar-width:none}
-    .tabs::-webkit-scrollbar{display:none}
-    .tab{flex:0 0 auto;padding:10px 13px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.055);color:var(--muted);font-size:13px;font-weight:1000}
-    .tab.active{color:white;border-color:rgba(255,95,162,.45);background:linear-gradient(135deg,rgba(255,95,162,.88),rgba(255,138,192,.72))}
-    .tabPanel{display:none}
-    .tabPanel.show{display:block}
-    .grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:12px}
-    .panel{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border-radius:24px;padding:14px;box-shadow:0 16px 45px rgba(0,0,0,.22)}
-    .panelHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
-    .panelHead h2,.panelHead h3{font-size:20px;letter-spacing:-.05em;line-height:1.1}
-    .panelHead p{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.4}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-    .stat{border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:18px;padding:12px}
-    .stat b{display:block;font-size:20px;line-height:1}
-    .stat span{display:block;margin-top:5px;color:var(--muted);font-size:11px;font-weight:800}
-    .notice{border:1px solid rgba(255,200,107,.22);background:rgba(255,200,107,.08);border-radius:18px;padding:12px;color:var(--cream);font-size:12px;line-height:1.5;margin-top:10px}
+button,input,select,textarea{font:inherit}
+button{border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
 
-    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .formGrid.one{grid-template-columns:1fr}
-    .field{display:flex;flex-direction:column;gap:6px}
-    .field.full{grid-column:1/-1}
-    .field label{color:var(--cream);font-size:12px;font-weight:900}
-    .field input,.field textarea,.field select{width:100%;min-height:44px;outline:none;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);border-radius:15px;padding:11px 12px;resize:vertical}
-    .field textarea{min-height:78px}
-    .field select option,.selectMini option{color:#111}
-    .checkBox{display:flex;align-items:center;gap:9px;padding:11px;border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:15px;color:var(--text);font-size:13px;font-weight:900}
-    .checkBox input{width:18px;height:18px;accent-color:var(--pink)}
-    .multiBox{grid-column:1/-1;display:grid;gap:8px}
-    .multiTitle{color:var(--cream);font-size:12px;font-weight:900}
-    .multiGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .multiItem{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:14px;color:var(--text);font-size:12px;font-weight:900}
-    .multiItem input{width:17px;height:17px;accent-color:var(--pink)}
-    .formActions{grid-column:1/-1;display:flex;gap:9px;flex-wrap:wrap;margin-top:2px}
-    .imagePreview{grid-column:1/-1;display:none;align-items:center;gap:10px;border:1px solid var(--line);background:rgba(255,255,255,.045);padding:10px;border-radius:18px}
-    .imagePreview.show{display:flex}
-    .imagePreview img{width:74px;height:74px;object-fit:cover;border-radius:16px;background:#2b1c30}
-    .imagePreview b{display:block;font-size:13px}
-    .imagePreview span{display:block;color:var(--muted);font-size:12px;margin-top:4px;word-break:break-all}
+.wrap{
+width:min(1320px,calc(100% - 28px));
+margin:auto;
+}
 
-    .toolbar{display:grid;grid-template-columns:1fr auto auto;gap:9px;margin:12px 0}
-    .toolbar.four{grid-template-columns:1fr auto auto auto}
-    .searchBox{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.055)}
-    .searchBox input{width:100%;border:none;outline:none;background:transparent;color:var(--text);font-weight:800}
-    .searchBox input::placeholder{color:rgba(201,174,189,.75)}
-    .selectMini{min-height:44px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.055);color:var(--text);padding:0 12px;outline:none;font-weight:900;font-size:13px}
-    .list{display:grid;gap:10px}
+.loginScreen{
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:24px;
+}
 
-    .cakeItem,.simpleItem,.orderItem{border:1px solid var(--line);background:rgba(255,255,255,.052);border-radius:20px;overflow:hidden}
-    .cakeTop{display:grid;grid-template-columns:82px 1fr auto;gap:12px;align-items:center;padding:10px}
-    .cakeTop img{width:82px;height:82px;object-fit:cover;border-radius:16px;background:#2b1c30}
-    .cakeInfo{min-width:0}
-    .cakeInfo h4{font-size:15px;letter-spacing:-.025em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .cakeInfo p{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-    .badge{padding:6px 8px;border-radius:999px;font-size:10px;font-weight:1000;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted)}
-    .badge.active{color:#d9ffe9;border-color:rgba(57,217,138,.25);background:rgba(57,217,138,.1)}
-    .badge.inactive{color:#ffdce1;border-color:rgba(255,91,110,.25);background:rgba(255,91,110,.1)}
-    .badge.featured{color:#fff2cf;border-color:rgba(255,200,107,.25);background:rgba(255,200,107,.1)}
-    .itemActions{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.loginCard{
+width:min(430px,100%);
+border:1px solid var(--line);
+background:rgba(255,255,255,.92);
+border-radius:28px;
+padding:22px;
+box-shadow:var(--shadow);
+}
 
-    .simpleRow{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:11px}
-    .simpleRow h4{font-size:14px;letter-spacing:-.025em}
-    .simpleRow p{color:var(--muted);font-size:12px;margin-top:5px}
-    .simpleActions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.loginCard h2{
+color:var(--purple);
+font-size:30px;
+letter-spacing:-.065em;
+margin-bottom:8px;
+}
 
-    .orderTop{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px;align-items:start}
-    .orderTitle{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .orderTitle h4{font-size:15px;letter-spacing:-.02em}
-    .orderDetails{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-    .orderMini{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:14px;padding:9px}
-    .orderMini b{display:block;font-size:11px;color:var(--cream);margin-bottom:3px}
-    .orderMini span{font-size:12px;color:var(--muted);word-break:break-word}
-    .orderNote{margin-top:10px;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:14px;padding:10px;color:var(--muted);font-size:12px;line-height:1.45;white-space:pre-wrap}
-    .statusSelect{min-height:38px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.07);color:var(--text);padding:0 10px;font-weight:900;font-size:12px}
-    .statusSelect option{color:#111}
-    .statusPill{text-transform:capitalize}
-    .status-pending{color:#fff2cf;border-color:rgba(255,200,107,.28);background:rgba(255,200,107,.1)}
-    .status-confirmed,.status-completed{color:#d9ffe9;border-color:rgba(57,217,138,.28);background:rgba(57,217,138,.1)}
-    .status-cancelled{color:#ffdce1;border-color:rgba(255,91,110,.28);background:rgba(255,91,110,.1)}
-    .status-preparing,.status-ready_for_pickup,.status-out_for_delivery{color:#d9efff;border-color:rgba(103,183,255,.28);background:rgba(103,183,255,.1)}
+.loginCard p{
+color:var(--muted);
+font-size:13px;
+line-height:1.55;
+margin-bottom:16px;
+}
 
-    .empty{padding:28px 14px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.18);border-radius:20px;background:rgba(255,255,255,.035)}
-    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;z-index:200;max-width:min(520px,calc(100% - 24px));border:1px solid var(--line);background:rgba(33,22,37,.96);color:var(--text);backdrop-filter:blur(18px);border-radius:999px;padding:11px 15px;font-size:13px;font-weight:900;box-shadow:0 18px 50px rgba(0,0,0,.38);transition:.2s ease;text-align:center}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    .muted{color:var(--muted)}
-    .dangerText{color:#ffdce1!important}
+.logo{
+width:42px;
+height:42px;
+border-radius:50%;
+display:grid;
+place-items:center;
+background:var(--purple);
+color:#fff;
+box-shadow:0 12px 28px rgba(100,13,107,.22);
+font-size:20px;
+overflow:hidden;
+flex:0 0 auto;
+border:2px solid rgba(255,255,255,.85);
+}
 
-    @media(max-width:930px){
-      .grid2{grid-template-columns:1fr}
-      .stats{grid-template-columns:repeat(2,1fr)}
-      .toolbar,.toolbar.four{grid-template-columns:1fr}
-      .multiGrid{grid-template-columns:repeat(2,1fr)}
-      .orderDetails{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:640px){
-      .wrap{width:min(100% - 18px,1180px)}
-      .brand p,.pill{display:none}
-      .panel{padding:12px;border-radius:22px}
-      .formGrid{grid-template-columns:1fr}
-      .multiGrid{grid-template-columns:1fr}
-      .cakeTop{grid-template-columns:70px 1fr}
-      .cakeTop img{width:70px;height:70px}
-      .itemActions{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:flex-end}
-      .simpleRow,.orderTop{grid-template-columns:1fr}
-      .simpleActions{justify-content:flex-start}
-      .orderDetails{grid-template-columns:1fr}
-    }
-  </style>
+.logo img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+background:#fff;
+}
+
+.app{display:none}
+.app.show{display:block}
+
+.topbar{
+position:sticky;
+top:0;
+z-index:60;
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(18px);
+border-bottom:1px solid var(--line);
+}
+
+.nav{
+min-height:62px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:10px;
+min-width:0;
+}
+
+.brand h1{
+color:var(--purple);
+font-size:18px;
+line-height:1;
+letter-spacing:-.045em;
+white-space:nowrap;
+}
+
+.brand p{
+margin-top:4px;
+color:var(--muted);
+font-size:11px;
+white-space:nowrap;
+max-width:320px;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.navActions{
+display:flex;
+align-items:center;
+gap:8px;
+flex-wrap:wrap;
+justify-content:flex-end;
+}
+
+.btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+min-height:38px;
+padding:9px 12px;
+border-radius:999px;
+color:var(--purple);
+font-weight:1000;
+background:#fff;
+border:1px solid var(--line);
+box-shadow:0 8px 18px rgba(100,13,107,.04);
+transition:.18s ease;
+white-space:nowrap;
+font-size:13px;
+}
+
+.btn:hover{
+transform:translateY(-1px);
+background:#fff7ff;
+}
+
+.btn:disabled{
+opacity:.55;
+cursor:not-allowed;
+transform:none!important;
+}
+
+.btn.primary{
+background:linear-gradient(135deg,var(--purple),var(--purple2));
+border-color:rgba(100,13,107,.30);
+color:#fff;
+box-shadow:0 12px 26px rgba(100,13,107,.20);
+}
+
+.btn.green{
+background:rgba(22,130,58,.08);
+border-color:rgba(22,130,58,.22);
+color:var(--green);
+}
+
+.btn.red{
+background:rgba(180,35,24,.08);
+border-color:rgba(180,35,24,.20);
+color:var(--red);
+}
+
+.btn.orange{
+background:rgba(181,71,8,.08);
+border-color:rgba(181,71,8,.20);
+color:var(--orange);
+}
+
+.btn.blue{
+background:rgba(23,92,211,.08);
+border-color:rgba(23,92,211,.20);
+color:var(--blue);
+}
+
+.btn.small{
+min-height:34px;
+padding:7px 10px;
+font-size:12px;
+}
+
+.btn.block{
+width:100%;
+}
+
+.main{
+padding:16px 0 34px;
+}
+
+.tabs{
+display:flex;
+gap:8px;
+overflow:auto;
+padding-bottom:8px;
+margin-bottom:14px;
+scrollbar-width:none;
+}
+
+.tabs::-webkit-scrollbar{display:none}
+
+.tabBtn{
+flex:0 0 auto;
+min-height:40px;
+padding:9px 13px;
+border-radius:999px;
+border:1px solid var(--line);
+background:rgba(255,255,255,.84);
+color:var(--muted);
+font-weight:1000;
+font-size:13px;
+box-shadow:0 8px 18px rgba(100,13,107,.04);
+}
+
+.tabBtn.active{
+color:#fff;
+background:linear-gradient(135deg,var(--purple),var(--purple2));
+border-color:rgba(100,13,107,.30);
+}
+
+.panel{display:none}
+.panel.active{display:block}
+
+.card{
+border:1px solid var(--line);
+background:rgba(255,255,255,.92);
+border-radius:24px;
+box-shadow:var(--shadow2);
+overflow:hidden;
+min-width:0;
+margin-bottom:14px;
+}
+
+.cardHead{
+padding:14px;
+border-bottom:1px solid var(--line);
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:12px;
+flex-wrap:wrap;
+}
+
+.cardHead h3{
+color:var(--purple);
+font-size:18px;
+letter-spacing:-.045em;
+}
+
+.cardHead p{
+margin-top:4px;
+color:var(--muted);
+font-size:12px;
+line-height:1.42;
+}
+
+.cardBody{
+padding:14px;
+}
+
+.gridStats{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:10px;
+margin-bottom:14px;
+}
+
+.stat{
+border:1px solid var(--line);
+background:rgba(255,255,255,.92);
+border-radius:20px;
+padding:14px;
+box-shadow:var(--shadow2);
+min-width:0;
+}
+
+.stat b{
+display:block;
+color:var(--purple);
+font-size:25px;
+letter-spacing:-.06em;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.stat span{
+display:block;
+margin-top:5px;
+color:var(--muted);
+font-size:12px;
+font-weight:750;
+line-height:1.28;
+}
+
+.stat.green b{color:var(--green)}
+.stat.red b{color:var(--red)}
+.stat.orange b{color:var(--orange)}
+.stat.blue b{color:var(--blue)}
+
+.layout2{
+display:grid;
+grid-template-columns:390px 1fr;
+gap:14px;
+align-items:start;
+}
+
+.setupGrid{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:14px;
+align-items:start;
+}
+
+.field{
+display:flex;
+flex-direction:column;
+gap:6px;
+margin-bottom:10px;
+min-width:0;
+}
+
+.field label{
+color:var(--purple);
+font-size:12px;
+font-weight:1000;
+}
+
+.field input,
+.field select,
+.field textarea{
+width:100%;
+min-height:43px;
+border:1px solid var(--line);
+outline:none;
+border-radius:15px;
+background:#fff;
+color:var(--text);
+padding:11px 12px;
+box-shadow:0 8px 18px rgba(100,13,107,.035);
+}
+
+.field textarea{
+min-height:86px;
+resize:vertical;
+}
+
+.hint{
+font-size:11px;
+color:var(--muted);
+line-height:1.45;
+}
+
+.formGrid{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:10px;
+}
+
+.full{
+grid-column:1/-1;
+}
+
+.formPanel{
+display:none;
+border:1px solid var(--line);
+background:#fff7ff;
+border-radius:22px;
+padding:14px;
+margin-bottom:14px;
+}
+
+.formPanel.open{
+display:block;
+}
+
+.formPanelTitle{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:12px;
+margin-bottom:12px;
+}
+
+.formPanelTitle h4{
+color:var(--purple);
+font-size:17px;
+letter-spacing:-.045em;
+}
+
+.formPanelTitle p{
+font-size:12px;
+color:var(--muted);
+margin-top:4px;
+line-height:1.4;
+}
+
+.checkRow{
+display:flex;
+align-items:center;
+gap:8px;
+color:var(--muted);
+font-size:13px;
+font-weight:850;
+margin:8px 0 10px;
+}
+
+.checkRow input{
+width:17px;
+height:17px;
+accent-color:var(--purple);
+}
+
+.list{
+display:grid;
+gap:8px;
+}
+
+.compactItem{
+border:1px solid var(--line);
+background:#fff;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 8px 18px rgba(100,13,107,.035);
+}
+
+.compactTop{
+padding:12px;
+display:flex;
+justify-content:space-between;
+gap:12px;
+align-items:center;
+cursor:pointer;
+}
+
+.compactMain{
+min-width:0;
+}
+
+.itemTitle{
+font-weight:1000;
+font-size:14px;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+.itemMeta{
+margin-top:5px;
+color:var(--muted);
+font-size:11px;
+line-height:1.45;
+}
+
+.itemActions{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+justify-content:flex-end;
+align-items:center;
+flex:0 0 auto;
+}
+
+.compactDetails{
+display:none;
+padding:12px;
+border-top:1px solid var(--line);
+background:#fff7ff;
+color:var(--muted);
+font-size:12px;
+line-height:1.55;
+}
+
+.compactItem.open .compactDetails{
+display:block;
+}
+
+.rowWithImage{
+display:flex;
+align-items:center;
+gap:10px;
+min-width:0;
+}
+
+.miniPreview{
+width:54px;
+height:54px;
+border-radius:16px;
+object-fit:cover;
+background:#f1e4f2;
+border:1px solid var(--line);
+flex:0 0 auto;
+}
+
+.tags{
+display:flex;
+gap:5px;
+flex-wrap:wrap;
+margin-top:8px;
+}
+
+.tag{
+padding:5px 7px;
+border-radius:999px;
+background:#fff7ff;
+border:1px solid var(--line);
+color:var(--muted);
+font-size:10px;
+font-weight:900;
+}
+
+.searchRow{
+display:flex;
+gap:8px;
+margin-bottom:12px;
+flex-wrap:wrap;
+}
+
+.searchRow input,
+.searchRow select{
+min-height:42px;
+border:1px solid var(--line);
+background:#fff;
+color:var(--text);
+border-radius:999px;
+padding:0 13px;
+outline:none;
+box-shadow:0 8px 18px rgba(100,13,107,.035);
+}
+
+.searchRow input{
+flex:1;
+min-width:220px;
+}
+
+.multiSelect{
+min-height:124px!important;
+padding:8px!important;
+border-radius:16px!important;
+}
+
+.imageBox{
+border:1px solid var(--line);
+background:#fff;
+border-radius:18px;
+padding:10px;
+display:grid;
+gap:8px;
+}
+
+.imageInputRow{
+display:grid;
+grid-template-columns:1fr;
+gap:8px;
+align-items:center;
+}
+
+.uploadRow{
+display:flex;
+gap:8px;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.uploadRow input[type=file]{
+flex:1;
+min-width:190px;
+padding:9px;
+box-shadow:none;
+}
+
+.imagePreview{
+width:140px;
+height:96px;
+border-radius:16px;
+border:1px solid var(--line);
+object-fit:cover;
+background:#f1e4f2;
+display:none;
+}
+
+.imagePreview.show{
+display:block;
+}
+
+.uploadStatus{
+display:none;
+padding:9px 10px;
+border-radius:14px;
+border:1px solid var(--line);
+background:#fff7ff;
+color:var(--muted);
+font-size:12px;
+font-weight:900;
+line-height:1.35;
+}
+
+.uploadStatus.show{
+display:block;
+}
+
+.uploadStatus.error{
+background:rgba(180,35,24,.08);
+border-color:rgba(180,35,24,.20);
+color:var(--red);
+}
+
+.uploadStatus.success{
+background:rgba(22,130,58,.08);
+border-color:rgba(22,130,58,.22);
+color:var(--green);
+}
+
+.productModeBox{
+border:1px solid var(--line);
+background:#fff;
+border-radius:20px;
+padding:12px;
+margin-bottom:12px;
+}
+
+.modePill{
+display:inline-flex;
+align-items:center;
+gap:6px;
+padding:7px 9px;
+border-radius:999px;
+background:#fff7ff;
+border:1px solid var(--line);
+color:var(--purple);
+font-size:11px;
+font-weight:1000;
+margin-top:8px;
+}
+
+.status{
+padding:7px 9px;
+border-radius:999px;
+font-size:11px;
+font-weight:1000;
+border:1px solid var(--line);
+background:#fff7ff;
+white-space:nowrap;
+}
+
+.status.Pending{color:var(--orange)}
+.status.Confirmed{color:var(--blue)}
+.status.InProgress{color:#4a5fd0}
+.status.Ready,.status.Completed{color:var(--green)}
+.status.Cancelled{color:var(--red)}
+.status.Deleted{color:var(--red)}
+
+.loading{
+padding:22px;
+border:1px dashed rgba(100,13,107,.22);
+border-radius:18px;
+color:var(--muted);
+text-align:center;
+background:rgba(255,255,255,.70);
+line-height:1.5;
+}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:18px;
+transform:translateX(-50%) translateY(20px);
+opacity:0;
+pointer-events:none;
+z-index:200;
+max-width:min(650px,calc(100% - 24px));
+background:var(--purple);
+color:#fff;
+border-radius:999px;
+padding:12px 15px;
+font-size:13px;
+font-weight:1000;
+box-shadow:0 18px 36px rgba(100,13,107,.24);
+transition:.2s ease;
+text-align:center;
+}
+
+.toast.show{
+opacity:1;
+transform:translateX(-50%) translateY(0);
+}
+
+.hidden{
+display:none!important;
+}
+
+.homeMenuGrid{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:12px;
+}
+
+.homeMenuCard{
+border:1px solid var(--line);
+background:#fff;
+border-radius:22px;
+padding:12px;
+box-shadow:0 8px 18px rgba(100,13,107,.035);
+display:grid;
+grid-template-columns:86px 1fr;
+gap:12px;
+align-items:start;
+}
+
+.homeMenuThumb{
+width:86px;
+height:86px;
+border-radius:18px;
+object-fit:cover;
+background:#f1e4f2;
+border:1px solid var(--line);
+}
+
+.homeMenuFields{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:8px;
+min-width:0;
+}
+
+.homeMenuFields .field{
+margin-bottom:0;
+}
+
+.setupJumpBar{
+position:sticky;
+top:74px;
+z-index:35;
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+padding:10px;
+margin-bottom:14px;
+border:1px solid var(--line);
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(16px);
+border-radius:22px;
+box-shadow:var(--shadow2);
+}
+
+.setupJumpBar .btn.active{
+background:linear-gradient(135deg,var(--purple),var(--purple2));
+color:#fff;
+}
+
+.setupAnchor{
+scroll-margin-top:150px;
+}
+
+.maintenanceGrid{
+display:grid;
+grid-template-columns:1fr 370px;
+gap:14px;
+align-items:start;
+}
+
+.ownerNotice{
+border:1px solid rgba(180,35,24,.20);
+background:rgba(180,35,24,.06);
+color:#7a271a;
+border-radius:18px;
+padding:12px;
+font-size:12px;
+font-weight:850;
+line-height:1.5;
+margin-bottom:12px;
+}
+
+.progressShell{
+height:14px;
+border-radius:999px;
+border:1px solid var(--line);
+background:#fff;
+overflow:hidden;
+}
+
+.progressFill{
+height:100%;
+width:0%;
+background:linear-gradient(135deg,var(--purple),var(--purple2));
+transition:.2s ease;
+}
+
+.reportGrid{
+display:grid;
+grid-template-columns:repeat(3,minmax(0,1fr));
+gap:10px;
+}
+
+.reportBox{
+border:1px solid var(--line);
+background:#fff;
+border-radius:18px;
+padding:12px;
+box-shadow:0 8px 18px rgba(100,13,107,.035);
+}
+
+.reportBox b{
+display:block;
+color:var(--purple);
+font-size:18px;
+letter-spacing:-.04em;
+}
+
+.reportBox span{
+display:block;
+margin-top:5px;
+font-size:11px;
+color:var(--muted);
+font-weight:850;
+}
+
+.deletedDanger{
+border:1px solid rgba(180,35,24,.20);
+background:rgba(180,35,24,.05);
+border-radius:18px;
+padding:12px;
+margin-top:10px;
+}
+
+.deletedDanger b{
+display:block;
+color:var(--red);
+font-size:13px;
+margin-bottom:8px;
+}
+
+@media(max-width:1120px){
+.gridStats{
+grid-template-columns:repeat(3,1fr);
+}
+
+.layout2,
+.setupGrid,
+.maintenanceGrid{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:720px){
+.wrap{
+width:min(100% - 16px,1320px);
+}
+
+.nav{
+align-items:flex-start;
+flex-direction:column;
+padding:10px 0;
+}
+
+.navActions{
+width:100%;
+justify-content:flex-start;
+}
+
+.gridStats{
+grid-template-columns:repeat(2,1fr);
+}
+
+.formGrid,
+.reportGrid{
+grid-template-columns:1fr;
+}
+
+.compactTop{
+align-items:flex-start;
+flex-direction:column;
+}
+
+.itemActions{
+justify-content:flex-start;
+}
+
+.rowWithImage{
+width:100%;
+}
+
+.homeMenuGrid{grid-template-columns:1fr;}
+.homeMenuCard{grid-template-columns:72px 1fr;}
+.homeMenuThumb{width:72px;height:72px;}
+.homeMenuFields{grid-template-columns:1fr;}
+}
+</style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="wrap nav">
-    <a class="brand" href="index.html">
-      <div id="adminTopLogo" class="logo">🍰</div>
-      <div>
-        <h1 id="adminTopBrand">Cake Studio Admin</h1>
-        <p>Manage catalogue, orders & settings</p>
-      </div>
-    </a>
+<section id="loginScreen" class="loginScreen">
+<div class="loginCard">
+<div id="loginLogo" class="logo" style="margin-bottom:14px;">🍰</div>
+<h2>Admin Login</h2>
+<p id="loginIntroText">Checking admin session...</p>
 
-    <div class="navActions">
-      <span id="adminEmailPill" class="pill">Not logged in</span>
-      <a class="btn small" href="index.html" target="_blank">Open Site</a>
-      <button id="signOutBtn" class="btn red small" style="display:none" onclick="signOut()">Sign Out</button>
-    </div>
-  </div>
+<div class="field">
+<label>Email</label>
+<input id="loginEmail" type="email" placeholder="admin@email.com">
+</div>
+
+<div class="field">
+<label>Password</label>
+<input id="loginPassword" type="password" placeholder="Password">
+</div>
+
+<button class="btn primary block" onclick="loginAdmin()">Login</button>
+
+<p class="hint" style="margin-top:12px;">
+This page is for owner/admin website management. Daily employee order work should stay in Order Manager.
+</p>
+</div>
+</section>
+
+<div id="app" class="app">
+<header class="topbar">
+<div class="wrap nav">
+<div class="brand">
+<div id="adminLogo" class="logo">🍰</div>
+<div>
+<h1>Siffat Cakes Website Manager</h1>
+<p id="adminEmailText">Managing website</p>
+</div>
+</div>
+
+<div class="navActions">
+<span class="btn green small">Connected</span>
+<a class="btn small" href="index.html" target="_blank">View Site</a>
+<a class="btn primary small" href="orders-admin.html">Order Manager</a>
+<button class="btn small" onclick="loadAll()">Refresh</button>
+<button class="btn red small" onclick="logoutAdmin()">Sign Out</button>
+</div>
+</div>
 </header>
 
-<section id="loginScreen" class="screen show">
-  <div class="wrap loginShell">
-    <div class="loginCard">
-      <div class="bigIcon">🔐</div>
-      <h2>Admin Login</h2>
-      <p>Use the same email added in Supabase SQL and Authentication Users.</p>
+<main class="wrap main">
+<div class="tabs">
+<button class="tabBtn active" data-tab="dashboard" onclick="showTab('dashboard')">Dashboard</button>
+<button class="tabBtn" data-tab="homepage" onclick="showTab('homepage')">Homepage Menu</button>
+<button class="tabBtn" data-tab="products" onclick="showTab('products')">Products</button>
+<button class="tabBtn" data-tab="setup" onclick="showTab('setup')">Cake Setup</button>
+<button class="tabBtn" data-tab="settings" onclick="showTab('settings')">Website Settings</button>
+<button class="tabBtn" data-tab="maintenance" onclick="showTab('maintenance')">Maintenance</button>
+</div>
 
-      <form class="formGrid one" onsubmit="loginAdmin(event)">
-        <div class="field"><label>Email</label><input id="loginEmail" type="email" required placeholder="admin@example.com"></div>
-        <div class="field"><label>Password</label><input id="loginPassword" type="password" required placeholder="Your password"></div>
-        <button class="btn primary" type="submit">Login</button>
-        <p id="loginMsg" class="muted"></p>
-      </form>
-    </div>
-  </div>
+<section id="dashboardPanel" class="panel active">
+<div id="statsGrid" class="gridStats"></div>
+
+<div class="layout2">
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Owner Admin Flow</h3>
+<p>Website Manager is for owner controls. Employees should use Order Manager only.</p>
+</div>
+</div>
+
+<div class="cardBody">
+<div class="list">
+<div class="compactItem open">
+<div class="compactTop">
+<div class="compactMain">
+<div class="itemTitle">Products</div>
+<div class="itemMeta">Manage customizable cakes and quick desserts separately.</div>
+</div>
+</div>
+</div>
+
+<div class="compactItem open">
+<div class="compactTop">
+<div class="compactMain">
+<div class="itemTitle">Homepage Menu</div>
+<div class="itemMeta">Homepage card images save separately and load on index.html.</div>
+</div>
+</div>
+</div>
+
+<div class="compactItem open">
+<div class="compactTop">
+<div class="compactMain">
+<div class="itemTitle">Maintenance</div>
+<div class="itemMeta">Owner can review deleted orders, restore them, export CSV and check photo usage.</div>
+</div>
+</div>
+</div>
+
+<div class="compactItem open">
+<div class="compactTop">
+<div class="compactMain">
+<div class="itemTitle">Deleted Orders Safety</div>
+<div class="itemMeta">Deleted orders are visible here for 30 days before permanent cleanup.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Recent Active Orders</h3>
+<p>Deleted orders are hidden here and moved to Maintenance.</p>
+</div>
+<a class="btn small" href="orders-admin.html">Open Order Manager</a>
+</div>
+
+<div class="cardBody">
+<div id="recentOrdersList" class="list"></div>
+</div>
+</div>
+</div>
 </section>
 
-<section id="adminScreen" class="screen">
-  <main class="wrap main">
+<section id="homepagePanel" class="panel">
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Homepage Menu Cards</h3>
+<p>Control the homepage menu photos separately from product photos. These are the main category cards on index.html.</p>
+</div>
+<div class="itemActions">
+<button class="btn small" onclick="loadHomepageMenuCardsSafe().then(renderHomepageMenuCards)">Refresh Cards</button>
+</div>
+</div>
 
-    <div class="tabs">
-      <button class="tab active" onclick="showTab('cakes', this)">Cakes</button>
-      <button class="tab" onclick="showTab('orders', this)">Orders</button>
-      <button class="tab" onclick="showTab('categories', this)">Categories</button>
-      <button class="tab" onclick="showTab('flavours', this)">Flavours</button>
-      <button class="tab" onclick="showTab('settings', this)">Settings</button>
-    </div>
-
-    <section id="tab-cakes" class="tabPanel show">
-      <div class="grid2">
-        <div class="panel">
-          <div class="panelHead">
-            <div>
-              <h2 id="cakeFormTitle">Add New Cake</h2>
-              <p>Add cake photo, categories, flavours and details.</p>
-            </div>
-            <button class="btn small" onclick="resetCakeForm()">Clear</button>
-          </div>
-
-          <form class="formGrid" onsubmit="saveCake(event)">
-            <input type="hidden" id="cakeId">
-
-            <div class="field"><label>Cake Name *</label><input id="cakeName" required placeholder="Chocolate Birthday Cake"></div>
-            <div class="field"><label>Starting Price</label><input id="cakePrice" type="number" min="0" step="0.01" placeholder="45"></div>
-            <div class="field full"><label>Image URL *</label><input id="cakeImage" required placeholder="https://..." oninput="previewCakeImage()"></div>
-
-            <div id="cakeImagePreviewBox" class="imagePreview">
-              <img id="cakeImagePreview" src="" alt="Cake preview">
-              <div><b>Image preview</b><span id="cakeImagePreviewUrl"></span></div>
-            </div>
-
-            <div class="field"><label>Sort Order</label><input id="cakeSortOrder" type="number" min="0" step="1" placeholder="0"></div>
-            <label class="checkBox"><input id="cakeActive" type="checkbox" checked> Active / Show</label>
-            <label class="checkBox"><input id="cakeFeatured" type="checkbox"> Featured cake</label>
-            <div class="field full"><label>Description</label><textarea id="cakeDescription" placeholder="Short cake details..."></textarea></div>
-
-            <div class="multiBox">
-              <div class="multiTitle">Select Categories</div>
-              <div id="cakeCategoryChecks" class="multiGrid"></div>
-            </div>
-
-            <div class="multiBox">
-              <div class="multiTitle">Select Available Flavours</div>
-              <div id="cakeFlavourChecks" class="multiGrid"></div>
-            </div>
-
-            <div class="formActions">
-              <button class="btn green" type="submit" id="saveCakeBtn">Save Cake</button>
-              <button class="btn" type="button" onclick="resetCakeForm()">Cancel Edit</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panelHead">
-            <div><h3>Dashboard</h3><p>Quick business status.</p></div>
-          </div>
-
-          <div class="stats">
-            <div class="stat"><b id="totalCount">0</b><span>Total Cakes</span></div>
-            <div class="stat"><b id="activeCount">0</b><span>Active</span></div>
-            <div class="stat"><b id="pendingOrdersCount">0</b><span>Pending Orders</span></div>
-            <div class="stat"><b id="todayOrdersCount">0</b><span>Today Orders</span></div>
-          </div>
-
-          <div class="notice"><b>Order flow:</b> Customer submits form → order saves here as Pending → WhatsApp opens with clean order slip.</div>
-        </div>
-      </div>
-
-      <section class="panel" style="margin-top:12px">
-        <div class="panelHead">
-          <div><h3>All Cakes</h3><p>Edit, hide, feature or delete cakes.</p></div>
-          <button class="btn small" onclick="loadAllData()">Refresh</button>
-        </div>
-
-        <div class="toolbar">
-          <div class="searchBox"><span>🔎</span><input id="cakeSearchInput" placeholder="Search cake, category, flavour..." oninput="renderCakes()"></div>
-          <select id="cakeStatusFilter" class="selectMini" onchange="renderCakes()">
-            <option value="all">All Status</option><option value="active">Active Only</option><option value="hidden">Hidden Only</option><option value="featured">Featured Only</option>
-          </select>
-          <select id="cakeSortFilter" class="selectMini" onchange="renderCakes()">
-            <option value="newest">Newest</option><option value="oldest">Oldest</option><option value="sort_order">Sort Order</option><option value="name">Name A-Z</option><option value="price_low">Price Low</option><option value="price_high">Price High</option>
-          </select>
-        </div>
-
-        <div id="cakeList" class="list"><div class="empty">Loading cakes...</div></div>
-      </section>
-    </section>
-
-    <section id="tab-orders" class="tabPanel">
-      <section class="panel">
-        <div class="panelHead">
-          <div><h2>Order History</h2><p>Manage pending, confirmed, preparing, completed and cancelled orders.</p></div>
-          <button class="btn small" onclick="loadAllData()">Refresh</button>
-        </div>
-
-        <div class="toolbar four">
-          <div class="searchBox"><span>🔎</span><input id="orderSearchInput" placeholder="Search name, phone, cake, date..." oninput="renderOrders()"></div>
-          <select id="orderStatusFilter" class="selectMini" onchange="renderOrders()">
-            <option value="all">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="preparing">Preparing</option>
-            <option value="ready_for_pickup">Ready for Pickup</option>
-            <option value="out_for_delivery">Out for Delivery</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-          <select id="orderDateFilter" class="selectMini" onchange="renderOrders()">
-            <option value="all">All Dates</option>
-            <option value="today">Today Created</option>
-            <option value="needed_today">Needed Today</option>
-            <option value="upcoming">Upcoming</option>
-          </select>
-          <select id="orderSortFilter" class="selectMini" onchange="renderOrders()">
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-            <option value="needed_date">Needed Date</option>
-          </select>
-        </div>
-
-        <div id="orderList" class="list"><div class="empty">Loading orders...</div></div>
-      </section>
-    </section>
-
-    <section id="tab-categories" class="tabPanel">
-      <div class="grid2">
-        <div class="panel">
-          <div class="panelHead">
-            <div><h2 id="categoryFormTitle">Add Category</h2><p>Examples: Birthday, Wedding, Kids, Cupcakes.</p></div>
-            <button class="btn small" onclick="resetCategoryForm()">Clear</button>
-          </div>
-          <form class="formGrid one" onsubmit="saveCategory(event)">
-            <input type="hidden" id="categoryId">
-            <div class="field"><label>Category Name *</label><input id="categoryName" required placeholder="Birthday"></div>
-            <div class="field"><label>Sort Order</label><input id="categorySortOrder" type="number" min="0" step="1" placeholder="0"></div>
-            <label class="checkBox"><input id="categoryActive" type="checkbox" checked> Active / Show on website</label>
-            <div class="formActions"><button class="btn green" type="submit" id="saveCategoryBtn">Save Category</button><button class="btn" type="button" onclick="resetCategoryForm()">Cancel Edit</button></div>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panelHead"><div><h3>Category List</h3><p>Delete carefully. It removes category from linked cakes.</p></div></div>
-          <div id="categoryList" class="list"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-flavours" class="tabPanel">
-      <div class="grid2">
-        <div class="panel">
-          <div class="panelHead">
-            <div><h2 id="flavourFormTitle">Add Flavour</h2><p>Examples: Chocolate, Vanilla, Rasmalai, Mango.</p></div>
-            <button class="btn small" onclick="resetFlavourForm()">Clear</button>
-          </div>
-          <form class="formGrid one" onsubmit="saveFlavour(event)">
-            <input type="hidden" id="flavourId">
-            <div class="field"><label>Flavour Name *</label><input id="flavourName" required placeholder="Chocolate"></div>
-            <div class="field"><label>Sort Order</label><input id="flavourSortOrder" type="number" min="0" step="1" placeholder="0"></div>
-            <label class="checkBox"><input id="flavourActive" type="checkbox" checked> Active / Show in order form</label>
-            <div class="formActions"><button class="btn green" type="submit" id="saveFlavourBtn">Save Flavour</button><button class="btn" type="button" onclick="resetFlavourForm()">Cancel Edit</button></div>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panelHead"><div><h3>Flavour List</h3><p>Delete carefully. It removes flavour from linked cakes.</p></div></div>
-          <div id="flavourList" class="list"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-settings" class="tabPanel">
-      <div class="panel">
-        <div class="panelHead"><div><h2>Site Settings</h2><p>Edit brand, logo, WhatsApp and homepage hero text.</p></div></div>
-
-        <form class="formGrid" onsubmit="saveSettings(event)">
-          <div class="field"><label>Brand Name</label><input id="brandName" placeholder="Cake Studio"></div>
-          <div class="field"><label>Tagline</label><input id="tagline" placeholder="Fresh custom cakes & sweet orders"></div>
-          <div class="field full"><label>Logo Image URL</label><input id="logoUrl" placeholder="https://..." oninput="previewLogoImage()"></div>
-
-          <div id="logoPreviewBox" class="imagePreview">
-            <img id="logoPreview" src="" alt="Logo preview">
-            <div><b>Logo preview</b><span id="logoPreviewUrl"></span></div>
-          </div>
-
-          <div class="field"><label>WhatsApp Number</label><input id="whatsappNumber" placeholder="16475551234"></div>
-          <div class="field"><label>Instagram URL</label><input id="instagramUrl" placeholder="https://instagram.com/..."></div>
-          <div class="field full"><label>Hero Title</label><textarea id="heroTitle" placeholder="Beautiful cakes for birthdays, weddings & every sweet moment."></textarea></div>
-          <div class="field full"><label>Hero Subtitle</label><textarea id="heroSubtitle" placeholder="Browse cake designs..."></textarea></div>
-          <div class="field full"><label>Address</label><input id="address" placeholder="Shop address or service area"></div>
-
-          <div class="formActions"><button class="btn green" type="submit">Save Settings</button></div>
-        </form>
-      </div>
-    </section>
-
-  </main>
+<div class="cardBody">
+<div id="homepageMenuNotice" class="loading" style="display:none;margin-bottom:12px;"></div>
+<div id="homepageMenuCardsList" class="homeMenuGrid">
+<div class="loading">Loading homepage menu cards...</div>
+</div>
+</div>
+</div>
 </section>
+
+<section id="productsPanel" class="panel">
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Products</h3>
+<p>Cakes are customizable. Cupcakes, muffins, brownies and baklava are quick-add desserts.</p>
+</div>
+
+<div class="itemActions">
+<button class="btn primary small" onclick="openProductForm('cake')">+ Customizable Cake</button>
+<button class="btn primary small" onclick="openProductForm('quick')">+ Quick Dessert</button>
+</div>
+</div>
+
+<div class="cardBody">
+<div id="productFormPanel" class="formPanel">
+<div class="formPanelTitle">
+<div>
+<h4 id="productFormTitle">Add Product</h4>
+<p id="productFormSubtitle">Choose product type first. The form changes automatically.</p>
+</div>
+<button class="btn small" type="button" onclick="closePanel('productFormPanel')">Close</button>
+</div>
+
+<form id="productForm">
+<input type="hidden" id="productId">
+<input type="hidden" id="productEditKind">
+
+<div class="productModeBox">
+<div class="field" style="margin-bottom:0;">
+<label>Product Type</label>
+<select id="productType" onchange="switchProductType()">
+<option value="cake">Customizable Cake</option>
+<option value="quick">Quick Add Dessert</option>
+</select>
+</div>
+<div id="productModeHint" class="modePill">Customizable cake flow</div>
+</div>
+
+<div class="formGrid">
+<div class="field">
+<label>Name</label>
+<input id="productName" required placeholder="Rasmalai Cake / Oreo Brownie">
+</div>
+
+<div class="field">
+<label>Slug</label>
+<input id="productSlug" placeholder="auto-generated-if-empty">
+</div>
+
+<div class="field full">
+<label>Description</label>
+<textarea id="productDesc" placeholder="Short product description..."></textarea>
+</div>
+
+<div class="field full">
+<label>Product Image</label>
+<div class="imageBox">
+<div class="imageInputRow">
+<input id="productImageUrl" placeholder="Paste direct image link..." oninput="previewImageFromInput('productImageUrl','productImagePreview')">
+</div>
+
+<div class="uploadRow">
+<input id="productImageFile" type="file" accept="image/png,image/jpeg,image/webp">
+<button class="btn small" type="button" onclick="uploadAndSet('productImageFile','productImageUrl','productImagePreview','products')">Upload Image</button>
+<button class="btn small" type="button" onclick="clearImageField('productImageUrl','productImagePreview','productImageFile')">Clear</button>
+</div>
+
+<img id="productImagePreview" class="imagePreview" alt="Preview">
+<div class="hint">Max 1 MB. Image count limit: 500 client photos max.</div>
+</div>
+</div>
+
+<div id="cakeProductFields" class="full">
+<div class="formGrid">
+<div class="field">
+<label>Starting Price</label>
+<input id="cakeStartingPrice" type="number" step="0.01" value="0">
+</div>
+
+<div class="field">
+<label>Price Type</label>
+<select id="cakePriceType">
+<option value="estimated">From / Estimated</option>
+<option value="fixed">Fixed</option>
+<option value="quote">Quote Required</option>
+</select>
+</div>
+
+<div class="field">
+<label>Cake Occasions</label>
+<select id="cakeCategoriesSelect" class="multiSelect" multiple></select>
+<div class="hint">Birthday, wedding, kids, anniversary etc.</div>
+</div>
+
+<div class="field">
+<label>Available Sizes</label>
+<select id="cakeSizesSelect" class="multiSelect" multiple></select>
+</div>
+
+<div class="field">
+<label>Available Flavours</label>
+<select id="cakeFlavoursSelect" class="multiSelect" multiple></select>
+</div>
+
+<div class="field">
+<label>Available Add-ons</label>
+<select id="cakeAddonsSelect" class="multiSelect" multiple></select>
+</div>
+</div>
+</div>
+
+<div id="quickProductFields" class="full hidden">
+<div class="formGrid">
+<div class="field">
+<label>Main Category</label>
+<select id="quickCategory">
+<option value="cupcakes">Cupcakes</option>
+<option value="muffins">Muffins</option>
+<option value="brownies">Brownies</option>
+<option value="baklava">Baklava</option>
+</select>
+</div>
+
+<div class="field">
+<label>Flavour / Variant</label>
+<input id="quickVariant" placeholder="Chocolate, Oreo, Lotus, Pistachio...">
+</div>
+
+<div class="field">
+<label>Price</label>
+<input id="quickPrice" type="number" step="0.01" value="0">
+</div>
+
+<div class="field">
+<label>Quote Required?</label>
+<select id="quickQuote">
+<option value="false">No, fixed price</option>
+<option value="true">Yes, quote required</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="field">
+<label>Sort Order</label>
+<input id="productSort" type="number" value="0">
+</div>
+
+<div class="field">
+<label>Visibility</label>
+<label class="checkRow"><input id="productFeatured" type="checkbox"> Featured</label>
+<label class="checkRow"><input id="productActive" type="checkbox" checked> Active</label>
+</div>
+
+<div class="full">
+<button class="btn primary" type="submit">Save Product</button>
+<button class="btn" type="button" onclick="resetProductForm(false)" style="margin-left:8px;">Clear</button>
+</div>
+</div>
+</form>
+</div>
+
+<div class="searchRow">
+<input id="productSearch" placeholder="Search products..." oninput="renderProducts()">
+<select id="productKindFilter" onchange="renderProducts()">
+<option value="all">All Products</option>
+<option value="cake">Customizable Cakes</option>
+<option value="quick">Quick Desserts</option>
+</select>
+<select id="productStatusFilter" onchange="renderProducts()">
+<option value="all">All Status</option>
+<option value="active">Active</option>
+<option value="inactive">Inactive</option>
+<option value="featured">Featured</option>
+</select>
+</div>
+
+<div id="productsList" class="list"></div>
+</div>
+</div>
+</section>
+
+<section id="setupPanel" class="panel">
+<div class="setupJumpBar">
+<button class="btn small active" id="setupSwitch-occasions" onclick="jumpSetup('occasions')">Cake Occasions</button>
+<button class="btn small" id="setupSwitch-sizes" onclick="jumpSetup('sizes')">Sizes</button>
+<button class="btn small" id="setupSwitch-flavours" onclick="jumpSetup('flavours')">Flavours</button>
+<button class="btn small" id="setupSwitch-options" onclick="jumpSetup('options')">Options</button>
+<button class="btn small" id="setupSwitch-addons" onclick="jumpSetup('addons')">Add-ons</button>
+</div>
+<div class="setupGrid">
+
+<div class="card setupAnchor" id="setup-occasions">
+<div class="cardHead">
+<div>
+<h3>Cake Occasions</h3>
+<p>These belong inside Cakes only, not homepage main menu.</p>
+</div>
+<button class="btn primary small" onclick="openOccasionForm()">+ Add Occasion</button>
+</div>
+
+<div class="cardBody">
+<div id="occasionFormPanel" class="formPanel">
+<div class="formPanelTitle">
+<div>
+<h4 id="occasionFormTitle">Add Cake Occasion</h4>
+<p>Birthday, wedding, kids, anniversary, baby shower, simple cakes.</p>
+</div>
+<button class="btn small" type="button" onclick="closePanel('occasionFormPanel')">Close</button>
+</div>
+
+<form id="occasionForm">
+<input type="hidden" id="occasionId">
+
+<div class="field">
+<label>Name</label>
+<input id="occasionName" required placeholder="Birthday Cakes">
+</div>
+
+<div class="field">
+<label>Slug</label>
+<input id="occasionSlug" placeholder="birthday">
+</div>
+
+<div class="field">
+<label>Description</label>
+<textarea id="occasionDesc"></textarea>
+</div>
+
+<div class="field">
+<label>Image</label>
+<div class="imageBox">
+<div class="imageInputRow">
+<input id="occasionImage" placeholder="Paste image link..." oninput="previewImageFromInput('occasionImage','occasionImagePreview')">
+</div>
+<div class="uploadRow">
+<input id="occasionImageFile" type="file" accept="image/png,image/jpeg,image/webp">
+<button class="btn small" type="button" onclick="uploadAndSet('occasionImageFile','occasionImage','occasionImagePreview','categories')">Upload</button>
+<button class="btn small" type="button" onclick="clearImageField('occasionImage','occasionImagePreview','occasionImageFile')">Clear</button>
+</div>
+<img id="occasionImagePreview" class="imagePreview" alt="Preview">
+<div class="hint">Max 1 MB. Image count limit: 500 client photos max.</div>
+</div>
+</div>
+
+<div class="field">
+<label>Sort Order</label>
+<input id="occasionSort" type="number" value="0">
+</div>
+
+<label class="checkRow"><input id="occasionActive" type="checkbox" checked> Active</label>
+
+<button class="btn primary block" type="submit">Save Occasion</button>
+<button class="btn block" type="button" onclick="resetOccasionForm(false)" style="margin-top:8px;">Clear</button>
+</form>
+</div>
+
+<div id="occasionList" class="list"></div>
+</div>
+</div>
+
+<div class="card setupAnchor" id="setup-sizes">
+<div class="cardHead">
+<div>
+<h3>Sizes & Servings</h3>
+<p>Used by cake customization pricing.</p>
+</div>
+<button class="btn primary small" onclick="openSizeForm()">+ Add Size</button>
+</div>
+
+<div class="cardBody">
+<div id="sizeFormPanel" class="formPanel">
+<div class="formPanelTitle">
+<div>
+<h4 id="sizeFormTitle">Add Size</h4>
+<p>Example: 8 inch · serves 10-14 · $65.</p>
+</div>
+<button class="btn small" type="button" onclick="closePanel('sizeFormPanel')">Close</button>
+</div>
+
+<form id="sizeForm">
+<input type="hidden" id="sizeId">
+<div class="field"><label>Size Name</label><input id="sizeName" required placeholder="8 inch"></div>
+<div class="field"><label>Servings</label><input id="sizeServings" placeholder="Serves 10-14 people"></div>
+<div class="field"><label>Price</label><input id="sizePrice" type="number" step="0.01" value="0"></div>
+<div class="field"><label>Sort Order</label><input id="sizeSort" type="number" value="0"></div>
+<label class="checkRow"><input id="sizeQuote" type="checkbox"> Quote Required</label>
+<label class="checkRow"><input id="sizeActive" type="checkbox" checked> Active</label>
+<button class="btn primary block" type="submit">Save Size</button>
+<button class="btn block" type="button" onclick="resetSizeForm(false)" style="margin-top:8px;">Clear</button>
+</form>
+</div>
+
+<div id="sizeList" class="list"></div>
+</div>
+</div>
+
+<div class="card setupAnchor" id="setup-flavours">
+<div class="cardHead">
+<div>
+<h3>Flavours</h3>
+<p>Flavours can have extra price or quote required.</p>
+</div>
+<button class="btn primary small" onclick="openFlavourForm()">+ Add Flavour</button>
+</div>
+
+<div class="cardBody">
+<div id="flavourFormPanel" class="formPanel">
+<div class="formPanelTitle">
+<div>
+<h4 id="flavourFormTitle">Add Flavour</h4>
+<p>Example: Rasmalai +$10.</p>
+</div>
+<button class="btn small" type="button" onclick="closePanel('flavourFormPanel')">Close</button>
+</div>
+
+<form id="flavourForm">
+<input type="hidden" id="flavourId">
+<div class="field"><label>Name</label><input id="flavourName" required placeholder="Rasmalai"></div>
+<div class="field"><label>Extra Price</label><input id="flavourPrice" type="number" step="0.01" value="0"></div>
+<div class="field"><label>Sort Order</label><input id="flavourSort" type="number" value="0"></div>
+<label class="checkRow"><input id="flavourQuote" type="checkbox"> Quote Required</label>
+<label class="checkRow"><input id="flavourActive" type="checkbox" checked> Active</label>
+<button class="btn primary block" type="submit">Save Flavour</button>
+<button class="btn block" type="button" onclick="resetFlavourForm(false)" style="margin-top:8px;">Clear</button>
+</form>
+</div>
+
+<div id="flavourList" class="list"></div>
+</div>
+</div>
+
+<div class="card setupAnchor" id="setup-options">
+<div class="cardHead">
+<div>
+<h3>Options</h3>
+<p>Regular, eggless, vegan, gluten-free etc.</p>
+</div>
+<button class="btn primary small" onclick="openOptionForm()">+ Add Option</button>
+</div>
+
+<div class="cardBody">
+<div id="optionFormPanel" class="formPanel">
+<div class="formPanelTitle">
+<div>
+<h4 id="optionFormTitle">Add Option</h4>
+<p>These appear in cake customization.</p>
+</div>
+<button class="btn small" type="button" onclick="closePanel('optionFormPanel')">Close</button>
+</div>
+
+<form id="optionForm">
+<input type="hidden" id="optionId">
+<div class="field"><label>Name</label><input id="optionName" required placeholder="Eggless"></div>
+<div class="field"><label>Type</label><input id="optionType" value="diet"></div>
+<div class="field"><label>Extra Price</label><input id="optionPrice" type="number" step="0.01" value="0"></div>
+<div class="field"><label>Sort Order</label><input id="optionSort" type="number" value="0"></div>
+<label class="checkRow"><input id="optionQuote" type="checkbox"> Quote Required</label>
+<label class="checkRow"><input id="optionActive" type="checkbox" checked> Active</label>
+<button class="btn primary block" type="submit">Save Option</button>
+<button class="btn block" type="button" onclick="resetOptionForm(false)" style="margin-top:8px;">Clear</button>
+</form>
+</div>
+
+<div id="optionList" class="list"></div>
+</div>
+</div>
+
+<div class="card setupAnchor" id="setup-addons">
+<div class="cardHead">
+<div>
+<h3>Add-ons</h3>
+<p>Toppers, flowers, gold leaf, custom decoration.</p>
+</div>
+<button class="btn primary small" onclick="openAddonForm()">+ Add Add-on</button>
+</div>
+
+<div class="cardBody">
+<div id="addonFormPanel" class="formPanel">
+<div class="formPanelTitle">
+<div>
+<h4 id="addonFormTitle">Add Add-on</h4>
+<p>Add-ons can be selected during cake customization.</p>
+</div>
+<button class="btn small" type="button" onclick="closePanel('addonFormPanel')">Close</button>
+</div>
+
+<form id="addonForm">
+<input type="hidden" id="addonId">
+<div class="field"><label>Name</label><input id="addonName" required placeholder="Name Topper"></div>
+<div class="field"><label>Description</label><textarea id="addonDesc"></textarea></div>
+<div class="field"><label>Price</label><input id="addonPrice" type="number" step="0.01" value="0"></div>
+<div class="field"><label>Sort Order</label><input id="addonSort" type="number" value="0"></div>
+<label class="checkRow"><input id="addonQuote" type="checkbox"> Quote Required</label>
+<label class="checkRow"><input id="addonActive" type="checkbox" checked> Active</label>
+<button class="btn primary block" type="submit">Save Add-on</button>
+<button class="btn block" type="button" onclick="resetAddonForm(false)" style="margin-top:8px;">Clear</button>
+</form>
+</div>
+
+<div id="addonList" class="list"></div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="settingsPanel" class="panel">
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Website Settings</h3>
+<p>Branding, contact, homepage, order rules, tax and policies.</p>
+</div>
+<button class="btn primary small" onclick="saveSettings()">Save Settings</button>
+</div>
+
+<div class="cardBody">
+<form id="settingsForm" class="formGrid">
+<div class="field">
+<label>Brand Name</label>
+<input id="setBrandName" placeholder="Siffat Cakes">
+</div>
+
+<div class="field">
+<label>Tagline</label>
+<input id="setTagline" placeholder="Eggless Cakes & Desserts">
+</div>
+
+<div class="field full">
+<label>Logo Image</label>
+<div class="imageBox">
+<div class="imageInputRow">
+<input id="setLogoUrl" placeholder="Paste logo image link..." oninput="previewImageFromInput('setLogoUrl','setLogoPreview')">
+</div>
+
+<div class="uploadRow">
+<input id="setLogoFile" type="file" accept="image/png,image/jpeg,image/webp">
+<button class="btn small" type="button" onclick="uploadAndSet('setLogoFile','setLogoUrl','setLogoPreview','settings')">Upload Logo</button>
+<button class="btn small" type="button" onclick="clearImageField('setLogoUrl','setLogoPreview','setLogoFile')">Clear</button>
+</div>
+
+<img id="setLogoPreview" class="imagePreview" alt="Logo preview">
+<div class="hint">Max 1 MB. Image count limit: 500 client photos max.</div>
+</div>
+</div>
+
+<div class="field full">
+<label>Hero Image</label>
+<div class="imageBox">
+<div class="imageInputRow">
+<input id="setHeroImage" placeholder="Paste hero image link..." oninput="previewImageFromInput('setHeroImage','setHeroPreview')">
+</div>
+
+<div class="uploadRow">
+<input id="setHeroFile" type="file" accept="image/png,image/jpeg,image/webp">
+<button class="btn small" type="button" onclick="uploadAndSet('setHeroFile','setHeroImage','setHeroPreview','settings')">Upload Hero</button>
+<button class="btn small" type="button" onclick="clearImageField('setHeroImage','setHeroPreview','setHeroFile')">Clear</button>
+</div>
+
+<img id="setHeroPreview" class="imagePreview" alt="Hero preview">
+<div class="hint">Max 1 MB. Image count limit: 500 client photos max.</div>
+</div>
+</div>
+
+<div class="field">
+<label>WhatsApp Number</label>
+<input id="setWhatsapp" placeholder="15195555555">
+<div class="hint">Use country code. Example Canada: 15195555555</div>
+</div>
+
+<div class="field">
+<label>Instagram URL</label>
+<input id="setInstagram" placeholder="https://instagram.com/...">
+</div>
+
+<div class="field">
+<label>Address</label>
+<input id="setAddress" placeholder="381 Talbot Street, St. Thomas">
+</div>
+
+<div class="field">
+<label>Business Hours</label>
+<input id="setHours" placeholder="Mon-Sat 10 AM - 7 PM">
+</div>
+
+<div class="field">
+<label>Service Area</label>
+<input id="setServiceArea" placeholder="London, St. Thomas, nearby areas">
+</div>
+
+<div class="field">
+<label>Currency Symbol</label>
+<input id="setCurrency" placeholder="$">
+</div>
+
+<div class="field full">
+<label>Hero Title</label>
+<input id="setHeroTitle">
+</div>
+
+<div class="field full">
+<label>Hero Subtitle</label>
+<textarea id="setHeroSubtitle"></textarea>
+</div>
+
+<div class="field">
+<label>Minimum Notice Hours</label>
+<input id="setNoticeHours" type="number" min="0">
+</div>
+
+<div class="field">
+<label>Show Prices?</label>
+<select id="setShowPrices">
+<option value="true">Yes, show estimated prices</option>
+<option value="false">No, request quote only</option>
+</select>
+</div>
+
+<div class="field">
+<label>Charge HST?</label>
+<select id="setChargeHst">
+<option value="false">No, do not charge HST</option>
+<option value="true">Yes, charge HST</option>
+</select>
+</div>
+
+<div class="field">
+<label>HST Rate %</label>
+<input id="setHstRate" type="number" min="0" step="0.01" placeholder="13">
+</div>
+
+<div class="field">
+<label>Default Delivery Fee</label>
+<input id="setDefaultDeliveryFee" type="number" min="0" step="0.01" placeholder="0">
+</div>
+
+<div class="field full">
+<label>Same-Day / Urgent Message</label>
+<textarea id="setSameDay"></textarea>
+</div>
+
+<div class="field full">
+<label>Policy Text</label>
+<textarea id="setPolicy"></textarea>
+</div>
+
+<div class="full">
+<button class="btn primary" type="button" onclick="saveSettings()">Save Settings</button>
+</div>
+</form>
+</div>
+</div>
+</section>
+
+<section id="maintenancePanel" class="panel">
+<div class="ownerNotice">
+<b>Owner Maintenance Area:</b> Deleted orders are shown here so employees cannot quietly delete customer orders. Keep this page for owner/admin use only.
+</div>
+
+<div class="maintenanceGrid">
+<div>
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Deleted Orders</h3>
+<p>Deleted orders stay here for 30 days. Owner can restore or permanently delete them.</p>
+</div>
+<div class="itemActions">
+<button class="btn small" onclick="renderMaintenance()">Refresh</button>
+<button class="btn orange small" onclick="purgeOldDeletedOrders()">Purge 30+ Days</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="searchRow">
+<input id="deletedSearch" placeholder="Search deleted orders..." oninput="renderDeletedOrders()">
+<select id="deletedSort" onchange="renderDeletedOrders()">
+<option value="newest">Newest deleted first</option>
+<option value="oldest">Oldest deleted first</option>
+<option value="days_left">Fewest days left</option>
+<option value="total_high">Total high to low</option>
+</select>
+</div>
+<div id="deletedOrdersList" class="list"></div>
+</div>
+</div>
+
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Reports / CSV Export</h3>
+<p>Owner reports are here, not in employee Order Manager.</p>
+</div>
+</div>
+<div class="cardBody">
+<div class="searchRow">
+<select id="reportRange" onchange="renderReportSummary()">
+<option value="this_week">This Week</option>
+<option value="this_month" selected>This Month</option>
+<option value="this_year">This Year</option>
+<option value="lifetime">Lifetime</option>
+</select>
+<select id="reportIncludeDeleted" onchange="renderReportSummary()">
+<option value="active">Active orders only</option>
+<option value="with_deleted">Include deleted orders</option>
+<option value="deleted_only">Deleted orders only</option>
+</select>
+</div>
+
+<div id="reportSummary" class="reportGrid"></div>
+
+<div class="itemActions" style="margin-top:12px;justify-content:flex-start;">
+<button class="btn primary small" onclick="exportOrdersCSV()">Export Orders CSV</button>
+<button class="btn small" onclick="exportProductsCSV()">Export Products CSV</button>
+<button class="btn small" onclick="printReportSummary()">Print Report</button>
+</div>
+</div>
+</div>
+</div>
+
+<div>
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Photo Usage Limit</h3>
+<p>Client photo limit: 500 images max.</p>
+</div>
+</div>
+<div class="cardBody">
+<div id="storageStats"></div>
+</div>
+</div>
+
+<div class="card">
+<div class="cardHead">
+<div>
+<h3>Maintenance Notes</h3>
+<p>Simple rules to keep the system clean.</p>
+</div>
+</div>
+<div class="cardBody">
+<div class="list">
+<div class="compactItem open">
+<div class="compactTop">
+<div class="compactMain">
+<div class="itemTitle">Deleted Orders</div>
+<div class="itemMeta">Review deleted orders here weekly so nothing disappears silently.</div>
+</div>
+</div>
+</div>
+
+<div class="compactItem open">
+<div class="compactTop">
+<div class="compactMain">
+<div class="itemTitle">Photo Limit</div>
+<div class="itemMeta">Keep total customer photos under 500 for this client setup.</div>
+</div>
+</div>
+</div>
+
+<div class="compactItem open">
+<div class="compactTop">
+<div class="compactMain">
+<div class="itemTitle">Reports</div>
+<div class="itemMeta">Export CSV monthly or yearly before clearing old orders.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+</div>
 
 <div id="toast" class="toast"></div>
 
 <script>
-  const SUPABASE_URL = "https://rdpynngsjhzirxwzrxdd.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_oPaplUdywtmujaMjyyzHTQ_6fqthIzu";
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL = "https://qchzgwrnibgziqkepnpb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_u72M1JPe6j9PIqXJ3qtDHA_KDnZheCL";
+const STORAGE_BUCKET = "cake-images";
 
-  const ORDER_STATUSES = [
-    ["pending", "Pending"],
-    ["confirmed", "Confirmed"],
-    ["preparing", "Preparing"],
-    ["ready_for_pickup", "Ready for Pickup"],
-    ["out_for_delivery", "Out for Delivery"],
-    ["completed", "Completed"],
-    ["cancelled", "Cancelled"]
-  ];
+const MAX_UPLOAD_MB = 1;
+const CLIENT_PHOTO_LIMIT = 500;
 
-  let currentUser = null;
-  let allCakes = [];
-  let allCategories = [];
-  let allFlavours = [];
-  let cakeCategoryRows = [];
-  let cakeFlavourRows = [];
-  let allOrders = [];
-  let siteSettings = null;
-  const $ = (id) => document.getElementById(id);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth:{
+    persistSession:true,
+    autoRefreshToken:true,
+    detectSessionInUrl:true
+  }
+});
 
-  init();
+const $ = (id) => document.getElementById(id);
 
-  async function init(){
-    const { data } = await supabaseClient.auth.getSession();
-    if(data.session && data.session.user){
-      currentUser = data.session.user;
-      await verifyAdminAndLoad();
-    }else{
-      showLogin();
-    }
+const DEFAULT_SETTINGS = {
+id:1,
+brand_name:"Siffat Cakes",
+tagline:"Eggless Cakes & Desserts",
+logo_url:"",
+whatsapp_number:"",
+instagram_url:"",
+address:"381 Talbot Street, St. Thomas",
+business_hours:"",
+service_area:"",
+hero_title:"Custom cakes and desserts for your sweetest moments.",
+hero_subtitle:"Custom cakes, cupcakes, brownies, muffins and baklava for every sweet moment.",
+hero_image_url:"",
+minimum_notice_hours:24,
+same_day_message:"Online orders require at least 24 hours notice. For same-day or urgent orders, please contact us directly on WhatsApp.",
+policy_text:"Online orders require at least 24 hours notice. Your order is confirmed only after the shop replies on WhatsApp. Estimated prices may change after design review.",
+currency:"$",
+show_prices:true,
+charge_hst:false,
+hst_rate:13,
+default_delivery_fee:0
+};
 
-    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
-      if(session && session.user){
+let currentUser = null;
+let siteSettings = {...DEFAULT_SETTINGS};
+
+let categories = [];
+let sizes = [];
+let flavours = [];
+let options = [];
+let addons = [];
+let cakes = [];
+let quickProducts = [];
+
+let cakeCategories = [];
+let cakeSizes = [];
+let cakeFlavours = [];
+let cakeAddons = [];
+
+let orders = [];
+let orderItems = [];
+
+let homepageMenuCards = [];
+const DEFAULT_HOMEPAGE_MENU_CARDS = [
+{ slug:"cakes", title:"Cakes", subtitle:"Custom cakes", image_url:"", link_url:"category.html?cat=cakes", sort_order:1, is_active:true },
+{ slug:"cupcakes", title:"Cupcakes", subtitle:"Quick desserts", image_url:"", link_url:"category.html?cat=cupcakes", sort_order:2, is_active:true },
+{ slug:"muffins", title:"Muffins", subtitle:"Fresh muffins", image_url:"", link_url:"category.html?cat=muffins", sort_order:3, is_active:true },
+{ slug:"brownies", title:"Brownies", subtitle:"Rich brownies", image_url:"", link_url:"category.html?cat=brownies", sort_order:4, is_active:true },
+{ slug:"baklava", title:"Baklava", subtitle:"Sweet layers", image_url:"", link_url:"category.html?cat=baklava", sort_order:5, is_active:true },
+{ slug:"custom-cake", title:"Custom Cake", subtitle:"Start custom order", image_url:"", link_url:"cake.html?custom=true", sort_order:6, is_active:true }
+];
+
+let formsBound = false;
+let adminBooting = false;
+let adminVerifiedOnce = false;
+let adminOpening = false;
+
+initAuth();
+
+async function initAuth(){
+  await bootAdminAuth();
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    setTimeout(async () => {
+      if(session?.user){
         currentUser = session.user;
-        await verifyAdminAndLoad();
-      }else{
+        await verifyAndOpen(false);
+      }else if(!adminBooting && !adminVerifiedOnce){
         currentUser = null;
         showLogin();
       }
-    });
-  }
+    }, 0);
+  });
+}
 
-  function showLogin(){
-    $("loginScreen").classList.add("show");
-    $("adminScreen").classList.remove("show");
-    $("signOutBtn").style.display = "none";
-    $("adminEmailPill").textContent = "Not logged in";
-  }
+async function bootAdminAuth(){
+  if(adminBooting) return;
+  adminBooting = true;
 
-  function showAdmin(){
-    $("loginScreen").classList.remove("show");
-    $("adminScreen").classList.add("show");
-    $("signOutBtn").style.display = "inline-flex";
-    $("adminEmailPill").textContent = currentUser?.email || "Admin";
-  }
+  try{
+    setLoginIntro("Checking admin session...");
 
-  async function loginAdmin(event){
-    event.preventDefault();
-    const email = $("loginEmail").value.trim();
-    const password = $("loginPassword").value;
-    $("loginMsg").textContent = "Logging in...";
+    const session = await waitForAdminSession(3500);
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if(error){
-      $("loginMsg").textContent = error.message;
-      showToast(error.message, true);
+    if(session?.user){
+      currentUser = session.user;
+      await verifyAndOpen(true);
       return;
     }
 
-    currentUser = data.user;
-    await verifyAdminAndLoad();
-  }
+    const refreshed = await supabaseClient.auth.refreshSession();
 
-  async function verifyAdminAndLoad(){
-    if(!currentUser){ showLogin(); return; }
-
-    try{
-      const { data, error } = await supabaseClient.from("app_admins").select("email").limit(1);
-      if(error) throw error;
-
-      if(!data || !data.length){
-        showToast("This email is not added as admin in app_admins table.", true);
-        await supabaseClient.auth.signOut();
-        showLogin();
-        return;
-      }
-
-      showAdmin();
-      await loadAllData();
-    }catch(err){
-      showToast("Admin check failed: " + err.message, true);
-      console.error(err);
-    }
-  }
-
-  async function signOut(){
-    await supabaseClient.auth.signOut();
-    resetCakeForm();
-    showLogin();
-    showToast("Signed out");
-  }
-
-  function showTab(name, btn){
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".tabPanel").forEach(p => p.classList.remove("show"));
-    btn.classList.add("active");
-    $("tab-" + name).classList.add("show");
-  }
-
-  async function loadAllData(){
-    $("cakeList").innerHTML = `<div class="empty">Loading cakes...</div>`;
-    $("orderList").innerHTML = `<div class="empty">Loading orders...</div>`;
-
-    const [cakesRes,catsRes,flavoursRes,cakeCatsRes,cakeFlavoursRes,settingsRes,ordersRes] = await Promise.all([
-      supabaseClient.from("cakes").select("*").order("sort_order", { ascending:true }).order("created_at", { ascending:false }),
-      supabaseClient.from("categories").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
-      supabaseClient.from("flavours").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
-      supabaseClient.from("cake_categories").select("*"),
-      supabaseClient.from("cake_flavours").select("*"),
-      supabaseClient.from("site_settings").select("*").eq("id", 1).maybeSingle(),
-      supabaseClient.from("orders").select("*").order("created_at", { ascending:false })
-    ]);
-
-    const firstError = cakesRes.error || catsRes.error || flavoursRes.error || cakeCatsRes.error || cakeFlavoursRes.error || settingsRes.error || ordersRes.error;
-    if(firstError){
-      showToast(firstError.message, true);
-      console.error(firstError);
-      return;
-    }
-
-    allCakes = cakesRes.data || [];
-    allCategories = catsRes.data || [];
-    allFlavours = flavoursRes.data || [];
-    cakeCategoryRows = cakeCatsRes.data || [];
-    cakeFlavourRows = cakeFlavoursRes.data || [];
-    siteSettings = settingsRes.data || null;
-    allOrders = ordersRes.data || [];
-
-    updateTopBrand();
-    fillSettingsForm();
-    renderCakeFormOptions();
-    renderCakes();
-    renderOrders();
-    renderCategories();
-    renderFlavours();
-    updateStats();
-  }
-
-  function updateTopBrand(){
-    const name = siteSettings?.brand_name || "Cake Studio";
-    const logo = siteSettings?.logo_url || "";
-    $("adminTopBrand").textContent = name + " Admin";
-    if(logo){
-      $("adminTopLogo").innerHTML = `<img src="${escapeHtml(logo)}" alt="Logo" onerror="this.parentElement.textContent='🍰'">`;
+    if(refreshed?.data?.session?.user){
+      currentUser = refreshed.data.session.user;
+      await verifyAndOpen(true);
     }else{
-      $("adminTopLogo").textContent = "🍰";
+      showLogin();
     }
+  }catch(err){
+    console.warn("Admin auth boot issue:", err);
+    showLogin();
+  }finally{
+    adminBooting = false;
+  }
+}
+
+async function waitForAdminSession(maxWait = 3500){
+  const first = await supabaseClient.auth.getSession();
+
+  if(first?.data?.session){
+    return first.data.session;
   }
 
-  function updateStats(){
-    const today = todayStr();
-    $("totalCount").textContent = allCakes.length;
-    $("activeCount").textContent = allCakes.filter(c => c.is_active).length;
-    $("pendingOrdersCount").textContent = allOrders.filter(o => o.status === "pending").length;
-    $("todayOrdersCount").textContent = allOrders.filter(o => String(o.created_at || "").startsWith(today)).length;
-  }
+  return new Promise((resolve) => {
+    let finished = false;
 
-  function renderCakeFormOptions(){
-    const activeCats = allCategories.filter(c => c.is_active);
-    const activeFlavs = allFlavours.filter(f => f.is_active);
-
-    $("cakeCategoryChecks").innerHTML = activeCats.length ? activeCats.map(cat => `
-      <label class="multiItem"><input type="checkbox" name="cakeCategory" value="${cat.id}">${escapeHtml(cat.name)}</label>
-    `).join("") : `<div class="empty">No active categories. Add category first.</div>`;
-
-    $("cakeFlavourChecks").innerHTML = activeFlavs.length ? activeFlavs.map(flav => `
-      <label class="multiItem"><input type="checkbox" name="cakeFlavour" value="${flav.id}">${escapeHtml(flav.name)}</label>
-    `).join("") : `<div class="empty">No active flavours. Add flavour first.</div>`;
-  }
-
-  function getCakeCategoryIds(cakeId){return cakeCategoryRows.filter(row => row.cake_id === cakeId).map(row => row.category_id)}
-  function getCakeFlavourIds(cakeId){return cakeFlavourRows.filter(row => row.cake_id === cakeId).map(row => row.flavour_id)}
-  function getCakeCategoryNames(cakeId){return getCakeCategoryIds(cakeId).map(id => allCategories.find(c => c.id === id)?.name).filter(Boolean)}
-  function getCakeFlavourNames(cakeId){return getCakeFlavourIds(cakeId).map(id => allFlavours.find(f => f.id === id)?.name).filter(Boolean)}
-
-  function renderCakes(){
-    const search = $("cakeSearchInput").value.trim().toLowerCase();
-    const status = $("cakeStatusFilter").value;
-    const sort = $("cakeSortFilter").value;
-    let cakes = [...allCakes];
-
-    if(search){
-      cakes = cakes.filter(c => {
-        const categories = getCakeCategoryNames(c.id).join(" ");
-        const flavours = getCakeFlavourNames(c.id).join(" ");
-        const combined = `${c.name || ""} ${c.category || ""} ${c.description || ""} ${categories} ${flavours}`.toLowerCase();
-        return combined.includes(search);
-      });
-    }
-
-    if(status === "active") cakes = cakes.filter(c => c.is_active);
-    if(status === "hidden") cakes = cakes.filter(c => !c.is_active);
-    if(status === "featured") cakes = cakes.filter(c => c.is_featured);
-
-    cakes.sort((a,b) => {
-      if(sort === "oldest") return new Date(a.created_at || 0) - new Date(b.created_at || 0);
-      if(sort === "sort_order") return Number(a.sort_order || 0) - Number(b.sort_order || 0);
-      if(sort === "name") return String(a.name || "").localeCompare(String(b.name || ""));
-      if(sort === "price_low") return Number(a.starting_price || 0) - Number(b.starting_price || 0);
-      if(sort === "price_high") return Number(b.starting_price || 0) - Number(a.starting_price || 0);
-      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-    });
-
-    if(!cakes.length){
-      $("cakeList").innerHTML = `<div class="empty">No cakes found.</div>`;
-      return;
-    }
-
-    $("cakeList").innerHTML = cakes.map(cake => {
-      const price = cake.starting_price === null || cake.starting_price === undefined || cake.starting_price === "" ? "Custom price" : "$" + Number(cake.starting_price).toFixed(2).replace(".00","");
-      const cats = getCakeCategoryNames(cake.id);
-      const flavs = getCakeFlavourNames(cake.id);
-
-      return `
-        <article class="cakeItem">
-          <div class="cakeTop">
-            <img src="${escapeHtml(cake.image_url || "")}" alt="${escapeHtml(cake.name || "Cake")}" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80'">
-            <div class="cakeInfo">
-              <h4>${escapeHtml(cake.name || "Untitled Cake")}</h4>
-              <p>${escapeHtml(cake.description || "No description")}</p>
-              <div class="badges">
-                <span class="badge">${price}</span>
-                <span class="badge ${cake.is_active ? "active" : "inactive"}">${cake.is_active ? "Active" : "Hidden"}</span>
-                ${cake.is_featured ? `<span class="badge featured">Featured</span>` : ""}
-                <span class="badge">Sort ${Number(cake.sort_order || 0)}</span>
-                ${cats.map(name => `<span class="badge">${escapeHtml(name)}</span>`).join("")}
-                ${flavs.map(name => `<span class="badge">${escapeHtml(name)}</span>`).join("")}
-              </div>
-            </div>
-            <div class="itemActions">
-              <button class="btn small" onclick="editCake('${cake.id}')">Edit</button>
-              <button class="btn small" onclick="toggleCakeActive('${cake.id}', ${cake.is_active ? "false" : "true"})">${cake.is_active ? "Hide" : "Show"}</button>
-              <button class="btn red small" onclick="deleteCake('${cake.id}')">Delete</button>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join("");
-  }
-
-  async function saveCake(event){
-    event.preventDefault();
-    const id = $("cakeId").value.trim();
-    const selectedCategoryIds = getCheckedValues("cakeCategory");
-    const selectedFlavourIds = getCheckedValues("cakeFlavour");
-
-    if(!selectedCategoryIds.length){ showToast("Select at least one category.", true); return; }
-
-    const firstCategoryName = allCategories.find(c => c.id === selectedCategoryIds[0])?.name || "Custom";
-    const payload = {
-      name: $("cakeName").value.trim(),
-      category: firstCategoryName,
-      description: $("cakeDescription").value.trim(),
-      image_url: $("cakeImage").value.trim(),
-      starting_price: $("cakePrice").value === "" ? null : Number($("cakePrice").value),
-      sort_order: $("cakeSortOrder").value === "" ? 0 : Number($("cakeSortOrder").value),
-      is_active: $("cakeActive").checked,
-      is_featured: $("cakeFeatured").checked
+    const finish = (session) => {
+      if(finished) return;
+      finished = true;
+      clearTimeout(timer);
+      subscription?.unsubscribe();
+      resolve(session || null);
     };
 
-    if(!payload.name || !payload.image_url){ showToast("Cake name and image URL are required.", true); return; }
+    const { data } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      if(session) finish(session);
+    });
 
-    $("saveCakeBtn").textContent = id ? "Updating..." : "Saving...";
-    $("saveCakeBtn").disabled = true;
+    const subscription = data?.subscription;
 
-    const result = id
-      ? await supabaseClient.from("cakes").update(payload).eq("id", id).select().single()
-      : await supabaseClient.from("cakes").insert(payload).select().single();
+    const timer = setTimeout(() => {
+      finish(null);
+    }, maxWait);
+  });
+}
+
+async function loginAdmin(){
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  if(!email || !password){
+    showToast("Enter admin email and password.", true);
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  if(error){
+    showToast(error.message, true);
+    return;
+  }
+
+  if(data?.user){
+    currentUser = data.user;
+    await verifyAndOpen(true);
+  }
+
+  showToast("Logged in.");
+}
+
+async function logoutAdmin(){
+  await supabaseClient.auth.signOut();
+  currentUser = null;
+  adminVerifiedOnce = false;
+  showLogin();
+  showToast("Signed out.");
+}
+
+async function verifyAndOpen(force = false){
+  if(adminOpening) return;
+  if(adminVerifiedOnce && !force && $("app").classList.contains("show")) return;
+
+  adminOpening = true;
+
+  try{
+    setLoginIntro("Verifying admin access...");
+
+    let result = await supabaseClient.rpc("is_admin");
 
     if(result.error){
-      $("saveCakeBtn").disabled = false;
-      $("saveCakeBtn").textContent = "Save Cake";
-      showToast(result.error.message, true);
+      await wait(800);
+      result = await supabaseClient.rpc("is_admin");
+    }
+
+    if(result.error || result.data !== true){
+      await supabaseClient.auth.signOut();
+      adminVerifiedOnce = false;
+      showLogin();
+      showToast("This user is not added as admin in admin_users table.", true);
       return;
     }
 
-    const relOk = await saveCakeRelations(result.data.id, selectedCategoryIds, selectedFlavourIds);
-    $("saveCakeBtn").disabled = false;
-    $("saveCakeBtn").textContent = "Save Cake";
-    if(!relOk) return;
+    $("loginScreen").style.display = "none";
+    $("app").classList.add("show");
+    $("adminEmailText").textContent = currentUser?.email || "Admin";
+    adminVerifiedOnce = true;
 
-    showToast(id ? "Cake updated" : "Cake added");
-    resetCakeForm();
-    await loadAllData();
+    bindForms();
+    await loadAll(false);
+  }catch(err){
+    console.error(err);
+    showLogin();
+    showToast(err.message || "Admin verification failed.", true);
+  }finally{
+    adminOpening = false;
   }
+}
 
-  async function saveCakeRelations(cakeId, categoryIds, flavourIds){
-    const deleteCats = await supabaseClient.from("cake_categories").delete().eq("cake_id", cakeId);
-    if(deleteCats.error){ showToast(deleteCats.error.message, true); return false; }
+function showLogin(){
+  $("loginScreen").style.display = "grid";
+  $("app").classList.remove("show");
+  setLoginIntro("Login to manage Siffat Cakes website, products, cake setup and settings.");
+}
 
-    const deleteFlavs = await supabaseClient.from("cake_flavours").delete().eq("cake_id", cakeId);
-    if(deleteFlavs.error){ showToast(deleteFlavs.error.message, true); return false; }
+function setLoginIntro(text){
+  const el = $("loginIntroText");
+  if(el) el.textContent = text;
+}
 
-    if(categoryIds.length){
-      const rows = categoryIds.map(category_id => ({ cake_id:cakeId, category_id }));
-      const insertCats = await supabaseClient.from("cake_categories").insert(rows);
-      if(insertCats.error){ showToast(insertCats.error.message, true); return false; }
+function bindForms(){
+  if(formsBound) return;
+  formsBound = true;
+
+  $("productForm").addEventListener("submit", saveProduct);
+  $("occasionForm").addEventListener("submit", saveOccasion);
+  $("sizeForm").addEventListener("submit", saveSize);
+  $("flavourForm").addEventListener("submit", saveFlavour);
+  $("optionForm").addEventListener("submit", saveOption);
+  $("addonForm").addEventListener("submit", saveAddon);
+}
+
+async function loadAll(showMessage = true){
+  if(showMessage) showToast("Loading admin data...");
+
+  try{
+    const [
+      settingsRes,
+      categoriesRes,
+      sizesRes,
+      flavoursRes,
+      optionsRes,
+      addonsRes,
+      cakesRes,
+      quickProductsRes,
+      cakeCategoriesRes,
+      cakeSizesRes,
+      cakeFlavoursRes,
+      cakeAddonsRes,
+      ordersRes,
+      orderItemsRes
+    ] = await Promise.all([
+      supabaseClient.from("site_settings").select("*").eq("id", 1).maybeSingle(),
+      supabaseClient.from("categories").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
+      supabaseClient.from("sizes").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
+      supabaseClient.from("flavours").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
+      supabaseClient.from("cake_options").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
+      supabaseClient.from("addons").select("*").order("sort_order", { ascending:true }).order("name", { ascending:true }),
+      supabaseClient.from("cakes").select("*").order("sort_order", { ascending:true }).order("created_at", { ascending:false }),
+      supabaseClient.from("quick_products").select("*").order("sort_order", { ascending:true }).order("created_at", { ascending:false }),
+      supabaseClient.from("cake_categories").select("*"),
+      supabaseClient.from("cake_sizes").select("*"),
+      supabaseClient.from("cake_flavours").select("*"),
+      supabaseClient.from("cake_addons").select("*"),
+      supabaseClient.from("orders").select("*").order("created_at", { ascending:false }),
+      supabaseClient.from("order_items").select("*").order("created_at", { ascending:true })
+    ]);
+
+    const firstError =
+      settingsRes.error ||
+      categoriesRes.error ||
+      sizesRes.error ||
+      flavoursRes.error ||
+      optionsRes.error ||
+      addonsRes.error ||
+      cakesRes.error ||
+      quickProductsRes.error ||
+      cakeCategoriesRes.error ||
+      cakeSizesRes.error ||
+      cakeFlavoursRes.error ||
+      cakeAddonsRes.error ||
+      ordersRes.error ||
+      orderItemsRes.error;
+
+    if(firstError) throw firstError;
+
+    siteSettings = {...DEFAULT_SETTINGS, ...(settingsRes.data || {})};
+    categories = categoriesRes.data || [];
+    sizes = sizesRes.data || [];
+    flavours = flavoursRes.data || [];
+    options = optionsRes.data || [];
+    addons = addonsRes.data || [];
+    cakes = cakesRes.data || [];
+    quickProducts = quickProductsRes.data || [];
+
+    cakeCategories = cakeCategoriesRes.data || [];
+    cakeSizes = cakeSizesRes.data || [];
+    cakeFlavours = cakeFlavoursRes.data || [];
+    cakeAddons = cakeAddonsRes.data || [];
+
+    orders = ordersRes.data || [];
+    orderItems = orderItemsRes.data || [];
+
+    await loadHomepageMenuCardsSafe();
+
+    renderAll();
+
+    if(showMessage) showToast("Admin data loaded.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "Failed to load admin data.", true);
+  }
+}
+
+function renderAll(){
+  applyAdminLogo();
+  renderStats();
+  renderRecentOrders();
+  fillSettingsForm();
+  fillProductSelects();
+  renderHomepageMenuCards();
+  renderProducts();
+  renderSetupLists();
+  renderMaintenance();
+}
+
+function applyAdminLogo(){
+  const logoUrl = siteSettings.logo_url || "";
+  const brand = siteSettings.brand_name || "Siffat Cakes";
+
+  ["adminLogo","loginLogo"].forEach(id => {
+    const el = $(id);
+    if(!el) return;
+
+    if(logoUrl){
+      el.innerHTML = `<img src="${escapeHtml(addCacheBustToImageUrl(logoUrl))}" alt="${escapeHtml(brand)}" onerror="this.parentElement.textContent='🍰'">`;
+    }else{
+      el.textContent = "🍰";
     }
+  });
+}
 
-    if(flavourIds.length){
-      const rows = flavourIds.map(flavour_id => ({ cake_id:cakeId, flavour_id }));
-      const insertFlavs = await supabaseClient.from("cake_flavours").insert(rows);
-      if(insertFlavs.error){ showToast(insertFlavs.error.message, true); return false; }
-    }
+function showTab(tab){
+  document.querySelectorAll(".tabBtn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tab);
+  });
 
-    return true;
+  document.querySelectorAll(".panel").forEach(panel => {
+    panel.classList.remove("active");
+  });
+
+  $(tab + "Panel").classList.add("active");
+
+  if(tab === "maintenance"){
+    renderMaintenance();
+  }
+}
+
+function openPanel(id){
+  $(id).classList.add("open");
+}
+
+function closePanel(id){
+  $(id).classList.remove("open");
+}
+
+function toggleCompact(id){
+  const el = $(id);
+  if(el) el.classList.toggle("open");
+}
+
+function getActiveOrders(){
+  return orders.filter(order => !isDeletedOrder(order));
+}
+
+function getDeletedOrders(){
+  return orders.filter(order => isDeletedOrder(order));
+}
+
+function isDeletedOrder(order){
+  return truthy(order.is_deleted) || truthy(order.deleted) || truthy(order.is_deleted_order) || !!order.deleted_at;
+}
+
+function truthy(value){
+  return value === true || value === "true" || value === 1 || value === "1";
+}
+
+function renderStats(){
+  const activeOrders = getActiveOrders();
+  const deletedOrders = getDeletedOrders();
+
+  const statusCount = (status) => activeOrders.filter(o => normalizeStatus(o.status) === normalizeStatus(status)).length;
+  const quoteCount = activeOrders.filter(order => {
+    const items = orderItems.filter(item => item.order_id === order.id);
+    return Number(order.estimated_total || 0) === 0 || items.some(item => Number(item.estimated_item_total || 0) === 0);
+  }).length;
+
+  $("statsGrid").innerHTML = `
+    <div class="stat"><b>${activeOrders.length}</b><span>Active Orders</span></div>
+    <div class="stat orange"><b>${statusCount("Pending")}</b><span>Pending Orders</span></div>
+    <div class="stat"><b>${cakes.length + quickProducts.length}</b><span>Total Products</span></div>
+    <div class="stat"><b>${categories.length}</b><span>Cake Occasions</span></div>
+    <div class="stat blue"><b>${homepageMenuCards.length}</b><span>Homepage Cards</span></div>
+    <div class="stat orange"><b>${quoteCount}</b><span>Quote Required</span></div>
+    <div class="stat red"><b>${deletedOrders.length}</b><span>Deleted Orders</span></div>
+    <div class="stat green"><b>${getUniqueImageUrls().length}/${CLIENT_PHOTO_LIMIT}</b><span>Photo Usage</span></div>
+  `;
+}
+
+function renderRecentOrders(){
+  const recent = getActiveOrders().slice(0,5);
+
+  if(!recent.length){
+    $("recentOrdersList").innerHTML = `<div class="loading">No active orders yet.</div>`;
+    return;
   }
 
-  function editCake(id){
-    const cake = allCakes.find(c => c.id === id);
-    if(!cake) return;
-
-    $("cakeId").value = cake.id;
-    $("cakeName").value = cake.name || "";
-    $("cakeImage").value = cake.image_url || "";
-    $("cakePrice").value = cake.starting_price ?? "";
-    $("cakeSortOrder").value = cake.sort_order ?? 0;
-    $("cakeDescription").value = cake.description || "";
-    $("cakeActive").checked = !!cake.is_active;
-    $("cakeFeatured").checked = !!cake.is_featured;
-
-    const catIds = getCakeCategoryIds(cake.id);
-    const flavIds = getCakeFlavourIds(cake.id);
-
-    document.querySelectorAll("input[name='cakeCategory']").forEach(cb => cb.checked = catIds.includes(cb.value));
-    document.querySelectorAll("input[name='cakeFlavour']").forEach(cb => cb.checked = flavIds.includes(cb.value));
-
-    $("cakeFormTitle").textContent = "Edit Cake";
-    $("saveCakeBtn").textContent = "Update Cake";
-    previewCakeImage();
-    window.scrollTo({ top:0, behavior:"smooth" });
-  }
-
-  async function toggleCakeActive(id, nextValue){
-    const { error } = await supabaseClient.from("cakes").update({ is_active: nextValue }).eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    showToast(nextValue ? "Cake is visible now" : "Cake hidden from website");
-    await loadAllData();
-  }
-
-  async function deleteCake(id){
-    const cake = allCakes.find(c => c.id === id);
-    if(!confirm(`Delete "${cake?.name || "this cake"}" permanently?`)) return;
-
-    const { error } = await supabaseClient.from("cakes").delete().eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    if($("cakeId").value === id) resetCakeForm();
-    showToast("Cake deleted");
-    await loadAllData();
-  }
-
-  function resetCakeForm(){
-    $("cakeId").value = "";
-    $("cakeName").value = "";
-    $("cakeImage").value = "";
-    $("cakePrice").value = "";
-    $("cakeSortOrder").value = "";
-    $("cakeDescription").value = "";
-    $("cakeActive").checked = true;
-    $("cakeFeatured").checked = false;
-    $("cakeFormTitle").textContent = "Add New Cake";
-    $("saveCakeBtn").textContent = "Save Cake";
-    $("saveCakeBtn").disabled = false;
-    document.querySelectorAll("input[name='cakeCategory'], input[name='cakeFlavour']").forEach(cb => cb.checked = false);
-    $("cakeImagePreviewBox").classList.remove("show");
-    $("cakeImagePreview").src = "";
-    $("cakeImagePreviewUrl").textContent = "";
-  }
-
-  function previewCakeImage(){
-    const url = $("cakeImage").value.trim();
-    if(!url){ $("cakeImagePreviewBox").classList.remove("show"); return; }
-    $("cakeImagePreview").src = url;
-    $("cakeImagePreviewUrl").textContent = url;
-    $("cakeImagePreviewBox").classList.add("show");
-  }
-
-  function renderOrders(){
-    const search = $("orderSearchInput").value.trim().toLowerCase();
-    const status = $("orderStatusFilter").value;
-    const dateFilter = $("orderDateFilter").value;
-    const sort = $("orderSortFilter").value;
-    const today = todayStr();
-
-    let orders = [...allOrders];
-
-    if(search){
-      orders = orders.filter(o => {
-        const combined = `${o.customer_name || ""} ${o.customer_phone || ""} ${o.cake_name || ""} ${o.cake_categories || ""} ${o.needed_date || ""} ${o.cake_flavour || ""}`.toLowerCase();
-        return combined.includes(search);
-      });
-    }
-
-    if(status !== "all") orders = orders.filter(o => o.status === status);
-    if(dateFilter === "today") orders = orders.filter(o => String(o.created_at || "").startsWith(today));
-    if(dateFilter === "needed_today") orders = orders.filter(o => String(o.needed_date || "") === today);
-    if(dateFilter === "upcoming") orders = orders.filter(o => String(o.needed_date || "") >= today && o.status !== "completed" && o.status !== "cancelled");
-
-    orders.sort((a,b) => {
-      if(sort === "oldest") return new Date(a.created_at || 0) - new Date(b.created_at || 0);
-      if(sort === "needed_date") return String(a.needed_date || "").localeCompare(String(b.needed_date || ""));
-      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-    });
-
-    if(!orders.length){
-      $("orderList").innerHTML = `<div class="empty">No orders found.</div>`;
-      return;
-    }
-
-    $("orderList").innerHTML = orders.map(o => {
-      const statusLabel = statusText(o.status);
-      return `
-        <article class="orderItem">
-          <div class="orderTop">
-            <div>
-              <div class="orderTitle">
-                <h4>${escapeHtml(o.customer_name || "Customer")} · ${escapeHtml(o.cake_name || "Cake Order")}</h4>
-                <span class="badge statusPill status-${escapeHtml(o.status || "pending")}">${escapeHtml(statusLabel)}</span>
-                <span class="badge">${formatDateTime(o.created_at)}</span>
-              </div>
-
-              <div class="badges">
-                <span class="badge">${escapeHtml(o.cake_categories || "Custom")}</span>
-                <span class="badge">${escapeHtml(o.cake_price || "Price not set")}</span>
-                <span class="badge">Order ID ${escapeHtml(String(o.id || "").slice(0,8).toUpperCase())}</span>
-              </div>
-
-              <div class="orderDetails">
-                <div class="orderMini"><b>Phone</b><span>${escapeHtml(o.customer_phone || "-")}</span></div>
-                <div class="orderMini"><b>Needed Date</b><span>${escapeHtml(o.needed_date || "-")}</span></div>
-                <div class="orderMini"><b>Needed Time</b><span>${escapeHtml(o.needed_time || "-")}</span></div>
-                <div class="orderMini"><b>Size</b><span>${escapeHtml(o.cake_size || "-")}</span></div>
-                <div class="orderMini"><b>Flavour</b><span>${escapeHtml(o.cake_flavour || "-")}</span></div>
-                <div class="orderMini"><b>Eggless</b><span>${escapeHtml(o.eggless || "No")}</span></div>
-                <div class="orderMini"><b>Type</b><span>${escapeHtml(o.delivery_type || "Pickup")}</span></div>
-                <div class="orderMini"><b>Address / Note</b><span>${escapeHtml(o.address || "-")}</span></div>
-                <div class="orderMini"><b>Cake Message</b><span>${escapeHtml(o.cake_message || "-")}</span></div>
-              </div>
-
-              <div class="orderNote"><b>Special Notes:</b><br>${escapeHtml(o.notes || "No extra notes")}</div>
-            </div>
-
-            <div class="itemActions">
-              <select class="statusSelect" onchange="updateOrderStatus('${o.id}', this.value)">
-                ${ORDER_STATUSES.map(([value,label]) => `<option value="${value}" ${o.status === value ? "selected" : ""}>${label}</option>`).join("")}
-              </select>
-              <button class="btn small" onclick="copyOrderText('${o.id}')">Copy</button>
-              <button class="btn red small" onclick="deleteOrder('${o.id}')">Delete</button>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join("");
-  }
-
-  async function updateOrderStatus(id, status){
-    const { error } = await supabaseClient.from("orders").update({ status }).eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    showToast("Order status updated");
-    await loadAllData();
-  }
-
-  async function deleteOrder(id){
-    if(!confirm("Delete this order permanently?")) return;
-    const { error } = await supabaseClient.from("orders").delete().eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    showToast("Order deleted");
-    await loadAllData();
-  }
-
-  function copyOrderText(id){
-    const o = allOrders.find(x => x.id === id);
-    if(!o) return;
-
-    const text = `🍰 CAKE ORDER
-Status: ${statusText(o.status)}
-Order ID: ${String(o.id || "").slice(0,8).toUpperCase()}
-
-Customer: ${o.customer_name || ""}
-Phone: ${o.customer_phone || ""}
-
-Cake: ${o.cake_name || ""}
-Category: ${o.cake_categories || ""}
-Price: ${o.cake_price || ""}
-
-Size: ${o.cake_size || ""}
-Flavour: ${o.cake_flavour || ""}
-Eggless: ${o.eggless || ""}
-
-Needed Date: ${o.needed_date || ""}
-Needed Time: ${o.needed_time || ""}
-Type: ${o.delivery_type || ""}
-Address / Note: ${o.address || ""}
-
-Message on Cake: ${o.cake_message || ""}
-Notes: ${o.notes || ""}`;
-
-    navigator.clipboard.writeText(text).then(() => showToast("Order copied"));
-  }
-
-  function statusText(status){
-    return ORDER_STATUSES.find(([value]) => value === status)?.[1] || "Pending";
-  }
-
-  function renderCategories(){
-    if(!allCategories.length){ $("categoryList").innerHTML = `<div class="empty">No categories yet.</div>`; return; }
-    $("categoryList").innerHTML = allCategories.map(cat => `
-      <article class="simpleItem">
-        <div class="simpleRow">
-          <div><h4>${escapeHtml(cat.name)}</h4><p>Sort ${Number(cat.sort_order || 0)} · ${cat.is_active ? "Active" : "Hidden"}</p></div>
-          <div class="simpleActions">
-            <button class="btn small" onclick="editCategory('${cat.id}')">Edit</button>
-            <button class="btn small" onclick="toggleCategoryActive('${cat.id}', ${cat.is_active ? "false" : "true"})">${cat.is_active ? "Hide" : "Show"}</button>
-            <button class="btn red small" onclick="deleteCategory('${cat.id}')">Delete</button>
+  $("recentOrdersList").innerHTML = recent.map(order => `
+    <div class="compactItem">
+      <div class="compactTop">
+        <div class="compactMain">
+          <div class="itemTitle">${escapeHtml(order.customer_name || "Customer")}</div>
+          <div class="itemMeta">
+            ${escapeHtml(order.customer_phone || "")}<br>
+            Needed: ${formatDate(order.needed_date)} ${order.needed_time ? escapeHtml(order.needed_time) : ""}<br>
+            Estimated: ${money(order.estimated_total)}
           </div>
         </div>
-      </article>
-    `).join("");
-  }
+        <span class="status ${escapeClass(order.status)}">${escapeHtml(order.status || "Pending")}</span>
+      </div>
+    </div>
+  `).join("");
+}
 
-  async function saveCategory(event){
-    event.preventDefault();
-    const id = $("categoryId").value.trim();
-    const name = $("categoryName").value.trim();
-    if(!name){ showToast("Category name required.", true); return; }
+function fillSettingsForm(){
+  $("setBrandName").value = siteSettings.brand_name || "";
+  $("setTagline").value = siteSettings.tagline || "";
+  $("setLogoUrl").value = siteSettings.logo_url || "";
+  $("setHeroImage").value = siteSettings.hero_image_url || "";
+  $("setWhatsapp").value = siteSettings.whatsapp_number || "";
+  $("setInstagram").value = siteSettings.instagram_url || "";
+  $("setAddress").value = siteSettings.address || "";
+  $("setHours").value = siteSettings.business_hours || "";
+  $("setServiceArea").value = siteSettings.service_area || "";
+  $("setCurrency").value = siteSettings.currency || "$";
+  $("setHeroTitle").value = siteSettings.hero_title || "";
+  $("setHeroSubtitle").value = siteSettings.hero_subtitle || "";
+  $("setNoticeHours").value = siteSettings.minimum_notice_hours ?? 24;
+  $("setShowPrices").value = String(siteSettings.show_prices !== false);
+  $("setChargeHst").value = String(siteSettings.charge_hst === true);
+  $("setHstRate").value = siteSettings.hst_rate ?? 13;
+  $("setDefaultDeliveryFee").value = siteSettings.default_delivery_fee ?? 0;
+  $("setSameDay").value = siteSettings.same_day_message || "";
+  $("setPolicy").value = siteSettings.policy_text || "";
 
-    const payload = { name, slug: slugify(name), sort_order: $("categorySortOrder").value === "" ? 0 : Number($("categorySortOrder").value), is_active: $("categoryActive").checked };
-    $("saveCategoryBtn").disabled = true;
-    $("saveCategoryBtn").textContent = id ? "Updating..." : "Saving...";
+  $("setLogoUrl").dataset.savedUrl = siteSettings.logo_url || "";
+  $("setHeroImage").dataset.savedUrl = siteSettings.hero_image_url || "";
 
-    const result = id ? await supabaseClient.from("categories").update(payload).eq("id", id) : await supabaseClient.from("categories").insert(payload);
-    $("saveCategoryBtn").disabled = false;
-    $("saveCategoryBtn").textContent = "Save Category";
+  setPreview("setLogoPreview", siteSettings.logo_url || "");
+  setPreview("setHeroPreview", siteSettings.hero_image_url || "");
+}
 
-    if(result.error){ showToast(result.error.message, true); return; }
-    showToast(id ? "Category updated" : "Category added");
-    resetCategoryForm();
-    await loadAllData();
-  }
+async function saveSettings(){
+  try{
+    const oldLogoUrl = siteSettings.logo_url || "";
+    const oldHeroUrl = siteSettings.hero_image_url || "";
 
-  function editCategory(id){
-    const cat = allCategories.find(c => c.id === id);
-    if(!cat) return;
-    $("categoryId").value = cat.id;
-    $("categoryName").value = cat.name || "";
-    $("categorySortOrder").value = cat.sort_order ?? 0;
-    $("categoryActive").checked = !!cat.is_active;
-    $("categoryFormTitle").textContent = "Edit Category";
-    $("saveCategoryBtn").textContent = "Update Category";
-  }
-
-  async function toggleCategoryActive(id, nextValue){
-    const { error } = await supabaseClient.from("categories").update({ is_active: nextValue }).eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    showToast(nextValue ? "Category active" : "Category hidden");
-    await loadAllData();
-  }
-
-  async function deleteCategory(id){
-    const cat = allCategories.find(c => c.id === id);
-    if(!confirm(`Delete category "${cat?.name || "this category"}"?`)) return;
-    const { error } = await supabaseClient.from("categories").delete().eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    showToast("Category deleted");
-    resetCategoryForm();
-    await loadAllData();
-  }
-
-  function resetCategoryForm(){
-    $("categoryId").value = "";
-    $("categoryName").value = "";
-    $("categorySortOrder").value = "";
-    $("categoryActive").checked = true;
-    $("categoryFormTitle").textContent = "Add Category";
-    $("saveCategoryBtn").textContent = "Save Category";
-    $("saveCategoryBtn").disabled = false;
-  }
-
-  function renderFlavours(){
-    if(!allFlavours.length){ $("flavourList").innerHTML = `<div class="empty">No flavours yet.</div>`; return; }
-    $("flavourList").innerHTML = allFlavours.map(flav => `
-      <article class="simpleItem">
-        <div class="simpleRow">
-          <div><h4>${escapeHtml(flav.name)}</h4><p>Sort ${Number(flav.sort_order || 0)} · ${flav.is_active ? "Active" : "Hidden"}</p></div>
-          <div class="simpleActions">
-            <button class="btn small" onclick="editFlavour('${flav.id}')">Edit</button>
-            <button class="btn small" onclick="toggleFlavourActive('${flav.id}', ${flav.is_active ? "false" : "true"})">${flav.is_active ? "Hide" : "Show"}</button>
-            <button class="btn red small" onclick="deleteFlavour('${flav.id}')">Delete</button>
-          </div>
-        </div>
-      </article>
-    `).join("");
-  }
-
-  async function saveFlavour(event){
-    event.preventDefault();
-    const id = $("flavourId").value.trim();
-    const name = $("flavourName").value.trim();
-    if(!name){ showToast("Flavour name required.", true); return; }
-
-    const payload = { name, slug: slugify(name), sort_order: $("flavourSortOrder").value === "" ? 0 : Number($("flavourSortOrder").value), is_active: $("flavourActive").checked };
-    $("saveFlavourBtn").disabled = true;
-    $("saveFlavourBtn").textContent = id ? "Updating..." : "Saving...";
-
-    const result = id ? await supabaseClient.from("flavours").update(payload).eq("id", id) : await supabaseClient.from("flavours").insert(payload);
-    $("saveFlavourBtn").disabled = false;
-    $("saveFlavourBtn").textContent = "Save Flavour";
-
-    if(result.error){ showToast(result.error.message, true); return; }
-    showToast(id ? "Flavour updated" : "Flavour added");
-    resetFlavourForm();
-    await loadAllData();
-  }
-
-  function editFlavour(id){
-    const flav = allFlavours.find(f => f.id === id);
-    if(!flav) return;
-    $("flavourId").value = flav.id;
-    $("flavourName").value = flav.name || "";
-    $("flavourSortOrder").value = flav.sort_order ?? 0;
-    $("flavourActive").checked = !!flav.is_active;
-    $("flavourFormTitle").textContent = "Edit Flavour";
-    $("saveFlavourBtn").textContent = "Update Flavour";
-  }
-
-  async function toggleFlavourActive(id, nextValue){
-    const { error } = await supabaseClient.from("flavours").update({ is_active: nextValue }).eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    showToast(nextValue ? "Flavour active" : "Flavour hidden");
-    await loadAllData();
-  }
-
-  async function deleteFlavour(id){
-    const flav = allFlavours.find(f => f.id === id);
-    if(!confirm(`Delete flavour "${flav?.name || "this flavour"}"?`)) return;
-    const { error } = await supabaseClient.from("flavours").delete().eq("id", id);
-    if(error){ showToast(error.message, true); return; }
-    showToast("Flavour deleted");
-    resetFlavourForm();
-    await loadAllData();
-  }
-
-  function resetFlavourForm(){
-    $("flavourId").value = "";
-    $("flavourName").value = "";
-    $("flavourSortOrder").value = "";
-    $("flavourActive").checked = true;
-    $("flavourFormTitle").textContent = "Add Flavour";
-    $("saveFlavourBtn").textContent = "Save Flavour";
-    $("saveFlavourBtn").disabled = false;
-  }
-
-  function fillSettingsForm(){
-    if(!siteSettings) return;
-    $("brandName").value = siteSettings.brand_name || "";
-    $("tagline").value = siteSettings.tagline || "";
-    $("logoUrl").value = siteSettings.logo_url || "";
-    $("whatsappNumber").value = siteSettings.whatsapp_number || "";
-    $("heroTitle").value = siteSettings.hero_title || "";
-    $("heroSubtitle").value = siteSettings.hero_subtitle || "";
-    $("instagramUrl").value = siteSettings.instagram_url || "";
-    $("address").value = siteSettings.address || "";
-    previewLogoImage();
-  }
-
-  async function saveSettings(event){
-    event.preventDefault();
     const payload = {
-      brand_name: $("brandName").value.trim() || "Cake Studio",
-      tagline: $("tagline").value.trim(),
-      logo_url: $("logoUrl").value.trim(),
-      whatsapp_number: $("whatsappNumber").value.trim(),
-      hero_title: $("heroTitle").value.trim(),
-      hero_subtitle: $("heroSubtitle").value.trim(),
-      instagram_url: $("instagramUrl").value.trim(),
-      address: $("address").value.trim()
+      id:1,
+      brand_name:$("setBrandName").value.trim() || "Siffat Cakes",
+      tagline:$("setTagline").value.trim(),
+      logo_url:$("setLogoUrl").value.trim(),
+      hero_image_url:$("setHeroImage").value.trim(),
+      whatsapp_number:$("setWhatsapp").value.trim(),
+      instagram_url:$("setInstagram").value.trim(),
+      address:$("setAddress").value.trim(),
+      business_hours:$("setHours").value.trim(),
+      service_area:$("setServiceArea").value.trim(),
+      currency:$("setCurrency").value.trim() || "$",
+      hero_title:$("setHeroTitle").value.trim(),
+      hero_subtitle:$("setHeroSubtitle").value.trim(),
+      minimum_notice_hours:Number($("setNoticeHours").value || 24),
+      show_prices:$("setShowPrices").value === "true",
+      charge_hst:$("setChargeHst").value === "true",
+      hst_rate:Number($("setHstRate").value || 0),
+      default_delivery_fee:Number($("setDefaultDeliveryFee").value || 0),
+      same_day_message:$("setSameDay").value.trim(),
+      policy_text:$("setPolicy").value.trim()
     };
 
-    const { error } = await supabaseClient.from("site_settings").update(payload).eq("id", 1);
-    if(error){ showToast(error.message, true); return; }
-    showToast("Settings saved");
-    await loadAllData();
+    const { data, error } = await supabaseClient
+      .from("site_settings")
+      .upsert(payload, { onConflict:"id" })
+      .select()
+      .single();
+
+    if(error) throw error;
+
+    siteSettings = {...siteSettings, ...(data || payload)};
+
+    await deleteOldSupabaseImageIfReplaced(oldLogoUrl, payload.logo_url);
+    await deleteOldSupabaseImageIfReplaced(oldHeroUrl, payload.hero_image_url);
+
+    fillSettingsForm();
+    applyAdminLogo();
+    showToast("Settings saved.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "Settings save failed.", true);
+  }
+}
+
+function fillProductSelects(){
+  fillMulti("cakeCategoriesSelect", categories, "name");
+  fillMulti("cakeSizesSelect", sizes, item => `${item.name} ${item.servings ? "· " + item.servings : ""} · ${item.quote_required ? "Quote" : money(item.price)}`);
+  fillMulti("cakeFlavoursSelect", flavours, item => `${item.name} · ${item.quote_required ? "Quote" : "+" + money(item.extra_price)}`);
+  fillMulti("cakeAddonsSelect", addons, item => `${item.name} · ${item.quote_required ? "Quote" : money(item.price)}`);
+}
+
+function fillMulti(id, rows, labelKey){
+  const labelFn = typeof labelKey === "function" ? labelKey : (item) => item[labelKey];
+
+  $(id).innerHTML = rows.map(row => `
+    <option value="${escapeHtml(row.id)}">${escapeHtml(labelFn(row))}</option>
+  `).join("");
+}
+
+function mergeHomepageMenuCards(rows = []){
+  const bySlug = new Map();
+
+  (rows || []).forEach(row => {
+    if(row && row.slug) bySlug.set(String(row.slug), row);
+  });
+
+  return DEFAULT_HOMEPAGE_MENU_CARDS.map(defaultCard => {
+    const saved = bySlug.get(defaultCard.slug) || {};
+    return {...defaultCard, ...saved};
+  }).sort((a,b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+}
+
+async function loadHomepageMenuCardsSafe(){
+  const notice = $("homepageMenuNotice");
+
+  try{
+    const { data, error } = await supabaseClient
+      .from("homepage_menu_cards")
+      .select("*")
+      .order("sort_order", { ascending:true })
+      .order("title", { ascending:true });
+
+    if(error) throw error;
+
+    homepageMenuCards = mergeHomepageMenuCards(data || []);
+
+    if(notice){
+      notice.style.display = "none";
+      notice.textContent = "";
+    }
+
+    return homepageMenuCards;
+  }catch(err){
+    console.warn("Homepage menu cards load issue:", err.message || err);
+
+    homepageMenuCards = mergeHomepageMenuCards([]);
+
+    if(notice){
+      notice.style.display = "block";
+      notice.textContent = "Homepage menu table is not ready yet. Run homepage-menu-cards SQL. Other admin data is still safe.";
+    }
+
+    return homepageMenuCards;
+  }
+}
+
+function renderHomepageMenuCards(){
+  const box = $("homepageMenuCardsList");
+  if(!box) return;
+
+  const rows = homepageMenuCards.length ? homepageMenuCards : mergeHomepageMenuCards([]);
+
+  box.innerHTML = rows.map(card => {
+    const slug = card.slug;
+    const img = card.image_url || getFallbackImage(slug === "custom-cake" ? "cakes" : slug);
+    const active = card.is_active !== false;
+
+    return `
+      <div class="homeMenuCard" id="home-card-${escapeAttr(slug)}">
+        <img class="homeMenuThumb" id="homePreview-${escapeAttr(slug)}" src="${escapeHtml(addCacheBustToImageUrl(img))}" onerror="this.src='${getFallbackImage("cakes")}'">
+        <div class="homeMenuFields">
+          <div class="field">
+            <label>Title</label>
+            <input id="homeTitle-${escapeAttr(slug)}" value="${escapeHtml(card.title || "")}">
+          </div>
+
+          <div class="field">
+            <label>Sort</label>
+            <input id="homeSort-${escapeAttr(slug)}" type="number" value="${Number(card.sort_order || 0)}">
+          </div>
+
+          <div class="field">
+            <label>Subtitle</label>
+            <input id="homeSubtitle-${escapeAttr(slug)}" value="${escapeHtml(card.subtitle || "")}">
+          </div>
+
+          <div class="field">
+            <label>Visibility</label>
+            <select id="homeActive-${escapeAttr(slug)}">
+              <option value="true" ${active ? "selected" : ""}>Active</option>
+              <option value="false" ${!active ? "selected" : ""}>Hidden</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Image URL</label>
+            <input id="homeImage-${escapeAttr(slug)}" value="${escapeHtml(card.image_url || "")}" oninput="previewHomepageCard('${escapeJs(slug)}')">
+          </div>
+
+          <div class="field full">
+            <label>Link URL</label>
+            <input id="homeLink-${escapeAttr(slug)}" value="${escapeHtml(card.link_url || "")}">
+          </div>
+
+          <div class="field full">
+            <label>Upload Image</label>
+            <div class="uploadRow">
+              <input id="homeFile-${escapeAttr(slug)}" type="file" accept="image/png,image/jpeg,image/webp">
+              <button class="btn small" type="button" onclick="uploadHomepageMenuImage('${escapeJs(slug)}')">Upload</button>
+              <button class="btn primary small" type="button" onclick="saveHomepageMenuCard('${escapeJs(slug)}')">Save Card</button>
+            </div>
+            <div class="hint">This image controls the homepage menu card shown on index.html.</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function previewHomepageCard(slug){
+  const input = $("homeImage-" + slug);
+  const img = $("homePreview-" + slug);
+
+  if(!input || !img) return;
+
+  const fallback = getFallbackImage(slug === "custom-cake" ? "cakes" : slug);
+  img.src = addCacheBustToImageUrl(input.value.trim() || fallback);
+}
+
+function getHomepageCardPayload(slug){
+  return {
+    slug,
+    title: $("homeTitle-" + slug)?.value.trim() || toTitle(slug),
+    subtitle: $("homeSubtitle-" + slug)?.value.trim() || "",
+    image_url: $("homeImage-" + slug)?.value.trim() || "",
+    link_url: $("homeLink-" + slug)?.value.trim() || (slug === "custom-cake" ? "cake.html?custom=true" : `category.html?cat=${slug}`),
+    sort_order: Number($("homeSort-" + slug)?.value || 0),
+    is_active: $("homeActive-" + slug)?.value !== "false"
+  };
+}
+
+async function saveHomepageMenuCard(slug, oldImageUrl = ""){
+  try{
+    const existingCard = homepageMenuCards.find(card => card.slug === slug);
+    const oldUrl = oldImageUrl || existingCard?.image_url || "";
+
+    const payload = getHomepageCardPayload(slug);
+
+    const { data, error } = await supabaseClient
+      .from("homepage_menu_cards")
+      .upsert(payload, { onConflict:"slug" })
+      .select()
+      .single();
+
+    if(error) throw error;
+
+    const idx = homepageMenuCards.findIndex(card => card.slug === slug);
+
+    if(idx >= 0){
+      homepageMenuCards[idx] = {...homepageMenuCards[idx], ...(data || payload)};
+    }else{
+      homepageMenuCards.push(data || payload);
+    }
+
+    homepageMenuCards = mergeHomepageMenuCards(homepageMenuCards);
+
+    await deleteOldSupabaseImageIfReplaced(oldUrl, payload.image_url);
+
+    renderHomepageMenuCards();
+    renderStats();
+    renderMaintenance();
+
+    showToast("Homepage menu card saved.");
+  }catch(err){
+    console.error(err);
+    showToast((err.message || "Could not save homepage menu card.") + " Run homepage-menu-cards SQL if table is missing.", true);
+  }
+}
+
+async function uploadHomepageMenuImage(slug){
+  const fileInput = $("homeFile-" + slug);
+  const urlInput = $("homeImage-" + slug);
+
+  if(!fileInput || !urlInput) return showToast("Upload field not found.", true);
+
+  const file = fileInput.files?.[0];
+  if(!file) return showToast("Choose an image first.", true);
+
+  if(getUniqueImageUrls().length >= CLIENT_PHOTO_LIMIT){
+    return showToast(`Photo limit reached. Maximum ${CLIENT_PHOTO_LIMIT} images allowed for this client.`, true);
   }
 
-  function previewLogoImage(){
-    const url = $("logoUrl").value.trim();
-    if(!url){ $("logoPreviewBox").classList.remove("show"); return; }
-    $("logoPreview").src = url;
-    $("logoPreviewUrl").textContent = url;
-    $("logoPreviewBox").classList.add("show");
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+    return showToast("Only JPG, PNG or WEBP images are allowed.", true);
   }
 
-  function getCheckedValues(name){
-    return Array.from(document.querySelectorAll(`input[name='${name}']:checked`)).map(cb => cb.value);
+  if(file.size > MAX_UPLOAD_MB * 1024 * 1024){
+    return showToast(`Image must be under ${MAX_UPLOAD_MB} MB.`, true);
   }
 
-  function slugify(value){
-    return String(value || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || crypto.randomUUID();
+  try{
+    showToast("Uploading homepage menu image...");
+
+    const oldUrl = urlInput.value.trim();
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+    const safeSlug = slug.replace(/[^a-z0-9-]/g, "");
+    const path = `homepage/${safeSlug}-${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
+
+    const { error:uploadError } = await supabaseClient.storage
+      .from(STORAGE_BUCKET)
+      .upload(path, file, {
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type
+      });
+
+    if(uploadError) throw uploadError;
+
+    const { data:urlData } = supabaseClient.storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(path);
+
+    urlInput.value = urlData.publicUrl;
+    fileInput.value = "";
+
+    previewHomepageCard(slug);
+
+    await saveHomepageMenuCard(slug, oldUrl);
+
+    showToast("Homepage menu image uploaded and saved.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "Homepage menu image upload failed.", true);
+  }
+}
+
+function jumpSetup(section){
+  showTab("setup");
+
+  document.querySelectorAll(".setupJumpBar .btn").forEach(btn => btn.classList.remove("active"));
+  const btn = $("setupSwitch-" + section);
+  if(btn) btn.classList.add("active");
+
+  setTimeout(() => {
+    const target = $("setup-" + section);
+    if(target) target.scrollIntoView({ behavior:"smooth", block:"start" });
+  }, 80);
+}
+
+function openProductForm(kind = "cake"){
+  resetProductForm(false);
+  $("productType").value = kind;
+  switchProductType();
+  openPanel("productFormPanel");
+  showTab("products");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function switchProductType(){
+  const type = $("productType").value;
+  const isCake = type === "cake";
+
+  $("cakeProductFields").classList.toggle("hidden", !isCake);
+  $("quickProductFields").classList.toggle("hidden", isCake);
+
+  $("productFormTitle").textContent = isCake ? "Add Customizable Cake" : "Add Quick Dessert";
+  $("productFormSubtitle").textContent = isCake
+    ? "Cake products open the full customization page."
+    : "Quick desserts are added directly to cart from category page.";
+
+  $("productModeHint").textContent = isCake
+    ? "Customizable cake flow"
+    : "Quick add dessert flow";
+}
+
+async function saveProduct(event){
+  event.preventDefault();
+
+  const type = $("productType").value;
+  const editKind = $("productEditKind").value;
+  const id = $("productId").value;
+
+  if(id && editKind && editKind !== type){
+    showToast("Clear form first before changing product type.", true);
+    return;
   }
 
-  function todayStr(){
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${y}-${m}-${day}`;
+  if(type === "cake"){
+    await saveCakeProduct();
+  }else{
+    await saveQuickProduct();
+  }
+}
+
+async function saveCakeProduct(){
+  const existingId = $("productId").value;
+  const name = $("productName").value.trim();
+
+  if(!name){
+    showToast("Product name is required.", true);
+    return;
   }
 
-  function formatDateTime(value){
-    if(!value) return "-";
+  const oldImageUrl = existingId
+    ? (cakes.find(c => String(c.id) === String(existingId))?.image_url || "")
+    : "";
+
+  const payload = {
+    name,
+    slug:$("productSlug").value.trim() || slugify(name),
+    description:$("productDesc").value.trim(),
+    image_url:$("productImageUrl").value.trim(),
+    starting_price:Number($("cakeStartingPrice").value || 0),
+    price_type:$("cakePriceType").value,
+    sort_order:Number($("productSort").value || 0),
+    is_featured:$("productFeatured").checked,
+    is_active:$("productActive").checked
+  };
+
+  let cakeId = existingId;
+
+  if(existingId){
+    const { error } = await supabaseClient.from("cakes").update(payload).eq("id", existingId);
+    if(error) return showToast(error.message, true);
+  }else{
+    const { data, error } = await supabaseClient.from("cakes").insert(payload).select("id").single();
+    if(error) return showToast(error.message, true);
+    cakeId = data.id;
+  }
+
+  const selectedCategories = getSelectedValues("cakeCategoriesSelect");
+  const selectedSizes = getSelectedValues("cakeSizesSelect");
+  const selectedFlavours = getSelectedValues("cakeFlavoursSelect");
+  const selectedAddons = getSelectedValues("cakeAddonsSelect");
+
+  const results = await Promise.all([
+    replaceRelations("cake_categories","cake_id",cakeId,"category_id",selectedCategories),
+    replaceRelations("cake_sizes","cake_id",cakeId,"size_id",selectedSizes),
+    replaceRelations("cake_flavours","cake_id",cakeId,"flavour_id",selectedFlavours),
+    replaceRelations("cake_addons","cake_id",cakeId,"addon_id",selectedAddons)
+  ]);
+
+  const relError = results.find(r => r?.error)?.error;
+  if(relError) return showToast(relError.message, true);
+
+  await deleteOldSupabaseImageIfReplaced(oldImageUrl, payload.image_url);
+
+  resetProductForm(true);
+  await loadAll(false);
+  showToast("Cake product saved.");
+}
+
+async function saveQuickProduct(){
+  const existingId = $("productId").value;
+  const name = $("productName").value.trim();
+
+  if(!name){
+    showToast("Product name is required.", true);
+    return;
+  }
+
+  const quote = $("quickQuote").value === "true";
+  const oldImageUrl = existingId
+    ? (quickProducts.find(p => String(p.id) === String(existingId))?.image_url || "")
+    : "";
+
+  const payload = {
+    name,
+    slug:$("productSlug").value.trim() || slugify(name),
+    category:$("quickCategory").value,
+    description:$("productDesc").value.trim(),
+    image_url:$("productImageUrl").value.trim(),
+    variant:$("quickVariant").value.trim(),
+    price:Number($("quickPrice").value || 0),
+    price_type:quote ? "quote" : "fixed",
+    quote_required:quote,
+    sort_order:Number($("productSort").value || 0),
+    is_featured:$("productFeatured").checked,
+    is_active:$("productActive").checked
+  };
+
+  const { error } = existingId
+    ? await supabaseClient.from("quick_products").update(payload).eq("id", existingId)
+    : await supabaseClient.from("quick_products").insert(payload);
+
+  if(error) return showToast(error.message, true);
+
+  await deleteOldSupabaseImageIfReplaced(oldImageUrl, payload.image_url);
+
+  resetProductForm(true);
+  await loadAll(false);
+  showToast("Quick dessert saved.");
+}
+
+async function replaceRelations(table,parentCol,parentId,childCol,ids){
+  const del = await supabaseClient.from(table).delete().eq(parentCol,parentId);
+  if(del.error) return del;
+
+  if(!ids.length) return { error:null };
+
+  const rows = ids.map(id => ({
+    [parentCol]:parentId,
+    [childCol]:id
+  }));
+
+  return await supabaseClient.from(table).insert(rows);
+}
+
+function renderProducts(){
+  const box = $("productsList");
+  const search = ($("productSearch")?.value || "").trim().toLowerCase();
+  const kindFilter = $("productKindFilter")?.value || "all";
+  const statusFilter = $("productStatusFilter")?.value || "all";
+
+  let rows = [];
+
+  if(kindFilter === "all" || kindFilter === "cake"){
+    rows.push(...cakes.map(item => ({...item, __kind:"cake"})));
+  }
+
+  if(kindFilter === "all" || kindFilter === "quick"){
+    rows.push(...quickProducts.map(item => ({...item, __kind:"quick"})));
+  }
+
+  if(statusFilter === "active") rows = rows.filter(item => item.is_active !== false);
+  if(statusFilter === "inactive") rows = rows.filter(item => item.is_active === false);
+  if(statusFilter === "featured") rows = rows.filter(item => item.is_featured === true);
+
+  if(search){
+    rows = rows.filter(item => {
+      const combined = `${item.name || ""} ${item.description || ""} ${item.category || ""} ${item.variant || ""}`.toLowerCase();
+      return combined.includes(search);
+    });
+  }
+
+  if(!rows.length){
+    box.innerHTML = `<div class="loading">No products found.</div>`;
+    return;
+  }
+
+  box.innerHTML = rows.map(item => {
+    return item.__kind === "cake" ? renderCakeProductRow(item) : renderQuickProductRow(item);
+  }).join("");
+}
+
+function renderCakeProductRow(cake){
+  const domId = "cake-" + cake.id;
+  const cats = getCakeRelationNames(cake.id,cakeCategories,categories,"category_id");
+  const cakeSizeNames = getCakeRelationNames(cake.id,cakeSizes,sizes,"size_id");
+  const flavs = getCakeRelationNames(cake.id,cakeFlavours,flavours,"flavour_id");
+  const cakeAddonNames = getCakeRelationNames(cake.id,cakeAddons,addons,"addon_id");
+  const img = cake.image_url || getFallbackImage("cakes");
+
+  return `
+    <div class="compactItem" id="${domId}">
+      <div class="compactTop" onclick="toggleCompact('${domId}')">
+        <div class="rowWithImage">
+          <img class="miniPreview" src="${escapeHtml(addCacheBustToImageUrl(img))}" onerror="this.src='${getFallbackImage("cakes")}'">
+          <div class="compactMain">
+            <div class="itemTitle">${escapeHtml(cake.name || "Cake")}</div>
+            <div class="itemMeta">
+              Customizable Cake · Starting ${money(cake.starting_price)} · ${escapeHtml(cake.price_type || "estimated")} · ${cake.is_active ? "Active" : "Inactive"} ${cake.is_featured ? "· Featured" : ""}
+            </div>
+            <div class="tags">
+              ${cats.slice(0,3).map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}
+              ${cakeSizeNames.slice(0,2).map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}
+              ${flavs.slice(0,2).map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+        <div class="itemActions" onclick="event.stopPropagation()">
+          <button class="btn small" onclick="editCakeProduct('${cake.id}')">Edit</button>
+          <button class="btn red small" onclick="deleteCakeProduct('${cake.id}')">Delete</button>
+        </div>
+      </div>
+      <div class="compactDetails">
+        <b>Description:</b> ${escapeHtml(cake.description || "No description")}<br>
+        <b>Image:</b> ${escapeHtml(cake.image_url || "No image")}<br>
+        <b>Occasions:</b> ${cats.length ? escapeHtml(cats.join(", ")) : "None"}<br>
+        <b>Sizes:</b> ${cakeSizeNames.length ? escapeHtml(cakeSizeNames.join(", ")) : "All/None selected"}<br>
+        <b>Flavours:</b> ${flavs.length ? escapeHtml(flavs.join(", ")) : "All/None selected"}<br>
+        <b>Add-ons:</b> ${cakeAddonNames.length ? escapeHtml(cakeAddonNames.join(", ")) : "All/None selected"}<br>
+        <b>Sort:</b> ${cake.sort_order ?? 0}
+      </div>
+    </div>
+  `;
+}
+
+function renderQuickProductRow(product){
+  const domId = "quick-" + product.id;
+  const img = product.image_url || getFallbackImage(product.category);
+
+  return `
+    <div class="compactItem" id="${domId}">
+      <div class="compactTop" onclick="toggleCompact('${domId}')">
+        <div class="rowWithImage">
+          <img class="miniPreview" src="${escapeHtml(addCacheBustToImageUrl(img))}" onerror="this.src='${getFallbackImage(product.category)}'">
+          <div class="compactMain">
+            <div class="itemTitle">${escapeHtml(product.name || "Dessert")}</div>
+            <div class="itemMeta">
+              Quick Dessert · ${toTitle(product.category)} ${product.variant ? "· " + escapeHtml(product.variant) : ""} · ${product.quote_required ? "Quote" : money(product.price)} · ${product.is_active ? "Active" : "Inactive"} ${product.is_featured ? "· Featured" : ""}
+            </div>
+            <div class="tags">
+              <span class="tag">${toTitle(product.category)}</span>
+              ${product.variant ? `<span class="tag">${escapeHtml(product.variant)}</span>` : ""}
+              <span class="tag">${product.quote_required ? "Quote required" : "Fixed price"}</span>
+            </div>
+          </div>
+        </div>
+        <div class="itemActions" onclick="event.stopPropagation()">
+          <button class="btn small" onclick="editQuickProduct('${product.id}')">Edit</button>
+          <button class="btn red small" onclick="deleteQuickProduct('${product.id}')">Delete</button>
+        </div>
+      </div>
+      <div class="compactDetails">
+        <b>Description:</b> ${escapeHtml(product.description || "No description")}<br>
+        <b>Image:</b> ${escapeHtml(product.image_url || "No image")}<br>
+        <b>Category:</b> ${toTitle(product.category)}<br>
+        <b>Variant:</b> ${escapeHtml(product.variant || "None")}<br>
+        <b>Price:</b> ${product.quote_required ? "Quote required" : money(product.price)}<br>
+        <b>Sort:</b> ${product.sort_order ?? 0}
+      </div>
+    </div>
+  `;
+}
+
+function editCakeProduct(id){
+  const cake = cakes.find(c => String(c.id) === String(id));
+  if(!cake) return;
+
+  resetProductForm(false);
+
+  $("productType").value = "cake";
+  $("productId").value = cake.id;
+  $("productEditKind").value = "cake";
+  switchProductType();
+
+  $("productFormTitle").textContent = "Edit Customizable Cake";
+  $("productName").value = cake.name || "";
+  $("productSlug").value = cake.slug || "";
+  $("productDesc").value = cake.description || "";
+  $("productImageUrl").value = cake.image_url || "";
+  $("productImageUrl").dataset.savedUrl = cake.image_url || "";
+  setPreview("productImagePreview", cake.image_url || "");
+
+  $("cakeStartingPrice").value = cake.starting_price ?? 0;
+  $("cakePriceType").value = cake.price_type || "estimated";
+
+  $("productSort").value = cake.sort_order ?? 0;
+  $("productFeatured").checked = cake.is_featured === true;
+  $("productActive").checked = cake.is_active !== false;
+
+  setSelectedValues("cakeCategoriesSelect", cakeCategories.filter(r => String(r.cake_id) === String(id)).map(r => r.category_id));
+  setSelectedValues("cakeSizesSelect", cakeSizes.filter(r => String(r.cake_id) === String(id)).map(r => r.size_id));
+  setSelectedValues("cakeFlavoursSelect", cakeFlavours.filter(r => String(r.cake_id) === String(id)).map(r => r.flavour_id));
+  setSelectedValues("cakeAddonsSelect", cakeAddons.filter(r => String(r.cake_id) === String(id)).map(r => r.addon_id));
+
+  openPanel("productFormPanel");
+  showTab("products");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function editQuickProduct(id){
+  const product = quickProducts.find(p => String(p.id) === String(id));
+  if(!product) return;
+
+  resetProductForm(false);
+
+  $("productType").value = "quick";
+  $("productId").value = product.id;
+  $("productEditKind").value = "quick";
+  switchProductType();
+
+  $("productFormTitle").textContent = "Edit Quick Dessert";
+  $("productName").value = product.name || "";
+  $("productSlug").value = product.slug || "";
+  $("productDesc").value = product.description || "";
+  $("productImageUrl").value = product.image_url || "";
+  $("productImageUrl").dataset.savedUrl = product.image_url || "";
+  setPreview("productImagePreview", product.image_url || "");
+
+  $("quickCategory").value = product.category || "cupcakes";
+  $("quickVariant").value = product.variant || "";
+  $("quickPrice").value = product.price ?? 0;
+  $("quickQuote").value = String(product.quote_required === true);
+
+  $("productSort").value = product.sort_order ?? 0;
+  $("productFeatured").checked = product.is_featured === true;
+  $("productActive").checked = product.is_active !== false;
+
+  openPanel("productFormPanel");
+  showTab("products");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function resetProductForm(close = false){
+  $("productForm").reset();
+  $("productId").value = "";
+  $("productEditKind").value = "";
+
+  $("productType").value = "cake";
+  $("cakeStartingPrice").value = 0;
+  $("cakePriceType").value = "estimated";
+  $("quickCategory").value = "cupcakes";
+  $("quickPrice").value = 0;
+  $("quickQuote").value = "false";
+
+  $("productSort").value = 0;
+  $("productFeatured").checked = false;
+  $("productActive").checked = true;
+
+  $("productImageUrl").dataset.savedUrl = "";
+
+  setSelectedValues("cakeCategoriesSelect", []);
+  setSelectedValues("cakeSizesSelect", []);
+  setSelectedValues("cakeFlavoursSelect", []);
+  setSelectedValues("cakeAddonsSelect", []);
+  clearImageField("productImageUrl","productImagePreview","productImageFile");
+
+  switchProductType();
+
+  if(close) closePanel("productFormPanel");
+}
+
+async function deleteCakeProduct(id){
+  if(!confirm("Delete this cake product?")) return;
+
+  await Promise.all([
+    supabaseClient.from("cake_categories").delete().eq("cake_id", id),
+    supabaseClient.from("cake_sizes").delete().eq("cake_id", id),
+    supabaseClient.from("cake_flavours").delete().eq("cake_id", id),
+    supabaseClient.from("cake_addons").delete().eq("cake_id", id)
+  ]);
+
+  const { error } = await supabaseClient.from("cakes").delete().eq("id", id);
+  if(error) return showToast(error.message, true);
+
+  await loadAll(false);
+  showToast("Cake product deleted.");
+}
+
+async function deleteQuickProduct(id){
+  if(!confirm("Delete this quick dessert?")) return;
+
+  const { error } = await supabaseClient.from("quick_products").delete().eq("id", id);
+  if(error) return showToast(error.message, true);
+
+  await loadAll(false);
+  showToast("Quick dessert deleted.");
+}
+
+function renderSetupLists(){
+  renderOccasionList();
+  renderSizeList();
+  renderFlavourList();
+  renderOptionList();
+  renderAddonList();
+}
+
+function renderOccasionList(){
+  const box = $("occasionList");
+
+  if(!categories.length){
+    box.innerHTML = `<div class="loading">No cake occasions yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = categories.map(item => {
+    const domId = "occasion-" + item.id;
+    const img = item.image_url || getFallbackImage("cakes");
+
+    return `
+      <div class="compactItem" id="${domId}">
+        <div class="compactTop" onclick="toggleCompact('${domId}')">
+          <div class="rowWithImage">
+            <img class="miniPreview" src="${escapeHtml(addCacheBustToImageUrl(img))}" onerror="this.src='${getFallbackImage("cakes")}'">
+            <div class="compactMain">
+              <div class="itemTitle">${escapeHtml(item.name)}</div>
+              <div class="itemMeta">${escapeHtml(item.slug || "")} · ${item.is_active ? "Active" : "Inactive"} · Sort ${item.sort_order ?? 0}</div>
+            </div>
+          </div>
+          <div class="itemActions" onclick="event.stopPropagation()">
+            <button class="btn small" onclick="editOccasion('${item.id}')">Edit</button>
+            <button class="btn red small" onclick="deleteOccasion('${item.id}')">Delete</button>
+          </div>
+        </div>
+        <div class="compactDetails">
+          <b>Description:</b> ${escapeHtml(item.description || "No description")}<br>
+          <b>Image:</b> ${escapeHtml(item.image_url || "No image")}<br>
+          <b>Status:</b> ${item.is_active ? "Active" : "Inactive"}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openOccasionForm(){
+  resetOccasionForm(false);
+  $("occasionFormTitle").textContent = "Add Cake Occasion";
+  openPanel("occasionFormPanel");
+}
+
+async function saveOccasion(event){
+  event.preventDefault();
+
+  const id = $("occasionId").value;
+  const name = $("occasionName").value.trim();
+
+  if(!name){
+    showToast("Occasion name is required.", true);
+    return;
+  }
+
+  const oldImageUrl = id
+    ? (categories.find(c => String(c.id) === String(id))?.image_url || "")
+    : "";
+
+  const payload = {
+    name,
+    slug:$("occasionSlug").value.trim() || slugify(name),
+    description:$("occasionDesc").value.trim(),
+    image_url:$("occasionImage").value.trim(),
+    sort_order:Number($("occasionSort").value || 0),
+    is_active:$("occasionActive").checked
+  };
+
+  const { error } = id
+    ? await supabaseClient.from("categories").update(payload).eq("id", id)
+    : await supabaseClient.from("categories").insert(payload);
+
+  if(error) return showToast(error.message, true);
+
+  await deleteOldSupabaseImageIfReplaced(oldImageUrl, payload.image_url);
+
+  resetOccasionForm(true);
+  await loadAll(false);
+  showToast("Cake occasion saved.");
+}
+
+function editOccasion(id){
+  const item = categories.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  $("occasionFormTitle").textContent = "Edit Cake Occasion";
+  $("occasionId").value = item.id;
+  $("occasionName").value = item.name || "";
+  $("occasionSlug").value = item.slug || "";
+  $("occasionDesc").value = item.description || "";
+  $("occasionImage").value = item.image_url || "";
+  $("occasionImage").dataset.savedUrl = item.image_url || "";
+  $("occasionSort").value = item.sort_order ?? 0;
+  $("occasionActive").checked = item.is_active !== false;
+  setPreview("occasionImagePreview", item.image_url || "");
+
+  openPanel("occasionFormPanel");
+  showTab("setup");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function resetOccasionForm(close = false){
+  $("occasionForm").reset();
+  $("occasionId").value = "";
+  $("occasionSort").value = 0;
+  $("occasionActive").checked = true;
+  $("occasionImage").dataset.savedUrl = "";
+  clearImageField("occasionImage","occasionImagePreview","occasionImageFile");
+  $("occasionFormTitle").textContent = "Add Cake Occasion";
+  if(close) closePanel("occasionFormPanel");
+}
+
+async function deleteOccasion(id){
+  if(!confirm("Delete this cake occasion?")) return;
+
+  await supabaseClient.from("cake_categories").delete().eq("category_id", id);
+  const { error } = await supabaseClient.from("categories").delete().eq("id", id);
+  if(error) return showToast(error.message, true);
+
+  await loadAll(false);
+  showToast("Cake occasion deleted.");
+}
+
+function renderSizeList(){
+  const box = $("sizeList");
+
+  if(!sizes.length){
+    box.innerHTML = `<div class="loading">No sizes yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = sizes.map(item => {
+    const domId = "size-" + item.id;
+
+    return `
+      <div class="compactItem" id="${domId}">
+        <div class="compactTop" onclick="toggleCompact('${domId}')">
+          <div class="compactMain">
+            <div class="itemTitle">${escapeHtml(item.name)} · ${item.quote_required ? "Quote" : money(item.price)}</div>
+            <div class="itemMeta">${escapeHtml(item.servings || "No servings")} · ${item.is_active ? "Active" : "Inactive"}</div>
+          </div>
+          <div class="itemActions" onclick="event.stopPropagation()">
+            <button class="btn small" onclick="editSize('${item.id}')">Edit</button>
+            <button class="btn red small" onclick="deleteSize('${item.id}')">Delete</button>
+          </div>
+        </div>
+        <div class="compactDetails">
+          <b>Servings:</b> ${escapeHtml(item.servings || "No servings")}<br>
+          <b>Price:</b> ${money(item.price)}<br>
+          <b>Quote Required:</b> ${item.quote_required ? "Yes" : "No"}<br>
+          <b>Sort:</b> ${item.sort_order ?? 0}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openSizeForm(){
+  resetSizeForm(false);
+  $("sizeFormTitle").textContent = "Add Size";
+  openPanel("sizeFormPanel");
+}
+
+async function saveSize(event){
+  event.preventDefault();
+
+  const id = $("sizeId").value;
+
+  const payload = {
+    name:$("sizeName").value.trim(),
+    servings:$("sizeServings").value.trim(),
+    price:Number($("sizePrice").value || 0),
+    quote_required:$("sizeQuote").checked,
+    is_active:$("sizeActive").checked,
+    sort_order:Number($("sizeSort").value || 0)
+  };
+
+  const { error } = id
+    ? await supabaseClient.from("sizes").update(payload).eq("id", id)
+    : await supabaseClient.from("sizes").insert(payload);
+
+  if(error) return showToast(error.message, true);
+
+  resetSizeForm(true);
+  await loadAll(false);
+  showToast("Size saved.");
+}
+
+function editSize(id){
+  const item = sizes.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  $("sizeFormTitle").textContent = "Edit Size";
+  $("sizeId").value = item.id;
+  $("sizeName").value = item.name || "";
+  $("sizeServings").value = item.servings || "";
+  $("sizePrice").value = item.price ?? 0;
+  $("sizeQuote").checked = item.quote_required === true;
+  $("sizeActive").checked = item.is_active !== false;
+  $("sizeSort").value = item.sort_order ?? 0;
+
+  openPanel("sizeFormPanel");
+  showTab("setup");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function resetSizeForm(close = false){
+  $("sizeForm").reset();
+  $("sizeId").value = "";
+  $("sizePrice").value = 0;
+  $("sizeSort").value = 0;
+  $("sizeActive").checked = true;
+  $("sizeFormTitle").textContent = "Add Size";
+  if(close) closePanel("sizeFormPanel");
+}
+
+async function deleteSize(id){
+  if(!confirm("Delete this size?")) return;
+
+  await supabaseClient.from("cake_sizes").delete().eq("size_id", id);
+  const { error } = await supabaseClient.from("sizes").delete().eq("id", id);
+  if(error) return showToast(error.message, true);
+
+  await loadAll(false);
+  showToast("Size deleted.");
+}
+
+function renderFlavourList(){
+  const box = $("flavourList");
+
+  if(!flavours.length){
+    box.innerHTML = `<div class="loading">No flavours yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = flavours.map(item => {
+    const domId = "flavour-" + item.id;
+
+    return `
+      <div class="compactItem" id="${domId}">
+        <div class="compactTop" onclick="toggleCompact('${domId}')">
+          <div class="compactMain">
+            <div class="itemTitle">${escapeHtml(item.name)} · ${item.quote_required ? "Quote" : "+" + money(item.extra_price)}</div>
+            <div class="itemMeta">${item.quote_required ? "Quote required" : "Fixed extra"} · ${item.is_active ? "Active" : "Inactive"}</div>
+          </div>
+          <div class="itemActions" onclick="event.stopPropagation()">
+            <button class="btn small" onclick="editFlavour('${item.id}')">Edit</button>
+            <button class="btn red small" onclick="deleteFlavour('${item.id}')">Delete</button>
+          </div>
+        </div>
+        <div class="compactDetails">
+          <b>Extra Price:</b> ${money(item.extra_price)}<br>
+          <b>Quote Required:</b> ${item.quote_required ? "Yes" : "No"}<br>
+          <b>Sort:</b> ${item.sort_order ?? 0}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openFlavourForm(){
+  resetFlavourForm(false);
+  $("flavourFormTitle").textContent = "Add Flavour";
+  openPanel("flavourFormPanel");
+}
+
+async function saveFlavour(event){
+  event.preventDefault();
+
+  const id = $("flavourId").value;
+
+  const payload = {
+    name:$("flavourName").value.trim(),
+    extra_price:Number($("flavourPrice").value || 0),
+    quote_required:$("flavourQuote").checked,
+    is_active:$("flavourActive").checked,
+    sort_order:Number($("flavourSort").value || 0)
+  };
+
+  const { error } = id
+    ? await supabaseClient.from("flavours").update(payload).eq("id", id)
+    : await supabaseClient.from("flavours").insert(payload);
+
+  if(error) return showToast(error.message, true);
+
+  resetFlavourForm(true);
+  await loadAll(false);
+  showToast("Flavour saved.");
+}
+
+function editFlavour(id){
+  const item = flavours.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  $("flavourFormTitle").textContent = "Edit Flavour";
+  $("flavourId").value = item.id;
+  $("flavourName").value = item.name || "";
+  $("flavourPrice").value = item.extra_price ?? 0;
+  $("flavourQuote").checked = item.quote_required === true;
+  $("flavourActive").checked = item.is_active !== false;
+  $("flavourSort").value = item.sort_order ?? 0;
+
+  openPanel("flavourFormPanel");
+  showTab("setup");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function resetFlavourForm(close = false){
+  $("flavourForm").reset();
+  $("flavourId").value = "";
+  $("flavourPrice").value = 0;
+  $("flavourSort").value = 0;
+  $("flavourActive").checked = true;
+  $("flavourFormTitle").textContent = "Add Flavour";
+  if(close) closePanel("flavourFormPanel");
+}
+
+async function deleteFlavour(id){
+  if(!confirm("Delete this flavour?")) return;
+
+  await supabaseClient.from("cake_flavours").delete().eq("flavour_id", id);
+  const { error } = await supabaseClient.from("flavours").delete().eq("id", id);
+  if(error) return showToast(error.message, true);
+
+  await loadAll(false);
+  showToast("Flavour deleted.");
+}
+
+function renderOptionList(){
+  const box = $("optionList");
+
+  if(!options.length){
+    box.innerHTML = `<div class="loading">No options yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = options.map(item => {
+    const domId = "option-" + item.id;
+
+    return `
+      <div class="compactItem" id="${domId}">
+        <div class="compactTop" onclick="toggleCompact('${domId}')">
+          <div class="compactMain">
+            <div class="itemTitle">${escapeHtml(item.name)} · ${item.quote_required ? "Quote" : "+" + money(item.extra_price)}</div>
+            <div class="itemMeta">${escapeHtml(item.option_type || "option")} · ${item.is_active ? "Active" : "Inactive"}</div>
+          </div>
+          <div class="itemActions" onclick="event.stopPropagation()">
+            <button class="btn small" onclick="editOption('${item.id}')">Edit</button>
+            <button class="btn red small" onclick="deleteOption('${item.id}')">Delete</button>
+          </div>
+        </div>
+        <div class="compactDetails">
+          <b>Type:</b> ${escapeHtml(item.option_type || "option")}<br>
+          <b>Extra Price:</b> ${money(item.extra_price)}<br>
+          <b>Quote Required:</b> ${item.quote_required ? "Yes" : "No"}<br>
+          <b>Sort:</b> ${item.sort_order ?? 0}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openOptionForm(){
+  resetOptionForm(false);
+  $("optionFormTitle").textContent = "Add Option";
+  openPanel("optionFormPanel");
+}
+
+async function saveOption(event){
+  event.preventDefault();
+
+  const id = $("optionId").value;
+
+  const payload = {
+    name:$("optionName").value.trim(),
+    option_type:$("optionType").value.trim() || "diet",
+    extra_price:Number($("optionPrice").value || 0),
+    quote_required:$("optionQuote").checked,
+    is_active:$("optionActive").checked,
+    sort_order:Number($("optionSort").value || 0)
+  };
+
+  const { error } = id
+    ? await supabaseClient.from("cake_options").update(payload).eq("id", id)
+    : await supabaseClient.from("cake_options").insert(payload);
+
+  if(error) return showToast(error.message, true);
+
+  resetOptionForm(true);
+  await loadAll(false);
+  showToast("Option saved.");
+}
+
+function editOption(id){
+  const item = options.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  $("optionFormTitle").textContent = "Edit Option";
+  $("optionId").value = item.id;
+  $("optionName").value = item.name || "";
+  $("optionType").value = item.option_type || "diet";
+  $("optionPrice").value = item.extra_price ?? 0;
+  $("optionQuote").checked = item.quote_required === true;
+  $("optionActive").checked = item.is_active !== false;
+  $("optionSort").value = item.sort_order ?? 0;
+
+  openPanel("optionFormPanel");
+  showTab("setup");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function resetOptionForm(close = false){
+  $("optionForm").reset();
+  $("optionId").value = "";
+  $("optionType").value = "diet";
+  $("optionPrice").value = 0;
+  $("optionSort").value = 0;
+  $("optionActive").checked = true;
+  $("optionFormTitle").textContent = "Add Option";
+  if(close) closePanel("optionFormPanel");
+}
+
+async function deleteOption(id){
+  if(!confirm("Delete this option?")) return;
+
+  const { error } = await supabaseClient.from("cake_options").delete().eq("id", id);
+  if(error) return showToast(error.message, true);
+
+  await loadAll(false);
+  showToast("Option deleted.");
+}
+
+function renderAddonList(){
+  const box = $("addonList");
+
+  if(!addons.length){
+    box.innerHTML = `<div class="loading">No add-ons yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = addons.map(item => {
+    const domId = "addon-" + item.id;
+
+    return `
+      <div class="compactItem" id="${domId}">
+        <div class="compactTop" onclick="toggleCompact('${domId}')">
+          <div class="compactMain">
+            <div class="itemTitle">${escapeHtml(item.name)} · ${item.quote_required ? "Quote" : money(item.price)}</div>
+            <div class="itemMeta">${escapeHtml(item.description || "No description")} · ${item.is_active ? "Active" : "Inactive"}</div>
+          </div>
+          <div class="itemActions" onclick="event.stopPropagation()">
+            <button class="btn small" onclick="editAddon('${item.id}')">Edit</button>
+            <button class="btn red small" onclick="deleteAddon('${item.id}')">Delete</button>
+          </div>
+        </div>
+        <div class="compactDetails">
+          <b>Description:</b> ${escapeHtml(item.description || "No description")}<br>
+          <b>Price:</b> ${money(item.price)}<br>
+          <b>Quote Required:</b> ${item.quote_required ? "Yes" : "No"}<br>
+          <b>Sort:</b> ${item.sort_order ?? 0}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openAddonForm(){
+  resetAddonForm(false);
+  $("addonFormTitle").textContent = "Add Add-on";
+  openPanel("addonFormPanel");
+}
+
+async function saveAddon(event){
+  event.preventDefault();
+
+  const id = $("addonId").value;
+
+  const payload = {
+    name:$("addonName").value.trim(),
+    description:$("addonDesc").value.trim(),
+    price:Number($("addonPrice").value || 0),
+    quote_required:$("addonQuote").checked,
+    is_active:$("addonActive").checked,
+    sort_order:Number($("addonSort").value || 0)
+  };
+
+  const { error } = id
+    ? await supabaseClient.from("addons").update(payload).eq("id", id)
+    : await supabaseClient.from("addons").insert(payload);
+
+  if(error) return showToast(error.message, true);
+
+  resetAddonForm(true);
+  await loadAll(false);
+  showToast("Add-on saved.");
+}
+
+function editAddon(id){
+  const item = addons.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  $("addonFormTitle").textContent = "Edit Add-on";
+  $("addonId").value = item.id;
+  $("addonName").value = item.name || "";
+  $("addonDesc").value = item.description || "";
+  $("addonPrice").value = item.price ?? 0;
+  $("addonQuote").checked = item.quote_required === true;
+  $("addonActive").checked = item.is_active !== false;
+  $("addonSort").value = item.sort_order ?? 0;
+
+  openPanel("addonFormPanel");
+  showTab("setup");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function resetAddonForm(close = false){
+  $("addonForm").reset();
+  $("addonId").value = "";
+  $("addonPrice").value = 0;
+  $("addonSort").value = 0;
+  $("addonActive").checked = true;
+  $("addonFormTitle").textContent = "Add Add-on";
+  if(close) closePanel("addonFormPanel");
+}
+
+async function deleteAddon(id){
+  if(!confirm("Delete this add-on?")) return;
+
+  await supabaseClient.from("cake_addons").delete().eq("addon_id", id);
+  const { error } = await supabaseClient.from("addons").delete().eq("id", id);
+  if(error) return showToast(error.message, true);
+
+  await loadAll(false);
+  showToast("Add-on deleted.");
+}
+
+function renderMaintenance(){
+  renderDeletedOrders();
+  renderReportSummary();
+  renderStorageStats();
+}
+
+function renderDeletedOrders(){
+  const box = $("deletedOrdersList");
+  if(!box) return;
+
+  const search = ($("deletedSearch")?.value || "").trim().toLowerCase();
+  const sort = $("deletedSort")?.value || "newest";
+
+  let rows = getDeletedOrders();
+
+  if(search){
+    rows = rows.filter(order => {
+      const text = [
+        order.id,
+        order.tracking_code,
+        order.customer_name,
+        order.customer_phone,
+        order.customer_email,
+        order.deleted_by_admin_email,
+        order.delete_reason,
+        order.status,
+        order.previous_status
+      ].join(" ").toLowerCase();
+
+      return text.includes(search);
+    });
+  }
+
+  rows.sort((a,b) => sortDeletedOrders(a,b,sort));
+
+  if(!rows.length){
+    box.innerHTML = `<div class="loading">No deleted orders found. Good — nothing hidden here.</div>`;
+    return;
+  }
+
+  box.innerHTML = rows.map(order => {
+    const id = String(order.id);
+    const domId = "deleted-" + id;
+    const deletedAt = order.deleted_at || order.updated_at || order.created_at;
+    const daysLeft = getDeletedDaysLeft(deletedAt);
+    const total = Number(order.estimated_total || 0);
+    const items = orderItems.filter(item => String(item.order_id) === id);
+    const deletedBy = order.deleted_by_admin_email || order.deleted_by || order.updated_by_admin_email || "Unknown admin";
+    const reason = order.delete_reason || order.deleted_reason || "No reason saved";
+    const previousStatus = order.previous_status || order.status || "Pending";
+
+    return `
+      <div class="compactItem" id="${escapeAttr(domId)}">
+        <div class="compactTop" onclick="toggleCompact('${escapeJs(domId)}')">
+          <div class="compactMain">
+            <div class="itemTitle">${escapeHtml(order.customer_name || "Deleted Customer")} · ${total ? money(total) : "Quote"}</div>
+            <div class="itemMeta">
+              Order ID: ${escapeHtml(id.slice(0,8).toUpperCase())} · Tracking: ${escapeHtml(getTrackingCode(order))}<br>
+              Deleted by: ${escapeHtml(deletedBy)}<br>
+              Deleted: ${formatDateTime(deletedAt)} · ${daysLeft > 0 ? daysLeft + " days left" : "Ready for purge"}
+            </div>
+            <div class="tags">
+              <span class="tag">Previous: ${escapeHtml(formatStatusLabel(previousStatus))}</span>
+              <span class="tag">${items.length} item(s)</span>
+              <span class="tag">${escapeHtml(order.delivery_type || "No type")}</span>
+            </div>
+          </div>
+          <div class="itemActions" onclick="event.stopPropagation()">
+            <span class="status Deleted">Deleted</span>
+            <button class="btn green small" onclick="restoreDeletedOrder('${escapeJs(id)}')">Restore</button>
+          </div>
+        </div>
+
+        <div class="compactDetails">
+          <b>Customer:</b> ${escapeHtml(order.customer_name || "No name")}<br>
+          <b>Phone:</b> ${escapeHtml(order.customer_phone || "No phone")}<br>
+          <b>Email:</b> ${escapeHtml(order.customer_email || "No email")}<br>
+          <b>Needed:</b> ${formatDate(order.needed_date)} ${order.needed_time ? escapeHtml(order.needed_time) : ""}<br>
+          <b>Deleted by:</b> ${escapeHtml(deletedBy)}<br>
+          <b>Reason:</b> ${escapeHtml(reason)}<br>
+          <b>Previous Status:</b> ${escapeHtml(formatStatusLabel(previousStatus))}<br>
+          <b>Items:</b> ${items.length ? items.map(item => escapeHtml(item.cake_name || item.product_name || "Item")).join(", ") : "No items found"}
+
+          <div class="deletedDanger">
+            <b>Permanent delete area</b>
+            <div class="itemActions" style="justify-content:flex-start;">
+              <button class="btn green small" onclick="restoreDeletedOrder('${escapeJs(id)}')">Restore Order</button>
+              <button class="btn red small" onclick="permanentDeleteOrder('${escapeJs(id)}')">Permanent Delete</button>
+            </div>
+            <div class="hint" style="margin-top:8px;">Permanent delete removes the order and its order items. Use only after exporting/reporting if needed.</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function sortDeletedOrders(a,b,sort){
+  if(sort === "oldest"){
+    return String(a.deleted_at || a.updated_at || a.created_at || "").localeCompare(String(b.deleted_at || b.updated_at || b.created_at || ""));
+  }
+
+  if(sort === "days_left"){
+    return getDeletedDaysLeft(a.deleted_at || a.updated_at || a.created_at) - getDeletedDaysLeft(b.deleted_at || b.updated_at || b.created_at);
+  }
+
+  if(sort === "total_high"){
+    return Number(b.estimated_total || 0) - Number(a.estimated_total || 0);
+  }
+
+  return String(b.deleted_at || b.updated_at || b.created_at || "").localeCompare(String(a.deleted_at || a.updated_at || a.created_at || ""));
+}
+
+function getDeletedDaysLeft(deletedAt){
+  if(!deletedAt) return 30;
+
+  const deletedDate = new Date(deletedAt);
+  if(Number.isNaN(deletedDate.getTime())) return 30;
+
+  const now = new Date();
+  const diffMs = now.getTime() - deletedDate.getTime();
+  const usedDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  return Math.max(0, 30 - usedDays);
+}
+
+async function restoreDeletedOrder(id){
+  const order = orders.find(o => String(o.id) === String(id));
+  if(!order) return showToast("Order not found.", true);
+
+  const statusToRestore = order.previous_status || "Pending";
+
+  if(!confirm("Restore this deleted order back to active orders?")) return;
+
+  try{
+    const payload = {
+      is_deleted:false,
+      deleted_at:null,
+      deleted_by_admin_id:null,
+      deleted_by_admin_email:null,
+      delete_reason:null,
+      status:statusToRestore
+    };
+
+    const { error } = await supabaseClient
+      .from("orders")
+      .update(payload)
+      .eq("id", id);
+
+    if(error) throw error;
+
+    await loadAll(false);
+    showToast("Order restored.");
+  }catch(err){
+    console.error(err);
+    showToast("Restore failed. Make sure deleted-order columns exist in Supabase. " + (err.message || ""), true);
+  }
+}
+
+async function permanentDeleteOrder(id){
+  if(!confirm("Permanently delete this order and all its items? This cannot be undone.")) return;
+
+  try{
+    const itemsDelete = await supabaseClient.from("order_items").delete().eq("order_id", id);
+    if(itemsDelete.error) throw itemsDelete.error;
+
+    const orderDelete = await supabaseClient.from("orders").delete().eq("id", id);
+    if(orderDelete.error) throw orderDelete.error;
+
+    await loadAll(false);
+    showToast("Order permanently deleted.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "Permanent delete failed.", true);
+  }
+}
+
+async function purgeOldDeletedOrders(){
+  const oldDeleted = getDeletedOrders().filter(order => {
+    const deletedAt = order.deleted_at || order.updated_at || order.created_at;
+    return getDeletedDaysLeft(deletedAt) <= 0;
+  });
+
+  if(!oldDeleted.length){
+    showToast("No deleted orders older than 30 days.");
+    return;
+  }
+
+  if(!confirm(`Permanently delete ${oldDeleted.length} deleted order(s) older than 30 days?`)) return;
+
+  try{
+    showToast("Purging old deleted orders...");
+
+    for(const order of oldDeleted){
+      await supabaseClient.from("order_items").delete().eq("order_id", order.id);
+      await supabaseClient.from("orders").delete().eq("id", order.id);
+    }
+
+    await loadAll(false);
+    showToast("Old deleted orders purged.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "Purge failed.", true);
+  }
+}
+
+function renderReportSummary(){
+  const box = $("reportSummary");
+  if(!box) return;
+
+  const rows = getOrdersForReport();
+  const total = sumOrders(rows);
+  const activeCount = rows.filter(o => !isDeletedOrder(o)).length;
+  const deletedCount = rows.filter(o => isDeletedOrder(o)).length;
+  const quoteCount = rows.filter(o => Number(o.estimated_total || 0) === 0).length;
+  const completedCount = rows.filter(o => normalizeStatus(o.status) === normalizeStatus("Completed")).length;
+  const avg = rows.length ? total / rows.length : 0;
+
+  box.innerHTML = `
+    <div class="reportBox"><b>${rows.length}</b><span>Total Orders</span></div>
+    <div class="reportBox"><b>${activeCount}</b><span>Active Orders</span></div>
+    <div class="reportBox"><b>${deletedCount}</b><span>Deleted Orders</span></div>
+    <div class="reportBox"><b>${completedCount}</b><span>Completed</span></div>
+    <div class="reportBox"><b>${quoteCount}</b><span>Quote / $0</span></div>
+    <div class="reportBox"><b>${money(total)}</b><span>Estimated Total</span></div>
+    <div class="reportBox"><b>${money(avg)}</b><span>Average Order</span></div>
+  `;
+}
+
+function getOrdersForReport(){
+  const range = $("reportRange")?.value || "this_month";
+  const include = $("reportIncludeDeleted")?.value || "active";
+
+  let rows = [...orders];
+
+  if(include === "active") rows = rows.filter(o => !isDeletedOrder(o));
+  if(include === "deleted_only") rows = rows.filter(o => isDeletedOrder(o));
+
+  rows = rows.filter(order => isOrderInRange(order, range));
+
+  return rows;
+}
+
+function isOrderInRange(order, range){
+  if(range === "lifetime") return true;
+
+  const date = new Date(order.created_at || order.needed_date || "");
+  if(Number.isNaN(date.getTime())) return false;
+
+  const now = new Date();
+
+  if(range === "this_week"){
+    const start = new Date(now);
+    start.setDate(now.getDate() - now.getDay());
+    start.setHours(0,0,0,0);
+
+    const end = new Date(start);
+    end.setDate(start.getDate() + 7);
+
+    return date >= start && date < end;
+  }
+
+  if(range === "this_month"){
+    return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+  }
+
+  if(range === "this_year"){
+    return date.getFullYear() === now.getFullYear();
+  }
+
+  return true;
+}
+
+function exportOrdersCSV(){
+  const rows = getOrdersForReport();
+
+  const csvRows = rows.map(order => ({
+    order_id:order.id,
+    short_id:String(order.id || "").slice(0,8).toUpperCase(),
+    tracking_code:getTrackingCode(order),
+    created_at:order.created_at || "",
+    needed_date:order.needed_date || "",
+    needed_time:order.needed_time || "",
+    customer_name:order.customer_name || "",
+    customer_phone:order.customer_phone || "",
+    customer_email:order.customer_email || "",
+    delivery_type:order.delivery_type || "",
+    city:order.city || "",
+    postal_code:order.postal_code || "",
+    status:order.status || "",
+    estimated_total:Number(order.estimated_total || 0),
+    is_deleted:isDeletedOrder(order) ? "Yes" : "No",
+    deleted_at:order.deleted_at || "",
+    deleted_by_admin_email:order.deleted_by_admin_email || "",
+    delete_reason:order.delete_reason || "",
+    admin_note:order.admin_note || ""
+  }));
+
+  downloadCSV(csvRows, `siffat-orders-${getDateStamp()}.csv`);
+}
+
+function exportProductsCSV(){
+  const rows = [
+    ...cakes.map(item => ({
+      type:"customizable_cake",
+      id:item.id,
+      name:item.name,
+      category:"",
+      variant:"",
+      price:item.starting_price,
+      price_type:item.price_type,
+      active:item.is_active,
+      featured:item.is_featured,
+      image_url:item.image_url
+    })),
+    ...quickProducts.map(item => ({
+      type:"quick_dessert",
+      id:item.id,
+      name:item.name,
+      category:item.category,
+      variant:item.variant,
+      price:item.price,
+      price_type:item.price_type,
+      active:item.is_active,
+      featured:item.is_featured,
+      image_url:item.image_url
+    }))
+  ];
+
+  downloadCSV(rows, `siffat-products-${getDateStamp()}.csv`);
+}
+
+function printReportSummary(){
+  const rows = getOrdersForReport();
+  const total = sumOrders(rows);
+  const win = window.open("", "_blank");
+
+  if(!win){
+    showToast("Popup blocked. Allow popups to print report.", true);
+    return;
+  }
+
+  win.document.write(`
+    <!doctype html>
+    <html>
+    <head>
+    <title>Siffat Cakes Report</title>
+    <style>
+      body{font-family:Arial,sans-serif;padding:24px;color:#1d141f}
+      h1{color:#640D6B}
+      table{width:100%;border-collapse:collapse;margin-top:16px}
+      th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:12px}
+      th{background:#640D6B;color:white}
+      .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+      .box{border:1px solid #ddd;border-radius:12px;padding:12px;margin-top:12px}
+      button{position:fixed;right:18px;top:18px;background:#640D6B;color:white;border:0;border-radius:999px;padding:10px 14px;font-weight:800}
+      @media print{button{display:none}}
+    </style>
+    </head>
+    <body>
+    <button onclick="window.print()">Print</button>
+    <div class="top">
+      <div>
+        <h1>Siffat Cakes Report</h1>
+        <p>Generated: ${escapeHtml(new Date().toLocaleString())}</p>
+      </div>
+      <div class="box">
+        <b>Total Orders:</b> ${rows.length}<br>
+        <b>Estimated Total:</b> ${money(total)}
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Customer</th>
+          <th>Needed</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Deleted</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(order => `
+          <tr>
+            <td>${escapeHtml(String(order.id || "").slice(0,8).toUpperCase())}</td>
+            <td>${escapeHtml(order.customer_name || "")}<br>${escapeHtml(order.customer_phone || "")}</td>
+            <td>${escapeHtml(order.needed_date || "")} ${escapeHtml(order.needed_time || "")}</td>
+            <td>${escapeHtml(order.status || "")}</td>
+            <td>${money(order.estimated_total)}</td>
+            <td>${isDeletedOrder(order) ? "Yes" : "No"}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+    </body>
+    </html>
+  `);
+
+  win.document.close();
+  win.focus();
+}
+
+function downloadCSV(rows, filename){
+  if(!rows.length){
+    showToast("No rows to export.", true);
+    return;
+  }
+
+  const headers = Object.keys(rows[0]);
+  const lines = [
+    headers.join(","),
+    ...rows.map(row => headers.map(header => csvCell(row[header])).join(","))
+  ];
+
+  const blob = new Blob([lines.join("\n")], { type:"text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  showToast("CSV exported.");
+}
+
+function csvCell(value){
+  const text = String(value ?? "");
+  return `"${text.replaceAll('"','""')}"`;
+}
+
+function getDateStamp(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function sumOrders(rows){
+  return rows.reduce((sum, order) => sum + Number(order.estimated_total || 0), 0);
+}
+
+function renderStorageStats(){
+  const box = $("storageStats");
+  if(!box) return;
+
+  const urls = getUniqueImageUrls();
+  const used = urls.length;
+  const remaining = Math.max(0, CLIENT_PHOTO_LIMIT - used);
+  const percent = Math.min(100, Math.round((used / CLIENT_PHOTO_LIMIT) * 100));
+
+  box.innerHTML = `
+    <div class="gridStats" style="grid-template-columns:repeat(2,1fr);margin-bottom:12px;">
+      <div class="stat green"><b>${used}</b><span>Images Used</span></div>
+      <div class="stat blue"><b>${remaining}</b><span>Images Remaining</span></div>
+    </div>
+
+    <div class="progressShell">
+      <div class="progressFill" style="width:${percent}%;"></div>
+    </div>
+
+    <div class="hint" style="margin-top:10px;">
+      ${used}/${CLIENT_PHOTO_LIMIT} image URLs are currently used across logo, hero, homepage cards, cake occasions, cakes and quick desserts.
+    </div>
+
+    <div class="deletedDanger" style="${used >= CLIENT_PHOTO_LIMIT ? "" : "display:none;"}">
+      <b>Photo limit reached</b>
+      Delete unused product/category photos or reuse existing image links before uploading more.
+    </div>
+
+    <div class="itemActions" style="justify-content:flex-start;margin-top:12px;">
+      <button class="btn small" onclick="copyImageUsageList()">Copy Image List</button>
+    </div>
+  `;
+}
+
+function getUniqueImageUrls(){
+  const urls = [];
+
+  [
+    siteSettings.logo_url,
+    siteSettings.hero_image_url
+  ].forEach(url => {
+    if(url) urls.push(url);
+  });
+
+  categories.forEach(item => {
+    if(item.image_url) urls.push(item.image_url);
+  });
+
+  cakes.forEach(item => {
+    if(item.image_url) urls.push(item.image_url);
+  });
+
+  quickProducts.forEach(item => {
+    if(item.image_url) urls.push(item.image_url);
+  });
+
+  homepageMenuCards.forEach(item => {
+    if(item.image_url) urls.push(item.image_url);
+  });
+
+  return [...new Set(urls.filter(Boolean))];
+}
+
+function copyImageUsageList(){
+  const urls = getUniqueImageUrls();
+
+  if(!urls.length){
+    showToast("No image URLs found.", true);
+    return;
+  }
+
+  navigator.clipboard.writeText(urls.join("\n"))
+    .then(() => showToast("Image URL list copied."))
+    .catch(() => showToast("Could not copy image list.", true));
+}
+
+function getTrackingCode(order){
+  return String(order.tracking_code || String(order.id || "").replaceAll("-","").slice(0,10)).toUpperCase();
+}
+
+function formatStatusLabel(status){
+  const s = normalizeStatus(status);
+
+  if(s === "pending") return "Pending";
+  if(s === "confirmed") return "Confirmed";
+  if(s === "inprogress") return "In Progress";
+  if(s === "ready") return "Ready";
+  if(s === "readyforpickup") return "Ready";
+  if(s === "completed") return "Completed";
+  if(s === "cancelled" || s === "canceled") return "Cancelled";
+
+  return status || "Pending";
+}
+
+function normalizeStatus(status){
+  return String(status || "").toLowerCase().replace(/[^a-z]/g,"");
+}
+
+async function uploadAndSet(fileInputId,targetInputId,previewId,folder){
+  const fileInput = $(fileInputId);
+  const targetInput = $(targetInputId);
+  const button = document.querySelector(`button[onclick*="${fileInputId}"]`);
+
+  clearUploadStatus(fileInputId);
+
+  if(!fileInput || !targetInput){
+    setUploadStatus(fileInputId, "Upload fields not found on this page.", true);
+    showToast("Upload fields not found on this page.", true);
+    return;
+  }
+
+  const file = fileInput.files?.[0];
+
+  if(!file){
+    setUploadStatus(fileInputId, "Choose an image first.", true);
+    showToast("Choose an image first.", true);
+    return;
+  }
+
+  if(getUniqueImageUrls().length >= CLIENT_PHOTO_LIMIT){
+    const msg = `Photo limit reached. Maximum ${CLIENT_PHOTO_LIMIT} images allowed for this client.`;
+    setUploadStatus(fileInputId, msg, true);
+    showToast(msg, true);
+    return;
+  }
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if(!allowedTypes.includes(file.type)){
+    const msg = "Only JPG, PNG, or WEBP images are allowed.";
+    setUploadStatus(fileInputId, msg, true);
+    showToast(msg, true);
+    return;
+  }
+
+  if(file.size > MAX_UPLOAD_MB * 1024 * 1024){
+    const msg = `Image must be less than ${MAX_UPLOAD_MB} MB. Please compress it and try again.`;
+    setUploadStatus(fileInputId, msg, true);
+    showToast(msg, true);
+    return;
+  }
+
+  const oldUrlBeforeUpload = targetInput.value.trim();
+  const safeFolder = String(folder || "products").replace(/[^a-zA-Z0-9/_-]/g, "-");
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  const path = `${safeFolder}/${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
+
+  try{
+    if(button) button.disabled = true;
+    setUploadStatus(fileInputId, "Uploading image... please wait.");
+    showToast("Uploading image...");
+
+    const { error:uploadError } = await supabaseClient.storage
+      .from(STORAGE_BUCKET)
+      .upload(path, file, {
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type
+      });
+
+    if(uploadError) throw uploadError;
+
+    const { data:urlData } = supabaseClient.storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(path);
+
+    const newUrl = urlData.publicUrl;
+
+    targetInput.value = newUrl;
+    fileInput.value = "";
+    setPreview(previewId, addCacheBustToImageUrl(newUrl));
+
+    setUploadStatus(fileInputId, "Image uploaded. Saving URL...");
+    showToast("Image uploaded. Saving URL...");
+
+    const saveResult = await autoSaveUploadedImage(targetInputId, newUrl, oldUrlBeforeUpload);
+
+    if(saveResult.saved){
+      targetInput.dataset.savedUrl = newUrl;
+      setUploadStatus(fileInputId, saveResult.message || "Photo uploaded and saved to database.", false, true);
+      showToast(saveResult.message || "Photo uploaded and saved.");
+    }else{
+      setUploadStatus(fileInputId, saveResult.message || "Image uploaded. Now click Save to store it.", false, true);
+      showToast(saveResult.message || "Image uploaded. Now click Save.");
+    }
+
+    renderMaintenance();
+  }catch(err){
+    console.error(err);
+    const msg = err.message || "Image upload failed. Check Supabase Storage bucket/policies.";
+    setUploadStatus(fileInputId, msg, true);
+    showToast(msg, true);
+  }finally{
+    if(button) button.disabled = false;
+  }
+}
+
+async function autoSaveUploadedImage(targetInputId,newUrl,oldUrl){
+  if(!newUrl) return { saved:false, message:"No image URL found." };
+
+  if(targetInputId === "productImageUrl"){
+    const productId = $("productId")?.value || "";
+    const kind = $("productEditKind")?.value || $("productType")?.value || "cake";
+
+    if(!productId){
+      return { saved:false, message:"Image uploaded. Fill product details and click Save Product." };
+    }
+
+    const table = kind === "quick" ? "quick_products" : "cakes";
+
+    const { data, error } = await supabaseClient
+      .from(table)
+      .update({ image_url:newUrl })
+      .eq("id", productId)
+      .select("id,image_url")
+      .single();
+
+    if(error) throw error;
+
+    if(!data || data.image_url !== newUrl){
+      throw new Error("Supabase did not confirm the saved product image URL.");
+    }
+
+    if(kind === "quick"){
+      const row = quickProducts.find(item => String(item.id) === String(productId));
+      if(row) row.image_url = newUrl;
+    }else{
+      const row = cakes.find(item => String(item.id) === String(productId));
+      if(row) row.image_url = newUrl;
+    }
+
+    await deleteOldSupabaseImageIfReplaced(oldUrl || "", newUrl);
+    renderProducts();
+
+    return { saved:true, message:"Product photo uploaded and saved." };
+  }
+
+  if(targetInputId === "occasionImage"){
+    const occasionId = $("occasionId")?.value || "";
+
+    if(!occasionId){
+      return { saved:false, message:"Image uploaded. Fill occasion details and click Save Occasion." };
+    }
+
+    const { data, error } = await supabaseClient
+      .from("categories")
+      .update({ image_url:newUrl })
+      .eq("id", occasionId)
+      .select("id,image_url")
+      .single();
+
+    if(error) throw error;
+
+    if(!data || data.image_url !== newUrl){
+      throw new Error("Supabase did not confirm the saved occasion image URL.");
+    }
+
+    const row = categories.find(item => String(item.id) === String(occasionId));
+    if(row) row.image_url = newUrl;
+
+    await deleteOldSupabaseImageIfReplaced(oldUrl || "", newUrl);
+    renderOccasionList();
+    fillProductSelects();
+
+    return { saved:true, message:"Occasion photo uploaded and saved." };
+  }
+
+  if(targetInputId === "setLogoUrl" || targetInputId === "setHeroImage"){
+    const field = targetInputId === "setLogoUrl" ? "logo_url" : "hero_image_url";
+
+    const { data, error } = await supabaseClient
+      .from("site_settings")
+      .upsert({ id:1, [field]:newUrl }, { onConflict:"id" })
+      .select("id,logo_url,hero_image_url")
+      .single();
+
+    if(error) throw error;
+
+    if(!data || data[field] !== newUrl){
+      throw new Error("Supabase did not confirm the saved settings image URL.");
+    }
+
+    siteSettings = {...siteSettings, [field]:newUrl};
+
+    await deleteOldSupabaseImageIfReplaced(oldUrl || "", newUrl);
+    fillSettingsForm();
+    applyAdminLogo();
+
+    return { saved:true, message: field === "logo_url" ? "Logo uploaded and saved." : "Hero image uploaded and saved." };
+  }
+
+  return { saved:false, message:"Image uploaded. Now click Save to store it." };
+}
+
+function getOrCreateUploadStatus(fileInputId){
+  const input = $(fileInputId);
+  if(!input) return null;
+
+  const id = "uploadStatus-" + fileInputId;
+  let status = $(id);
+
+  if(status) return status;
+
+  status = document.createElement("div");
+  status.id = id;
+  status.className = "uploadStatus";
+
+  const uploadRow = input.closest(".uploadRow");
+
+  if(uploadRow){
+    uploadRow.insertAdjacentElement("afterend", status);
+  }else{
+    input.insertAdjacentElement("afterend", status);
+  }
+
+  return status;
+}
+
+function setUploadStatus(fileInputId,message,isError = false,isSuccess = false){
+  const status = getOrCreateUploadStatus(fileInputId);
+  if(!status) return;
+
+  status.textContent = message;
+  status.classList.add("show");
+  status.classList.toggle("error", !!isError);
+  status.classList.toggle("success", !!isSuccess);
+}
+
+function clearUploadStatus(fileInputId){
+  const status = getOrCreateUploadStatus(fileInputId);
+  if(!status) return;
+
+  status.textContent = "";
+  status.classList.remove("show","error","success");
+}
+
+async function deleteOldSupabaseImageIfReplaced(oldUrl,newUrl){
+  if(!oldUrl) return;
+  if(oldUrl === newUrl) return;
+  if(!isSupabaseStorageUrl(oldUrl)) return;
+
+  const references = countCurrentImageReferences(oldUrl);
+
+  if(references > 0){
+    return;
+  }
+
+  await deleteStorageFileFromUrl(oldUrl, true);
+}
+
+async function deleteStorageFileFromUrl(url,silent = false){
+  const path = getStoragePathFromUrl(url);
+  if(!path) return false;
+
+  try{
+    const { error } = await supabaseClient.storage
+      .from(STORAGE_BUCKET)
+      .remove([path]);
+
+    if(error) throw error;
+
+    if(!silent) showToast("Old image deleted.");
+    return true;
+  }catch(err){
+    console.warn("Delete storage file failed:", err);
+    if(!silent) showToast(err.message || "Could not delete image.", true);
+    return false;
+  }
+}
+
+function isSupabaseStorageUrl(url){
+  return String(url || "").includes(`/storage/v1/object/public/${STORAGE_BUCKET}/`);
+}
+
+function getStoragePathFromUrl(url){
+  const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+  const text = String(url || "");
+  const idx = text.indexOf(marker);
+
+  if(idx === -1) return "";
+
+  const rawPath = text.slice(idx + marker.length).split("?")[0];
+
+  try{
+    return decodeURIComponent(rawPath);
+  }catch{
+    return rawPath;
+  }
+}
+
+function countCurrentImageReferences(url){
+  if(!url) return 0;
+
+  let count = 0;
+
+  if(siteSettings.logo_url === url) count++;
+  if(siteSettings.hero_image_url === url) count++;
+
+  categories.forEach(item => {
+    if(item.image_url === url) count++;
+  });
+
+  cakes.forEach(item => {
+    if(item.image_url === url) count++;
+  });
+
+  quickProducts.forEach(item => {
+    if(item.image_url === url) count++;
+  });
+
+  homepageMenuCards.forEach(item => {
+    if(item.image_url === url) count++;
+  });
+
+  return count;
+}
+
+function previewImageFromInput(inputId,previewId){
+  const input = $(inputId);
+  setPreview(previewId, input ? input.value.trim() : "");
+}
+
+function setPreview(previewId,url){
+  const img = $(previewId);
+  if(!img) return;
+
+  if(!url){
+    img.classList.remove("show");
+    img.removeAttribute("src");
+    return;
+  }
+
+  img.src = addCacheBustToImageUrl(url);
+  img.classList.add("show");
+}
+
+function clearImageField(inputId,previewId,fileId){
+  const input = $(inputId);
+  const file = $(fileId);
+
+  if(input) input.value = "";
+  if(file) file.value = "";
+  setPreview(previewId, "");
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text)
+    .then(() => showToast("Copied."))
+    .catch(() => showToast("Could not copy.", true));
+}
+
+function getSelectedValues(id){
+  return Array.from($(id).selectedOptions).map(option => option.value);
+}
+
+function setSelectedValues(id,values){
+  const set = new Set(values.map(String));
+
+  Array.from($(id).options).forEach(option => {
+    option.selected = set.has(String(option.value));
+  });
+}
+
+function getCakeRelationNames(cakeId,relationRows,sourceRows,sourceKey){
+  const ids = relationRows
+    .filter(row => String(row.cake_id) === String(cakeId))
+    .map(row => row[sourceKey]);
+
+  return ids
+    .map(id => sourceRows.find(row => String(row.id) === String(id))?.name)
+    .filter(Boolean);
+}
+
+function money(value){
+  const symbol = siteSettings.currency || "$";
+  const num = Number(value || 0);
+  return symbol + num.toFixed(2).replace(".00","");
+}
+
+function formatDate(value){
+  if(!value) return "Not selected";
+
+  try{
+    const d = new Date(value + "T00:00:00");
+    return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+  }catch{
+    return value;
+  }
+}
+
+function formatDateTime(value){
+  if(!value) return "Not available";
+
+  try{
     const d = new Date(value);
     if(Number.isNaN(d.getTime())) return value;
-    return d.toLocaleString([], { year:"numeric", month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" });
+    return d.toLocaleString();
+  }catch{
+    return value;
   }
+}
 
-  function showToast(message, isError = false){
-    const toast = $("toast");
-    toast.textContent = message;
-    toast.style.borderColor = isError ? "rgba(255,91,110,.35)" : "rgba(255,255,255,.09)";
-    toast.style.color = isError ? "#ffdce1" : "var(--text)";
-    toast.classList.add("show");
-    clearTimeout(window.__toastTimer);
-    window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
-  }
+function normalizePhone(value){
+  return String(value || "").replace(/[^\d]/g,"");
+}
 
-  function escapeHtml(value){
-    return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
+function slugify(value){
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"");
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeJs(value){
+  return String(value ?? "")
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'")
+    .replaceAll('"','\\"')
+    .replaceAll("\n","\\n")
+    .replaceAll("\r","");
+}
+
+function escapeAttr(value){
+  return escapeHtml(value);
+}
+
+function escapeClass(value){
+  return String(value || "").replace(/[^a-zA-Z0-9_-]/g,"");
+}
+
+function toTitle(value){
+  return String(value || "")
+    .replaceAll("-"," ")
+    .replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function getFallbackImage(category){
+  const key = String(category || "").toLowerCase();
+
+  const images = {
+    cakes:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80",
+    cupcakes:"https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?auto=format&fit=crop&w=900&q=80",
+    muffins:"https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=900&q=80",
+    brownies:"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=80",
+    baklava:"https://images.unsplash.com/photo-1627311745837-68d6b11f0e41?auto=format&fit=crop&w=900&q=80"
+  };
+
+  return images[key] || images.cakes;
+}
+
+function addCacheBustToImageUrl(url){
+  const clean = String(url || "");
+  if(!clean) return clean;
+
+  if(!clean.includes("supabase.co/storage")) return clean;
+
+  const sep = clean.includes("?") ? "&" : "?";
+  return `${clean}${sep}v=${Date.now()}`;
+}
+
+function wait(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function showToast(message,isError = false){
+  const toast = $("toast");
+  toast.textContent = message;
+  toast.style.background = isError ? "var(--red)" : "var(--purple)";
+  toast.classList.add("show");
+
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3200);
+}
 </script>
 
 </body>
