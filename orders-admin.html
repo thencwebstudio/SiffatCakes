@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Siffat Cakes Order Manager</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#fbf4fb;
+      --text:#1d141f;
+      --muted:#725a76;
+      --purple:#640D6B;
+      --purple2:#7a1281;
+      --line:rgba(100,13,107,.16);
+      --shadow:0 18px 45px rgba(100,13,107,.12);
+      --shadow2:0 10px 24px rgba(100,13,107,.08);
+      --green:#16823a;
+      --red:#b42318;
+      --orange:#b54708;
+      --blue:#175cd3;
+      --soft:#fff7ff;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html,body{
+      width:100%;
+      min-height:100%;
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(100,13,107,.12),transparent 33%),
+        radial-gradient(circle at 100% 0%,rgba(122,18,129,.08),transparent 30%),
+        linear-gradient(180deg,var(--bg),#fff 58%,#fff);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    button,input,select,textarea{font:inherit}
+    button{border:0;cursor:pointer}
+    a{color:inherit;text-decoration:none}
+
+    .wrap{
+      width:min(1460px,calc(100% - 28px));
+      margin:auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:60;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav{
+      min-height:62px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .logo{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--purple);
+      color:#fff;
+      box-shadow:0 12px 28px rgba(100,13,107,.22);
+      font-size:20px;
+      overflow:hidden;
+      flex:0 0 auto;
+      border:2px solid rgba(255,255,255,.85);
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      background:#fff;
+      display:block;
+    }
+
+    .brand h1{
+      color:var(--purple);
+      font-size:18px;
+      line-height:1;
+      letter-spacing:-.045em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:360px;
+    }
+
+    .brand p{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:11px;
+      white-space:nowrap;
+      max-width:360px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .navActions{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:38px;
+      padding:9px 12px;
+      border-radius:999px;
+      color:var(--purple);
+      font-weight:1000;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:0 8px 18px rgba(100,13,107,.04);
+      transition:.18s ease;
+      white-space:nowrap;
+      font-size:13px;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      background:#fff7ff;
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none!important;
+    }
+
+    .btn.primary{
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      border-color:rgba(100,13,107,.30);
+      color:#fff;
+      box-shadow:0 12px 26px rgba(100,13,107,.20);
+    }
+
+    .btn.green{
+      background:rgba(22,130,58,.08);
+      border-color:rgba(22,130,58,.22);
+      color:var(--green);
+    }
+
+    .btn.red{
+      background:rgba(180,35,24,.08);
+      border-color:rgba(180,35,24,.20);
+      color:var(--red);
+    }
+
+    .btn.orange{
+      background:rgba(181,71,8,.08);
+      border-color:rgba(181,71,8,.20);
+      color:var(--orange);
+    }
+
+    .btn.blue{
+      background:rgba(23,92,211,.08);
+      border-color:rgba(23,92,211,.20);
+      color:var(--blue);
+    }
+
+    .btn.small{
+      min-height:34px;
+      padding:7px 10px;
+      font-size:12px;
+    }
+
+    .btn.block{width:100%}
+
+    .loginScreen{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+
+    .loginCard{
+      width:min(430px,100%);
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.92);
+      border-radius:28px;
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .loginCard h2{
+      color:var(--purple);
+      font-size:30px;
+      letter-spacing:-.065em;
+      margin-bottom:8px;
+    }
+
+    .loginCard p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      margin-bottom:16px;
+    }
+
+    .app{display:none}
+    .app.show{display:block}
+
+    .main{
+      padding:14px 0 34px;
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.92);
+      border-radius:24px;
+      box-shadow:var(--shadow2);
+      overflow:hidden;
+      min-width:0;
+      margin-bottom:14px;
+    }
+
+    .cardHead{
+      padding:13px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .cardHead h3{
+      color:var(--purple);
+      font-size:18px;
+      letter-spacing:-.045em;
+    }
+
+    .cardHead p{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.42;
+    }
+
+    .cardBody{
+      padding:13px 14px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom:10px;
+      min-width:0;
+    }
+
+    .field label{
+      color:var(--purple);
+      font-size:12px;
+      font-weight:1000;
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      min-height:43px;
+      border:1px solid var(--line);
+      outline:none;
+      border-radius:15px;
+      background:#fff;
+      color:var(--text);
+      padding:11px 12px;
+      box-shadow:0 8px 18px rgba(100,13,107,.035);
+    }
+
+    .field textarea{
+      min-height:86px;
+      resize:vertical;
+    }
+
+    .hint{
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .full{grid-column:1/-1}
+
+    .orderBoard{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:9px;
+    }
+
+    .boardCard{
+      min-height:72px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.88);
+      border-radius:18px;
+      padding:12px;
+      box-shadow:0 8px 18px rgba(100,13,107,.04);
+      text-align:left;
+      transition:.16s ease;
+      color:var(--text);
+    }
+
+    .boardCard:hover{
+      transform:translateY(-1px);
+      border-color:rgba(100,13,107,.26);
+      background:#fff7ff;
+    }
+
+    .boardCard.active{
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      color:#fff;
+      border-color:rgba(100,13,107,.30);
+      box-shadow:0 16px 32px rgba(100,13,107,.22);
+    }
+
+    .boardCard b{
+      display:block;
+      font-size:24px;
+      line-height:1;
+      letter-spacing:-.06em;
+      color:var(--purple);
+      margin-bottom:8px;
+    }
+
+    .boardCard.active b,
+    .boardCard.active span{
+      color:#fff;
+    }
+
+    .boardCard span{
+      display:block;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:1000;
+      line-height:1.2;
+    }
+
+    .boardCard.pending b{color:var(--orange)}
+    .boardCard.confirmed b{color:var(--blue)}
+    .boardCard.ready b{color:var(--green)}
+    .boardCard.cancelled b{color:var(--red)}
+    .boardCard.active b{color:#fff}
+
+    .boardFooter{
+      margin-top:11px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .filterPill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff7ff;
+      color:var(--purple);
+      font-size:12px;
+      font-weight:1000;
+    }
+
+    .searchRow{
+      display:flex;
+      gap:8px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+
+    .searchRow input,
+    .searchRow select{
+      min-height:42px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:0 13px;
+      outline:none;
+      box-shadow:0 8px 18px rgba(100,13,107,.035);
+    }
+
+    .searchRow input{
+      flex:1;
+      min-width:250px;
+    }
+
+    .list{
+      display:grid;
+      gap:9px;
+    }
+
+    .loading{
+      padding:22px;
+      border:1px dashed rgba(100,13,107,.22);
+      border-radius:18px;
+      color:var(--muted);
+      text-align:center;
+      background:rgba(255,255,255,.70);
+      line-height:1.5;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      z-index:200;
+      max-width:min(720px,calc(100% - 24px));
+      background:var(--purple);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 15px;
+      font-size:13px;
+      font-weight:1000;
+      box-shadow:0 18px 36px rgba(100,13,107,.24);
+      transition:.2s ease;
+      text-align:center;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .status{
+      padding:7px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:1000;
+      border:1px solid var(--line);
+      background:#fff7ff;
+      white-space:nowrap;
+    }
+
+    .status.Pending{color:var(--orange)}
+    .status.Confirmed{color:var(--blue)}
+    .status.InProgress{color:#4a5fd0}
+    .status.Ready,.status.ReadyForPickup,.status.OutForDelivery,.status.Completed{color:var(--green)}
+    .status.Cancelled{color:var(--red)}
+
+    .orderCard{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 8px 18px rgba(100,13,107,.035);
+    }
+
+    .orderTop{
+      padding:12px 13px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      cursor:pointer;
+      border-bottom:1px solid transparent;
+    }
+
+    .orderCard.open .orderTop{
+      border-bottom-color:var(--line);
+    }
+
+    .orderTop h4{
+      font-size:15px;
+      margin-bottom:4px;
+      letter-spacing:-.025em;
+    }
+
+    .orderTop p{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .orderBody{
+      display:none;
+      padding:13px;
+      background:#fff7ff;
+    }
+
+    .orderCard.open .orderBody{
+      display:block;
+    }
+
+    .formGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .miniGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .sectionTitle{
+      color:var(--purple);
+      font-weight:1000;
+      margin:13px 0 8px;
+      font-size:13px;
+    }
+
+    .pillRow{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+
+    .pill{
+      padding:5px 7px;
+      border:1px solid var(--line);
+      background:#fff7ff;
+      color:var(--muted);
+      border-radius:999px;
+      font-size:10px;
+      font-weight:900;
+    }
+
+    .orderItems{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .orderItem{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:10px;
+      font-size:12px;
+      line-height:1.55;
+      color:var(--muted);
+    }
+
+    .orderItem b{
+      color:var(--text);
+    }
+
+    .statusButtons{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:7px;
+    }
+
+    .statusChoice{
+      min-height:40px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--purple);
+      font-size:12px;
+      font-weight:1000;
+      padding:8px;
+      transition:.16s ease;
+    }
+
+    .statusChoice:hover{
+      background:#fff7ff;
+      transform:translateY(-1px);
+    }
+
+    .statusChoice.active{
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      color:#fff;
+      border-color:rgba(100,13,107,.32);
+      box-shadow:0 12px 24px rgba(100,13,107,.16);
+    }
+
+    .actionStrip{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:12px;
+    }
+
+    .copyBox{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .dangerZone{
+      border:1px solid rgba(180,35,24,.22);
+      background:rgba(180,35,24,.05);
+      border-radius:18px;
+      padding:12px;
+      margin-top:12px;
+    }
+
+    .dangerZone b{
+      display:block;
+      color:var(--red);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    @media(max-width:1180px){
+      .orderBoard{grid-template-columns:repeat(4,1fr)}
+    }
+
+    @media(max-width:920px){
+      .formGrid,
+      .miniGrid{
+        grid-template-columns:1fr;
+      }
+
+      .orderTop{
+        flex-direction:column;
+      }
+
+      .statusButtons{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:720px){
+      .wrap{
+        width:min(100% - 16px,1460px);
+      }
+
+      .nav{
+        align-items:flex-start;
+        flex-direction:column;
+        padding:10px 0;
+      }
+
+      .navActions{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .orderBoard{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .boardCard{
+        min-height:64px;
+        padding:10px;
+      }
+
+      .boardCard b{
+        font-size:22px;
+      }
+
+      .searchRow input{
+        min-width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<section id="loginScreen" class="loginScreen">
+  <div class="loginCard">
+    <div class="logo" style="margin-bottom:14px;">🍰</div>
+    <h2>Order Manager Login</h2>
+    <p>Login to manage daily customer orders, update statuses, message customers and print orders.</p>
+
+    <div class="field">
+      <label>Email</label>
+      <input id="loginEmail" type="email" placeholder="admin@email.com">
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="Password">
+    </div>
+
+    <button class="btn primary block" onclick="loginAdmin()">Login</button>
+  </div>
+</section>
+
+<div id="app" class="app">
+  <header class="topbar">
+    <div class="wrap nav">
+      <div class="brand">
+        <div id="managerLogo" class="logo">🍰</div>
+        <div>
+          <h1 id="managerTitle">Siffat Cakes Order Manager</h1>
+          <p id="adminEmailText">Managing orders</p>
+        </div>
+      </div>
+
+      <div class="navActions">
+        <span class="btn green small">Connected</span>
+        <a class="btn small" href="track.html" target="_blank">Track Page</a>
+        <a class="btn small" href="index.html" target="_blank">View Site</a>
+        <button class="btn small" onclick="loadAll()">Refresh Orders</button>
+        <button class="btn blue small" onclick="hardRefreshPage()">Hard Refresh</button>
+        <button class="btn red small" onclick="logoutAdmin()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap main">
+
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Order Board</h3>
+          <p>Compact restaurant-style workflow. Click any box to filter orders quickly.</p>
+        </div>
+        <button class="btn primary small" onclick="loadAll()">Refresh Orders</button>
+      </div>
+
+      <div class="cardBody">
+        <div id="orderBoard" class="orderBoard"></div>
+
+        <div class="boardFooter">
+          <span class="filterPill" id="currentBoardFilter">Filter: Active Orders</span>
+          <p class="hint">Use <b>Save Only</b> to update silently. Use <b>Save + WhatsApp</b> only when you want to notify the customer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Orders</h3>
+          <p>Daily order management. Expand an order for full details, status, invoice and delete tools.</p>
+        </div>
+        <button class="btn small" onclick="clearBoardFilter()">Clear Board Filter</button>
+      </div>
+
+      <div class="cardBody">
+        <div class="searchRow">
+          <input id="orderSearch" placeholder="Search name, phone, email, order ID, tracking code..." oninput="renderOrders()">
+
+          <select id="orderDateFilter" onchange="renderOrders()">
+            <option value="all">All Dates</option>
+            <option value="today">Needed Today</option>
+            <option value="tomorrow">Needed Tomorrow</option>
+            <option value="week">Needed This Week</option>
+            <option value="month">Needed This Month</option>
+          </select>
+
+          <select id="orderTypeFilter" onchange="renderOrders()">
+            <option value="all">Pickup + Delivery</option>
+            <option value="Pickup">Pickup</option>
+            <option value="Delivery">Delivery</option>
+          </select>
+
+          <select id="orderSort" onchange="renderOrders()">
+            <option value="needed_soon">Needed date soonest</option>
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="needed_late">Needed date latest</option>
+            <option value="status">Status A-Z</option>
+            <option value="total_high">Total high to low</option>
+            <option value="total_low">Total low to high</option>
+          </select>
+
+          <button class="btn small" onclick="resetOrderFilters()">Reset</button>
+        </div>
+
+        <div id="ordersList" class="list">
+          <div class="loading">Loading orders...</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  const SUPABASE_URL = "https://qchzgwrnibgziqkepnpb.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_u72M1JPe6j9PIqXJ3qtDHA_KDnZheCL";
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true
+    }
+  });
+
+  const ORDER_STATUSES = [
+    { value:"Pending", label:"Pending" },
+    { value:"Confirmed", label:"Confirmed" },
+    { value:"InProgress", label:"In Progress" },
+    { value:"Ready", label:"Ready / Delivery" },
+    { value:"Completed", label:"Completed" },
+    { value:"Cancelled", label:"Cancelled" }
+  ];
+
+  const $ = id => document.getElementById(id);
+
+  let currentUser = null;
+  let authOpening = false;
+
+  let orders = [];
+  let orderItems = [];
+  let boardFilter = "active";
+
+  let siteSettings = {
+    brand_name:"Siffat Cakes",
+    tagline:"Eggless Cakes & Desserts",
+    whatsapp_number:"",
+    currency:"$",
+    address:"",
+    business_hours:"",
+    logo_url:"",
+    charge_hst:false,
+    hst_rate:13,
+    default_delivery_fee:0
+  };
+
+  initAuth();
+
+  async function initAuth(){
+    const { data } = await supabaseClient.auth.getSession();
+
+    if(data.session?.user){
+      currentUser = data.session.user;
+      await verifyAndOpen();
+    }else{
+      showLogin();
+    }
+
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      if(session?.user){
+        currentUser = session.user;
+        await verifyAndOpen();
+      }else{
+        currentUser = null;
+        showLogin();
+      }
+    });
+  }
+
+  async function loginAdmin(){
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+
+    if(!email || !password){
+      showToast("Enter admin email and password.", true);
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    if(error){
+      showToast(error.message, true);
+      return;
+    }
+
+    showToast("Logged in.");
+  }
+
+  async function logoutAdmin(){
+    await supabaseClient.auth.signOut();
+    showToast("Signed out.");
+  }
+
+  function showLogin(){
+    $("loginScreen").style.display = "grid";
+    $("app").classList.remove("show");
+  }
+
+  async function verifyAndOpen(){
+    if(authOpening) return;
+    authOpening = true;
+
+    try{
+      const { data, error } = await supabaseClient.rpc("is_admin");
+
+      if(error || data !== true){
+        await supabaseClient.auth.signOut();
+        showToast("This user is not added as admin.", true);
+        showLogin();
+        return;
+      }
+
+      $("loginScreen").style.display = "none";
+      $("app").classList.add("show");
+      $("adminEmailText").textContent = currentUser?.email || "Admin";
+
+      await loadAll(false);
+    }catch(err){
+      console.error(err);
+      showToast(err.message || "Admin verification failed.", true);
+      showLogin();
+    }finally{
+      authOpening = false;
+    }
+  }
+
+  async function loadAll(showMessage = true){
+    try{
+      if(showMessage) showToast("Loading orders...");
+
+      const [settingsRes, ordersRes, itemsRes] = await Promise.all([
+        supabaseClient.from("site_settings").select("*").eq("id", 1).maybeSingle(),
+        supabaseClient.from("orders").select("*").order("created_at", { ascending:false }),
+        supabaseClient.from("order_items").select("*").order("created_at", { ascending:true })
+      ]);
+
+      if(settingsRes.error) console.warn(settingsRes.error.message);
+      if(ordersRes.error) throw ordersRes.error;
+      if(itemsRes.error) throw itemsRes.error;
+
+      siteSettings = {...siteSettings, ...(settingsRes.data || {})};
+      orders = ordersRes.data || [];
+      orderItems = itemsRes.data || [];
+
+      applyBranding();
+      renderAll();
+
+      if(showMessage) showToast("Orders loaded.");
+    }catch(err){
+      console.error(err);
+      showToast(err.message || "Failed to load orders.", true);
+    }
+  }
+
+  function applyBranding(){
+    const brand = siteSettings.brand_name || "Siffat Cakes";
+    const logo = siteSettings.logo_url || "";
+
+    $("managerTitle").textContent = brand + " Order Manager";
+
+    if(logo){
+      $("managerLogo").innerHTML = `<img src="${escapeHtml(cacheBustImage(logo))}" alt="${escapeHtml(brand)}" onerror="this.parentElement.textContent='🍰'">`;
+    }else{
+      $("managerLogo").textContent = "🍰";
+    }
+  }
+
+  function renderAll(){
+    renderOrderBoard();
+    renderOrders();
+  }
+
+  function renderOrderBoard(){
+    const activeOrders = orders.filter(order => !isDeletedOrder(order));
+    const workflowOrders = activeOrders.filter(order => isWorkflowActive(order));
+
+    const boardItems = [
+      { key:"pending", label:"Pending", value:countStatus(activeOrders,"Pending"), cls:"pending" },
+      { key:"confirmed", label:"Confirmed", value:countStatus(activeOrders,"Confirmed"), cls:"confirmed" },
+      { key:"inprogress", label:"In Progress", value:countStatus(activeOrders,"InProgress"), cls:"" },
+      { key:"ready", label:"Ready / Delivery", value:countStatus(activeOrders,"Ready"), cls:"ready" },
+      { key:"completed", label:"Completed", value:countStatus(activeOrders,"Completed"), cls:"ready" },
+      { key:"cancelled", label:"Cancelled", value:countStatus(activeOrders,"Cancelled"), cls:"cancelled" },
+      { key:"today", label:"Needed Today", value:activeOrders.filter(isNeededToday).length, cls:"cancelled" },
+      { key:"tomorrow", label:"Needed Tomorrow", value:activeOrders.filter(isNeededTomorrow).length, cls:"confirmed" },
+      { key:"week", label:"This Week Active", value:workflowOrders.filter(isNeededThisWeek).length, cls:"" },
+      { key:"quote", label:"Quote Orders", value:activeOrders.filter(isQuoteOrder).length, cls:"pending" },
+      { key:"active", label:"Total Active", value:workflowOrders.length, cls:"ready" },
+      { key:"all", label:"All Orders", value:activeOrders.length, cls:"" }
+    ];
+
+    $("orderBoard").innerHTML = boardItems.map(item => `
+      <button class="boardCard ${item.cls || ""} ${boardFilter === item.key ? "active" : ""}" onclick="setBoardFilter('${item.key}')">
+        <b>${item.value}</b>
+        <span>${escapeHtml(item.label)}</span>
+      </button>
+    `).join("");
+
+    $("currentBoardFilter").textContent = "Filter: " + getBoardFilterLabel(boardFilter);
+  }
+
+  function setBoardFilter(filter){
+    boardFilter = filter;
+    renderOrderBoard();
+    renderOrders();
+  }
+
+  function clearBoardFilter(){
+    boardFilter = "active";
+    renderOrderBoard();
+    renderOrders();
+  }
+
+  function resetOrderFilters(){
+    $("orderSearch").value = "";
+    $("orderDateFilter").value = "all";
+    $("orderTypeFilter").value = "all";
+    $("orderSort").value = "needed_soon";
+    boardFilter = "active";
+    renderOrderBoard();
+    renderOrders();
+  }
+
+  function getBoardFilterLabel(filter){
+    const labels = {
+      pending:"Pending",
+      confirmed:"Confirmed",
+      inprogress:"In Progress",
+      ready:"Ready / Delivery",
+      completed:"Completed",
+      cancelled:"Cancelled",
+      today:"Needed Today",
+      tomorrow:"Needed Tomorrow",
+      week:"This Week Active",
+      quote:"Quote Orders",
+      active:"Active Orders",
+      all:"All Orders"
+    };
+
+    return labels[filter] || "Active Orders";
+  }
+
+  function renderOrders(){
+    const box = $("ordersList");
+    const search = ($("orderSearch")?.value || "").trim().toLowerCase();
+    const dateFilter = $("orderDateFilter")?.value || "all";
+    const typeFilter = $("orderTypeFilter")?.value || "all";
+    const sort = $("orderSort")?.value || "needed_soon";
+
+    let rows = orders.filter(order => !isDeletedOrder(order));
+
+    rows = applyBoardFilter(rows, boardFilter);
+
+    if(dateFilter === "today") rows = rows.filter(isNeededToday);
+    if(dateFilter === "tomorrow") rows = rows.filter(isNeededTomorrow);
+    if(dateFilter === "week") rows = rows.filter(isNeededThisWeek);
+    if(dateFilter === "month") rows = rows.filter(isNeededThisMonth);
+
+    if(typeFilter !== "all"){
+      rows = rows.filter(order => String(order.delivery_type || "").toLowerCase() === typeFilter.toLowerCase());
+    }
+
+    if(search){
+      rows = rows.filter(order => {
+        const combined = [
+          order.id,
+          getTrackingCode(order),
+          order.customer_name,
+          order.customer_phone,
+          order.customer_email,
+          order.needed_date,
+          order.status,
+          order.delivery_type
+        ].join(" ").toLowerCase();
+
+        return combined.includes(search);
+      });
+    }
+
+    rows.sort((a,b) => sortOrders(a,b,sort));
+
+    if(!rows.length){
+      box.innerHTML = `<div class="loading">No orders found for this filter.</div>`;
+      return;
+    }
+
+    box.innerHTML = rows.map(renderOrderRow).join("");
+  }
+
+  function applyBoardFilter(rows, filter){
+    if(filter === "all") return rows;
+
+    if(filter === "active") return rows.filter(isWorkflowActive);
+    if(filter === "pending") return rows.filter(order => sameStatus(order.status,"Pending"));
+    if(filter === "confirmed") return rows.filter(order => sameStatus(order.status,"Confirmed"));
+    if(filter === "inprogress") return rows.filter(order => sameStatus(order.status,"InProgress"));
+    if(filter === "ready") return rows.filter(order => sameStatus(order.status,"Ready"));
+    if(filter === "completed") return rows.filter(order => sameStatus(order.status,"Completed"));
+    if(filter === "cancelled") return rows.filter(order => sameStatus(order.status,"Cancelled"));
+    if(filter === "today") return rows.filter(isNeededToday);
+    if(filter === "tomorrow") return rows.filter(isNeededTomorrow);
+    if(filter === "week") return rows.filter(order => isWorkflowActive(order) && isNeededThisWeek(order));
+    if(filter === "quote") return rows.filter(isQuoteOrder);
+
+    return rows.filter(isWorkflowActive);
+  }
+
+  function renderOrderRow(order){
+    const id = String(order.id);
+    const items = orderItems.filter(item => String(item.order_id) === id);
+    const shortId = id.slice(0,8).toUpperCase();
+    const trackingCode = getTrackingCode(order);
+    const hasQuote = isQuoteOrder(order);
+    const safeStatus = toDbStatus(order.status || "Pending");
+    const statusClass = escapeClass(safeStatus);
+    const trackLink = getTrackLink(trackingCode);
+    const adminTrail = getAdminTrail(order);
+
+    return `
+      <div class="orderCard" id="order-${escapeAttr(id)}">
+        <div class="orderTop" onclick="toggleOrder('${escapeJs(id)}')">
+          <div>
+            <h4>${escapeHtml(order.customer_name || "Customer")} · ${hasQuote ? "Quote" : money(order.estimated_total)}</h4>
+            <p>
+              ${escapeHtml(order.customer_phone || "")}${order.customer_email ? " · " + escapeHtml(order.customer_email) : ""}<br>
+              Needed: ${formatDate(order.needed_date)} ${order.needed_time ? escapeHtml(order.needed_time) : ""} · ${escapeHtml(order.delivery_type || "")}<br>
+              Order ID: ${escapeHtml(shortId)} · Tracking: ${escapeHtml(trackingCode)}
+            </p>
+
+            <div class="pillRow">
+              <span class="pill">${items.length} item(s)</span>
+              <span class="pill">${escapeHtml(order.delivery_type || "No type")}</span>
+              <span class="pill">Created: ${formatDateTime(order.created_at)}</span>
+              ${adminTrail ? `<span class="pill">${escapeHtml(adminTrail)}</span>` : ""}
+            </div>
+          </div>
+
+          <div style="display:flex;gap:7px;align-items:flex-end;flex-direction:column;" onclick="event.stopPropagation()">
+            <span class="status ${statusClass}">${escapeHtml(formatStatusLabel(order.status || "Pending"))}</span>
+            <button class="btn small" onclick="toggleOrder('${escapeJs(id)}')">Details</button>
+          </div>
+        </div>
+
+        <div class="orderBody">
+          <div class="sectionTitle">Quick Status</div>
+          <input type="hidden" id="status-${escapeAttr(id)}" value="${escapeHtml(safeStatus)}">
+
+          <div class="statusButtons" id="statusButtons-${escapeAttr(id)}">
+            ${ORDER_STATUSES.map(status => `
+              <button
+                class="statusChoice ${sameStatus(safeStatus,status.value) ? "active" : ""}"
+                data-status="${escapeHtml(status.value)}"
+                onclick="pickStatus('${escapeJs(id)}','${escapeJs(status.value)}')">
+                ${escapeHtml(status.label)}
+              </button>
+            `).join("")}
+          </div>
+
+          <div class="formGrid" style="margin-top:12px;">
+            <div class="field">
+              <label>Tracking Code</label>
+              <input id="tracking-${escapeAttr(id)}" value="${escapeHtml(trackingCode)}">
+            </div>
+
+            <div class="field">
+              <label>Estimated / Final Total</label>
+              <input id="total-${escapeAttr(id)}" type="number" step="0.01" value="${Number(order.estimated_total || 0)}">
+            </div>
+
+            <div class="field">
+              <label>Prepared / Updated By</label>
+              <input readonly value="${escapeHtml(getAdminTrail(order) || currentUser?.email || "Admin")}">
+            </div>
+
+            <div class="field full">
+              <label>Admin Note / History</label>
+              <textarea id="note-${escapeAttr(id)}" placeholder="Private admin note...">${escapeHtml(order.admin_note || "")}</textarea>
+              <div class="hint">When you save, your admin email is added into this note/history for tracking.</div>
+            </div>
+          </div>
+
+          <div class="actionStrip">
+            <button class="btn primary small" onclick="saveOrderChanges('${escapeJs(id)}', false)">Save Only</button>
+            <button class="btn green small" onclick="saveOrderChanges('${escapeJs(id)}', true)">Save + WhatsApp</button>
+            <button class="btn small" onclick="whatsappCustomer('${escapeJs(id)}')">WhatsApp Customer</button>
+            <button class="btn small" onclick="copyWhatsAppMessage('${escapeJs(id)}')">Copy Original WhatsApp</button>
+            <button class="btn small" onclick="printOrder('${escapeJs(id)}')">Print Order</button>
+          </div>
+
+          <div class="miniGrid">
+            <div>
+              <div class="sectionTitle">Customer</div>
+              <div class="orderItem">
+                <b>Name:</b> ${escapeHtml(order.customer_name || "")}<br>
+                <b>Phone:</b> ${escapeHtml(order.customer_phone || "")}<br>
+                <b>Email:</b> ${escapeHtml(order.customer_email || "")}<br>
+                <b>Delivery Type:</b> ${escapeHtml(order.delivery_type || "")}<br>
+                <b>Needed:</b> ${formatDate(order.needed_date)} ${order.needed_time ? escapeHtml(order.needed_time) : ""}<br>
+                <b>Order Note:</b> ${escapeHtml(order.order_note || "")}
+              </div>
+            </div>
+
+            <div>
+              <div class="sectionTitle">Tracking Link</div>
+              <input class="copyBox" id="tracklink-${escapeAttr(id)}" readonly value="${escapeHtml(trackLink)}">
+
+              <div class="pillRow">
+                <button class="btn small" onclick="copyField('tracklink-${escapeJs(id)}')">Copy Link</button>
+                <a class="btn small" href="${escapeHtml(trackLink)}" target="_blank">Open Track</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="sectionTitle">Items</div>
+          <div class="orderItems">
+            ${items.length ? items.map(renderOrderItem).join("") : `<div class="loading">No items found for this order.</div>`}
+          </div>
+
+          <div class="dangerZone">
+            <b>Delete Tools</b>
+            <div class="pillRow">
+              <button class="btn red small" onclick="moveOrderToDeleted('${escapeJs(id)}')">Move to Deleted</button>
+            </div>
+            <p class="hint" style="margin-top:8px;">This hides the order from employee page. Owner can review/restore deleted orders from Website Manager.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function pickStatus(id,status){
+    const input = $("status-" + id);
+    if(input) input.value = toDbStatus(status);
+
+    const container = $("statusButtons-" + id);
+    if(!container) return;
+
+    const buttons = Array.from(container.querySelectorAll(".statusChoice"));
+    buttons.forEach(btn => btn.classList.remove("active"));
+
+    const target = buttons.find(btn => sameStatus(btn.dataset.status, status));
+    if(target) target.classList.add("active");
+  }
+
+  function renderOrderItem(item){
+    const info = parseJson(item.product_snapshot || item.quick_product_snapshot || item.snapshot_json || item.addons_json || null);
+    const isQuick = isQuickOrderItem(item);
+
+    if(isQuick){
+      return `
+        <div class="orderItem">
+          <b>${escapeHtml(item.cake_name || item.product_name || info.name || "Quick Dessert")}</b><br>
+          <b>Type:</b> Quick Dessert<br>
+          <b>Category:</b> ${escapeHtml(info.categoryName || info.category || item.option_name || "")}<br>
+          <b>Variant:</b> ${escapeHtml(info.variant || item.flavour_name || "")}<br>
+          <b>Quantity:</b> ${item.quantity || 1}<br>
+          <b>Total:</b> ${Number(item.estimated_item_total || 0) === 0 ? "Quote" : money(item.estimated_item_total)}<br>
+          <b>Notes:</b> ${escapeHtml(item.special_notes || "")}
+        </div>
+      `;
+    }
+
+    return `
+      <div class="orderItem">
+        <b>${escapeHtml(item.cake_name || "Cake")}</b><br>
+        <b>Type:</b> Custom Cake<br>
+        <b>Size:</b> ${escapeHtml(item.size_name || "")} ${item.servings ? "· " + escapeHtml(item.servings) : ""}<br>
+        <b>Flavour:</b> ${escapeHtml(item.flavour_name || "")}<br>
+        <b>Option:</b> ${escapeHtml(item.option_name || "")}<br>
+        <b>Quantity:</b> ${item.quantity || 1}<br>
+        <b>Message on Cake:</b> ${escapeHtml(item.message_on_cake || "")}<br>
+        <b>Special Notes:</b> ${escapeHtml(item.special_notes || "")}<br>
+        <b>Add-ons:</b> ${formatAddons(item.addons_json)}<br>
+        <b>Total:</b> ${Number(item.estimated_item_total || 0) === 0 ? "Quote" : money(item.estimated_item_total)}
+      </div>
+    `;
+  }
+
+  async function saveOrderChanges(id, notifyCustomer = false){
+    const order = orders.find(o => String(o.id) === String(id));
+    if(!order) return showToast("Order not found.", true);
+
+    const status = toDbStatus($("status-" + id).value);
+    const tracking_code = ($("tracking-" + id).value || "").trim().toUpperCase().replace(/[^A-Z0-9-]/g, "");
+    const estimated_total = Number($("total-" + id)?.value || 0);
+    const oldNote = $("note-" + id).value.trim();
+
+    const adminEmail = currentUser?.email || "Unknown admin";
+    const auditLine = `[${new Date().toLocaleString()}] ${adminEmail}: set status to ${formatStatusLabel(status)}${notifyCustomer ? " + WhatsApp notification" : " · saved only"}.`;
+
+    const admin_note = oldNote
+      ? oldNote + "\n" + auditLine
+      : auditLine;
+
+    showToast(notifyCustomer ? "Saving and preparing WhatsApp..." : "Saving order update...");
+
+    const result = await updateOrderSmart(id, {
+      status,
+      tracking_code,
+      estimated_total,
+      admin_note,
+      adminEmail
+    });
+
+    if(result.error){
+      showToast(result.error.message || "Order update failed.", true);
+      return;
+    }
+
+    if(notifyCustomer){
+      sendCustomerStatusWhatsApp(order, status, tracking_code);
+      showToast("Order saved. WhatsApp opened. Refreshing...");
+      hardRefreshPage(1200);
+      return;
+    }
+
+    showToast("Order saved. Refreshing...");
+    hardRefreshPage(700);
+  }
+
+  async function updateOrderSmart(id,data){
+    const rpcAttempts = [
+      {
+        fn:"admin_update_order_v2",
+        args:{
+          p_order_id:id,
+          p_status:data.status,
+          p_admin_note:data.admin_note,
+          p_tracking_code:data.tracking_code,
+          p_estimated_total:data.estimated_total,
+          p_admin_email:data.adminEmail
+        }
+      },
+      {
+        fn:"admin_update_order",
+        args:{
+          p_order_id:id,
+          p_status:data.status,
+          p_admin_note:data.admin_note,
+          p_tracking_code:data.tracking_code,
+          p_estimated_total:data.estimated_total
+        }
+      },
+      {
+        fn:"admin_update_order",
+        args:{
+          p_order_id:id,
+          p_status:data.status,
+          p_admin_note:data.admin_note,
+          p_tracking_code:data.tracking_code
+        }
+      }
+    ];
+
+    for(const attempt of rpcAttempts){
+      try{
+        const { error } = await supabaseClient.rpc(attempt.fn, attempt.args);
+        if(!error) return { error:null };
+      }catch(err){
+        console.warn("RPC update attempt failed:", attempt.fn, err.message || err);
+      }
+    }
+
+    const preparedFields = {};
+    const statusNorm = normalizeStatus(data.status);
+
+    if(statusNorm === "confirmed"){
+      preparedFields.confirmed_by_email = data.adminEmail;
+      preparedFields.confirmed_at = new Date().toISOString();
+    }
+
+    if(["inprogress","ready","completed"].includes(statusNorm)){
+      preparedFields.prepared_by_email = data.adminEmail;
+      preparedFields.prepared_at = new Date().toISOString();
+    }
+
+    const updateAttempts = [
+      {
+        status:data.status,
+        tracking_code:data.tracking_code,
+        estimated_total:data.estimated_total,
+        admin_note:data.admin_note,
+        updated_by_email:data.adminEmail,
+        last_status_by_email:data.adminEmail,
+        updated_at:new Date().toISOString(),
+        ...preparedFields
+      },
+      {
+        status:data.status,
+        tracking_code:data.tracking_code,
+        estimated_total:data.estimated_total,
+        admin_note:data.admin_note,
+        updated_by_email:data.adminEmail,
+        updated_at:new Date().toISOString()
+      },
+      {
+        status:data.status,
+        tracking_code:data.tracking_code,
+        estimated_total:data.estimated_total,
+        admin_note:data.admin_note
+      },
+      {
+        status:data.status,
+        estimated_total:data.estimated_total,
+        admin_note:data.admin_note
+      },
+      {
+        status:data.status,
+        estimated_total:data.estimated_total
+      },
+      {
+        status:data.status
+      }
+    ];
+
+    let lastError = null;
+
+    for(const payload of updateAttempts){
+      const { error } = await supabaseClient.from("orders").update(payload).eq("id", id);
+
+      if(!error){
+        return { error:null };
+      }
+
+      lastError = error;
+    }
+
+    return { error:lastError };
+  }
+
+  async function moveOrderToDeleted(id){
+    const order = orders.find(o => String(o.id) === String(id));
+    if(!order) return;
+
+    const ok = confirm("Move this order to Deleted? Owner can review or restore it from Website Manager.");
+    if(!ok) return;
+
+    const adminEmail = currentUser?.email || "Unknown admin";
+    const deletedAt = new Date().toISOString();
+    const oldNote = order.admin_note || "";
+    const auditLine = `[${new Date().toLocaleString()}] ${adminEmail}: moved order to Deleted.`;
+
+    const rpcAttempts = [
+      { fn:"admin_soft_delete_order", args:{ p_order_id:id, p_admin_email:adminEmail } },
+      { fn:"admin_delete_order_soft", args:{ p_order_id:id, p_admin_email:adminEmail } }
+    ];
+
+    for(const attempt of rpcAttempts){
+      try{
+        const { error } = await supabaseClient.rpc(attempt.fn, attempt.args);
+        if(!error){
+          showToast("Order moved to Deleted. Refreshing...");
+          hardRefreshPage(900);
+          return;
+        }
+      }catch(err){
+        console.warn("Soft delete RPC skipped:", err.message || err);
+      }
+    }
+
+    const attempts = [
+      {
+        deleted_at:deletedAt,
+        deleted_by_email:adminEmail,
+        deleted_by_user_id:currentUser?.id || null,
+        is_deleted:true,
+        archived:true,
+        admin_note:oldNote ? oldNote + "\n" + auditLine : auditLine
+      },
+      {
+        deleted_at:deletedAt,
+        deleted_by_email:adminEmail,
+        is_deleted:true,
+        archived:true,
+        admin_note:oldNote ? oldNote + "\n" + auditLine : auditLine
+      },
+      {
+        deleted_at:deletedAt,
+        deleted_by_email:adminEmail,
+        archived:true,
+        admin_note:oldNote ? oldNote + "\n" + auditLine : auditLine
+      },
+      {
+        deleted_at:deletedAt,
+        admin_note:oldNote ? oldNote + "\n" + auditLine : auditLine
+      },
+      {
+        archived:true,
+        admin_note:oldNote ? oldNote + "\n" + auditLine : auditLine
+      }
+    ];
+
+    let lastError = null;
+
+    for(const payload of attempts){
+      const { error } = await supabaseClient.from("orders").update(payload).eq("id", id);
+      if(!error){
+        showToast("Order moved to Deleted. Refreshing...");
+        hardRefreshPage(900);
+        return;
+      }
+      lastError = error;
+    }
+
+    showToast(lastError?.message || "Could not move order to Deleted.", true);
+  }
+
+  function whatsappCustomer(id){
+    const order = orders.find(o => String(o.id) === String(id));
+    if(!order) return;
+
+    sendCustomerStatusWhatsApp(order, order.status || "Pending", getTrackingCode(order));
+  }
+
+  function sendCustomerStatusWhatsApp(order,status,trackingCode){
+    const phone = normalizePhone(order.customer_phone || "");
+
+    if(!phone){
+      showToast("Customer phone number missing.", true);
+      return;
+    }
+
+    const msg = buildCustomerStatusMessage(order, status, trackingCode);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+  }
+
+  function buildCustomerStatusMessage(order,status,trackingCode){
+    const label = formatStatusLabel(status);
+    const trackLink = getTrackLink(trackingCode || getTrackingCode(order));
+    const name = order.customer_name ? " " + order.customer_name : "";
+
+    if(sameStatus(status,"Confirmed")){
+      return `Hi${name}, your Siffat Cakes order is confirmed. You can track it here: ${trackLink}`;
+    }
+
+    if(sameStatus(status,"InProgress")){
+      return `Hi${name}, your Siffat Cakes order is now in progress. You can track it here: ${trackLink}`;
+    }
+
+    if(sameStatus(status,"Ready")){
+      return `Hi${name}, your Siffat Cakes order is ready / ready for delivery update. You can track it here: ${trackLink}`;
+    }
+
+    if(sameStatus(status,"Completed")){
+      return `Hi${name}, your Siffat Cakes order is completed. Thank you for ordering with us.`;
+    }
+
+    if(sameStatus(status,"Cancelled")){
+      return `Hi${name}, your Siffat Cakes order status is cancelled. Please contact us if you have any questions.`;
+    }
+
+    return `Hi${name}, your Siffat Cakes order status is: ${label}. You can track it here: ${trackLink}`;
+  }
+
+  function copyWhatsAppMessage(id){
+    const order = orders.find(o => String(o.id) === String(id));
+
+    if(!order || !order.whatsapp_message){
+      showToast("No original WhatsApp message found.", true);
+      return;
+    }
+
+    navigator.clipboard.writeText(order.whatsapp_message)
+      .then(() => showToast("WhatsApp message copied."))
+      .catch(() => showToast("Could not copy message.", true));
+  }
+
+  function printOrder(id){
+    const order = orders.find(o => String(o.id) === String(id));
+
+    if(!order){
+      showToast("Order not found.", true);
+      return;
+    }
+
+    const items = orderItems.filter(item => String(item.order_id) === String(id));
+    const win = window.open("", "_blank");
+
+    if(!win){
+      showToast("Popup blocked. Allow popups to print.", true);
+      return;
+    }
+
+    win.document.write(buildInvoiceHtml(order, items));
+    win.document.close();
+    win.focus();
+  }
+
+  function buildInvoiceHtml(order, items){
+    const brand = siteSettings.brand_name || "Siffat Cakes";
+    const logo = siteSettings.logo_url || "";
+    const shortId = String(order.id || "").slice(0,8).toUpperCase();
+
+    const itemSubtotal = items.reduce((sum,item) => sum + Number(item.estimated_item_total || 0), 0);
+    const savedSubtotal = Number(order.subtotal ?? order.estimated_subtotal ?? order.known_subtotal ?? 0);
+    const estimatedTotal = Number(order.estimated_total || 0);
+
+    const subtotal = itemSubtotal > 0
+      ? itemSubtotal
+      : savedSubtotal > 0
+        ? savedSubtotal
+        : estimatedTotal;
+
+    const delivery = getInvoiceDeliveryFee(order);
+    const savedTax = Number(order.hst_amount ?? order.tax_amount ?? order.hst ?? 0);
+    const hstRate = Number(siteSettings.hst_rate ?? 13);
+
+    const shouldChargeHst =
+      truthy(siteSettings.charge_hst) ||
+      savedTax > 0 ||
+      truthy(order.charge_hst) ||
+      Number(order.hst_rate || 0) > 0;
+
+    const taxableBase = subtotal + delivery;
+
+    const hstAmount = savedTax > 0
+      ? savedTax
+      : shouldChargeHst && taxableBase > 0
+        ? roundMoney(taxableBase * (hstRate / 100))
+        : 0;
+
+    const invoiceTotal = taxableBase + hstAmount;
+
+    return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${escapeHtml(brand)} Order ${escapeHtml(shortId)}</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f5eef6;color:#1d141f;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45}
+    .page{width:210mm;min-height:297mm;margin:0 auto;background:white;padding:16mm;}
+    .printBtn{position:fixed;right:18px;top:18px;border:0;border-radius:999px;background:#640D6B;color:white;padding:11px 16px;font-weight:800;box-shadow:0 12px 28px rgba(100,13,107,.25);cursor:pointer}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;border-bottom:2px solid #640D6B;padding-bottom:16px;margin-bottom:16px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:54px;height:54px;border-radius:16px;background:#640D6B;color:#fff;display:grid;place-items:center;font-size:25px;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .brand h1{margin:0;color:#640D6B;font-size:23px;letter-spacing:-.04em}
+    .brand p{margin:4px 0 0;color:#725a76;font-size:12px}
+    .invoiceTitle{text-align:right}
+    .invoiceTitle h2{margin:0;color:#640D6B;font-size:26px;letter-spacing:-.05em}
+    .invoiceTitle p{margin:5px 0 0;color:#725a76;font-size:12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+    .box{border:1px solid rgba(100,13,107,.18);background:#fff9ff;border-radius:14px;padding:12px}
+    .box h3{margin:0 0 8px;color:#640D6B;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+    .box p{margin:0 0 3px}
+    .muted{color:#725a76}
+    table{width:100%;border-collapse:collapse}
+    .items{border:1px solid rgba(100,13,107,.18);border-radius:14px;overflow:hidden}
+    th{background:#640D6B;color:white;text-align:left;padding:10px;font-size:12px}
+    td{border-top:1px solid rgba(100,13,107,.12);padding:10px;vertical-align:top}
+    td:last-child,th:last-child{text-align:right}
+    .itemName{font-weight:700;color:#1d141f}
+    .itemMeta{margin-top:4px;color:#725a76;font-size:11px;line-height:1.42}
+    .totals{margin-left:auto;width:300px;margin-top:14px;border:1px solid rgba(100,13,107,.18);border-radius:14px;overflow:hidden}
+    .totals div{display:flex;justify-content:space-between;padding:9px 12px;border-top:1px solid rgba(100,13,107,.10)}
+    .totals div:first-child{border-top:0}
+    .totals .grand{background:#640D6B;color:white;font-weight:800;font-size:15px}
+    .thanks{margin-top:18px;padding:12px;border-radius:14px;background:#fff9ff;border:1px solid rgba(100,13,107,.18);color:#725a76;font-size:12px}
+    .footer{margin-top:18px;border-top:1px solid rgba(100,13,107,.16);padding-top:12px;display:flex;justify-content:space-between;gap:14px;color:#725a76;font-size:11px}
+    @media print{body{background:white}.page{width:auto;min-height:auto;margin:0;padding:0}.printBtn{display:none}.top,.box,.items,.totals,.thanks{break-inside:avoid}}
+  </style>
+</head>
+<body>
+<button class="printBtn" onclick="window.print()">Print / Save PDF</button>
+<main class="page">
+  <section class="top">
+    <div class="brand">
+      <div class="logo">${logo ? `<img src="${escapeHtml(logo)}" alt="Logo">` : "🍰"}</div>
+      <div>
+        <h1>${escapeHtml(brand)}</h1>
+        <p>${escapeHtml(siteSettings.address || "")}</p>
+        <p>${escapeHtml(siteSettings.business_hours || "")}</p>
+      </div>
+    </div>
+
+    <div class="invoiceTitle">
+      <h2>Order / Invoice</h2>
+      <p><b>Order:</b> ${escapeHtml(shortId)}</p>
+      <p><b>Date:</b> ${escapeHtml(formatDateTime(order.created_at))}</p>
+      <p><b>Status:</b> ${escapeHtml(formatStatusLabel(order.status || "Pending"))}</p>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="box">
+      <h3>Customer</h3>
+      <p><b>${escapeHtml(order.customer_name || "Customer")}</b></p>
+      <p class="muted">${escapeHtml(order.customer_phone || "")}</p>
+      <p class="muted">${escapeHtml(order.customer_email || "")}</p>
+    </div>
+
+    <div class="box">
+      <h3>Order Details</h3>
+      <p><b>Needed:</b> ${escapeHtml(formatDate(order.needed_date))} ${order.needed_time ? escapeHtml(order.needed_time) : ""}</p>
+      <p><b>Type:</b> ${escapeHtml(order.delivery_type || "")}</p>
+      <p><b>Tracking:</b> ${escapeHtml(getTrackingCode(order))}</p>
+    </div>
+  </section>
+
+  <section class="items">
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Qty</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        ${items.length ? items.map(renderInvoiceItem).join("") : `<tr><td colspan="3">No items found.</td></tr>`}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="totals">
+    <div><span>Subtotal</span><b>${subtotal ? money(subtotal) : "Quote"}</b></div>
+    ${delivery ? `<div><span>Delivery</span><b>${money(delivery)}</b></div>` : ""}
+    ${shouldChargeHst ? `<div><span>HST (${hstRate}%)</span><b>${money(hstAmount)}</b></div>` : ""}
+    <div class="grand"><span>Total</span><b>${invoiceTotal ? money(invoiceTotal) : "Quote"}</b></div>
+  </section>
+
+  <section class="thanks">Thank you for ordering from ${escapeHtml(brand)}. Final confirmation can be provided by the shop after review/payment.</section>
+  <section class="footer"><span>${escapeHtml(brand)}</span><span>${escapeHtml(siteSettings.whatsapp_number || "")}</span></section>
+</main>
+</body>
+</html>`;
+  }
+
+  function getInvoiceDeliveryFee(order){
+    if(order.delivery_fee !== undefined && order.delivery_fee !== null){
+      return Number(order.delivery_fee || 0);
+    }
+
+    const isDelivery = String(order.delivery_type || "").toLowerCase() === "delivery";
+
+    if(isDelivery){
+      return Number(siteSettings.default_delivery_fee || 0);
+    }
+
+    return 0;
+  }
+
+  function renderInvoiceItem(item){
+    const info = parseJson(item.product_snapshot || item.quick_product_snapshot || item.snapshot_json || null);
+    const isQuick = isQuickOrderItem(item);
+    const name = item.cake_name || item.product_name || info.name || (isQuick ? "Dessert" : "Custom Cake");
+    const qty = Number(item.quantity || 1);
+    const total = Number(item.estimated_item_total || 0);
+
+    const meta = isQuick
+      ? [info.categoryName || info.category || item.option_name, info.variant || item.flavour_name].filter(Boolean).join(" · ")
+      : [item.size_name, item.flavour_name, item.option_name, item.message_on_cake ? "Message: " + item.message_on_cake : ""].filter(Boolean).join(" · ");
+
+    return `
+      <tr>
+        <td>
+          <div class="itemName">${escapeHtml(name)}</div>
+          ${meta ? `<div class="itemMeta">${escapeHtml(meta)}</div>` : ""}
+        </td>
+        <td>${qty}</td>
+        <td>${total ? money(total) : "Quote"}</td>
+      </tr>
+    `;
+  }
+
+  function toggleOrder(id){
+    const el = $("order-" + id);
+    if(el) el.classList.toggle("open");
+  }
+
+  function getTrackingCode(order){
+    return String(order.tracking_code || String(order.id || "").replaceAll("-","").slice(0,10)).toUpperCase();
+  }
+
+  function getTrackLink(code){
+    return `${location.origin}${location.pathname.replace(/[^/]+$/, "track.html")}?code=${encodeURIComponent(code)}`;
+  }
+
+  function getAdminTrail(order){
+    return (
+      order.prepared_by_email ||
+      order.confirmed_by_email ||
+      order.updated_by_email ||
+      order.last_status_by_email ||
+      order.deleted_by_email ||
+      order.admin_email ||
+      ""
+    );
+  }
+
+  function toDbStatus(value){
+    const s = normalizeStatus(value);
+
+    if(s === "pending") return "Pending";
+    if(s === "confirmed") return "Confirmed";
+    if(s === "inprogress") return "InProgress";
+    if(s === "ready" || s === "readyforpickup" || s === "outfordelivery" || s === "readydelivery") return "Ready";
+    if(s === "completed") return "Completed";
+    if(s === "cancelled" || s === "canceled") return "Cancelled";
+
+    return "Pending";
+  }
+
+  function formatStatusLabel(value){
+    const db = toDbStatus(value);
+    const found = ORDER_STATUSES.find(s => s.value === db);
+    return found ? found.label : db;
+  }
+
+  function sameStatus(a,b){
+    return normalizeStatus(toDbStatus(a)) === normalizeStatus(toDbStatus(b));
+  }
+
+  function sortOrders(a,b,sort){
+    if(sort === "oldest") return String(a.created_at || "").localeCompare(String(b.created_at || ""));
+    if(sort === "needed_soon") return String(a.needed_date || "9999-99-99").localeCompare(String(b.needed_date || "9999-99-99"));
+    if(sort === "needed_late") return String(b.needed_date || "").localeCompare(String(a.needed_date || ""));
+    if(sort === "status") return formatStatusLabel(a.status || "").localeCompare(formatStatusLabel(b.status || ""));
+    if(sort === "total_high") return Number(b.estimated_total || 0) - Number(a.estimated_total || 0);
+    if(sort === "total_low") return Number(a.estimated_total || 0) - Number(b.estimated_total || 0);
+
+    return String(b.created_at || "").localeCompare(String(a.created_at || ""));
+  }
+
+  function countStatus(rows,status){
+    return rows.filter(order => sameStatus(order.status,status)).length;
+  }
+
+  function isWorkflowActive(order){
+    return !sameStatus(order.status,"Completed") && !sameStatus(order.status,"Cancelled") && !isDeletedOrder(order);
+  }
+
+  function isQuoteOrder(order){
+    const items = orderItems.filter(item => String(item.order_id) === String(order.id));
+
+    return Number(order.estimated_total || 0) === 0 || items.some(item => Number(item.estimated_item_total || 0) === 0);
+  }
+
+  function isNeededToday(order){
+    return isSameDay(order.needed_date, new Date());
+  }
+
+  function isNeededTomorrow(order){
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return isSameDay(order.needed_date, d);
+  }
+
+  function isNeededThisWeek(order){
+    if(!order.needed_date) return false;
+
+    const d = new Date(order.needed_date + "T00:00:00");
+    const start = startOfWeek(new Date());
+    const end = new Date(start);
+    end.setDate(end.getDate() + 7);
+
+    return d >= start && d < end;
+  }
+
+  function isNeededThisMonth(order){
+    if(!order.needed_date) return false;
+
+    const d = new Date(order.needed_date + "T00:00:00");
+    const now = new Date();
+
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  }
+
+  function isSameDay(dateValue, compareDate){
+    if(!dateValue) return false;
+
+    const d = new Date(dateValue + "T00:00:00");
+
+    return d.getFullYear() === compareDate.getFullYear() &&
+      d.getMonth() === compareDate.getMonth() &&
+      d.getDate() === compareDate.getDate();
+  }
+
+  function startOfWeek(date){
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day;
+    d.setDate(diff);
+    d.setHours(0,0,0,0);
+    return d;
+  }
+
+  function isDeletedOrder(order){
+    return (
+      !!order.deleted_at ||
+      truthy(order.is_deleted) ||
+      truthy(order.deleted) ||
+      truthy(order.archived) ||
+      normalizeStatus(order.status) === "deleted" ||
+      !!order.deleted_by_email
+    );
+  }
+
+  function isQuickOrderItem(item){
+    const raw = String(item.product_type || item.item_type || item.type || "").toLowerCase();
+
+    return raw.includes("quick") ||
+      raw.includes("dessert") ||
+      !!item.quick_product_id ||
+      !!item.quick_product_snapshot;
+  }
+
+  function parseJson(value){
+    if(!value) return {};
+    if(typeof value === "object") return value;
+
+    try{
+      return JSON.parse(value);
+    }catch{
+      return {};
+    }
+  }
+
+  function formatAddons(value){
+    const data = parseJson(value);
+
+    if(Array.isArray(data)){
+      return data.map(x => escapeHtml(x.name || x)).join(", ") || "None";
+    }
+
+    return "None";
+  }
+
+  function normalizeStatus(s){
+    return String(s || "").toLowerCase().replace(/[^a-z]/g,"");
+  }
+
+  function truthy(v){
+    return v === true || v === "true" || v === 1 || v === "1";
+  }
+
+  function roundMoney(value){
+    return Math.round(Number(value || 0) * 100) / 100;
+  }
+
+  function money(value){
+    const currency = siteSettings.currency || "$";
+    const n = Number(value || 0);
+    return currency + n.toFixed(2).replace(".00","");
+  }
+
+  function formatDate(value){
+    if(!value) return "No date";
+
+    const d = new Date(value + "T00:00:00");
+    return Number.isNaN(d.getTime()) ? value : d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+  }
+
+  function formatDateTime(value){
+    if(!value) return "";
+
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? value : d.toLocaleString();
+  }
+
+  function normalizePhone(value){
+    return String(value || "").replace(/[^\d]/g,"");
+  }
+
+  function copyField(id){
+    const el = $(id);
+    if(!el) return;
+
+    navigator.clipboard.writeText(el.value)
+      .then(() => showToast("Copied."))
+      .catch(() => showToast("Could not copy.", true));
+  }
+
+  function hardRefreshPage(delay = 0){
+    showToast("Hard refreshing page...");
+
+    setTimeout(() => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("_refresh", Date.now().toString());
+      window.location.replace(url.toString());
+    }, delay);
+  }
+
+  function cacheBustImage(url){
+    const clean = String(url || "");
+    if(!clean) return clean;
+    if(!clean.includes("supabase.co/storage")) return clean;
+
+    const sep = clean.includes("?") ? "&" : "?";
+    return `${clean}${sep}v=${Date.now()}`;
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function escapeAttr(value){
+    return escapeHtml(value);
+  }
+
+  function escapeJs(value){
+    return String(value ?? "")
+      .replaceAll("\\","\\\\")
+      .replaceAll("'","\\'")
+      .replaceAll('"','\\"')
+      .replaceAll("\n","\\n")
+      .replaceAll("\r","");
+  }
+
+  function escapeClass(value){
+    return String(value || "").replace(/[^a-zA-Z0-9_-]/g,"");
+  }
+
+  function showToast(message,isError = false){
+    const toast = $("toast");
+
+    toast.textContent = message;
+    toast.style.background = isError ? "var(--red)" : "var(--purple)";
+    toast.classList.add("show");
+
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.remove("show"), 3600);
+  }
+</script>
+
+</body>
+</html>
